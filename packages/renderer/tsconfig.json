@@ -8,20 +8,17 @@
     "strict": true,
     "isolatedModules": true,
     "jsx": "react",
-	"allowSyntheticDefaultImports": true,
+    "allowSyntheticDefaultImports": true,
     "types": ["node"],
     "baseUrl": ".",
-    "paths": {
-      "#preload": ["../preload/src/index"],
-      "/@/*": ["./src/*"]
-    },
     "lib": ["ESNext", "dom", "dom.iterable"]
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
     "types/**/*.d.ts",
-    "../../types/**/*.d.ts"
+    "../../types/**/*.d.ts",
+    "../common/**/*.ts"
   ],
   "exclude": ["**/*.spec.ts", "**/*.test.ts"]
 }

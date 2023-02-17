@@ -299,3 +299,8 @@ See [Contributing Guide](contributing.md).
 [cawa-93-github]: https://github.com/cawa-93/
 
 [cawa-93-sponsor]: https://www.patreon.com/Kozack/
+
+
+# Trouble shooting
+
+1. Install react devtool [URL](https://polypane.app/docs/downgrading-react-devtools/)
