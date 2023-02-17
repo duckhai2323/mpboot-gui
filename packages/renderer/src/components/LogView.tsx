@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
-import { LogViewer } from 'react-log-output'
+import { LazyLog } from 'react-lazylog'
+// @ts-ignore
 import { useElectron } from "../hooks/useElectron";
 export interface LogViewProps {
 
@@ -27,7 +28,7 @@ export const LogView: FC = (props: LogViewProps) => {
         }
     }, [logFileName])
 
-    const onButtonClick = (e : React.MouseEvent) => {
+    const onButtonClick = (e: React.MouseEvent) => {
         e.preventDefault();
         (async () => {
             const logFile = await electron.generateLog()
@@ -35,9 +36,19 @@ export const LogView: FC = (props: LogViewProps) => {
         })()
     }
     return (
-        <div>
-            <button onClick={onButtonClick} color="red">Generate Log</button>
-            <LogViewer text={log} style={{ width: "1200px", maxHeight: "600px" }} />
+        <div style={{ height: "100%" }}>
+            {
+                log == "" ?
+                    <button onClick={onButtonClick} color="red">Generate Log</button>
+                    :
+                    <LazyLog
+                        text={log}
+                        follow
+                        extraLines={1}
+                        selectableLines
+                    />
+            }
         </div>
+
     );
 };
