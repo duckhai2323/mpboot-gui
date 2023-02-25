@@ -1,45 +1,46 @@
+import { Allotment } from 'allotment';
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import SplitPane from 'react-split-pane';
 // @ts-ignore
-import Pane from 'react-split-pane/lib/Pane';
 import { useWindowSize } from 'usehooks-ts';
 import { ContentView } from '../components/ContentView/ContentView';
 import { FileTree } from '../components/FileTree/FileTree';
 import { LogView } from '../components/LogView/LogView';
 import { ParameterView } from '../components/ParameterView/ParameterView';
-import { TreeView } from '../components/TreeView/TreeView';
+import { TreeView, TreeViewWithSize } from '../components/TreeView/TreeView';
+import "allotment/dist/style.css";
+import "./main.css";
 
 export const MainPage = () => {
-	const size = useWindowSize();
+    const size = useWindowSize();
+    const ref = React.useRef<HTMLDivElement>(null);
     return (
-		<div style={{width: size.width, height: size.height}}>
-			{/* @ts-ignore */}
-			<SplitPane split="vertical">
-				<Pane minSize="10%" maxSize="60%" initialSize="10%">
-					<FileTree />
-				</Pane>
-				{/* @ts-ignore */}
-				<SplitPane split="horizontal" minSize="20%" maxSize="60%">
-					<Pane minSize="70%">
-						<ContentView />
-					</Pane>
-					<Pane minSize="30%">
-						<LogView />
-					</Pane>
-				</SplitPane>
-				{/* @ts-ignore */}
-				<SplitPane split="horizontal" minSize="20%" maxSize="60%" initialSize="20%">
-					<Pane >
-						<ParameterView />
-					</Pane>
-					<Pane >
+        <Allotment >
+            <Allotment.Pane minSize={size.width * 0.1} className="allotment__pane--scroll-on-overflow-y" >
+                <FileTree />
+            </Allotment.Pane>
+            <Allotment.Pane minSize={size.width * 0.6}>
+                <Allotment vertical >
+                    <Allotment.Pane 
+                    className="allotment__pane--scroll-on-overflow-x allotment__pane--scroll-on-overflow-y"  >
+                        <ContentView />
+                    </Allotment.Pane>
+                    <Allotment.Pane >
+                        <LogView />
+                    </Allotment.Pane>
+                </Allotment>
+            </Allotment.Pane>
+            <Allotment.Pane minSize={size.width * 0.2} >
+                <Allotment vertical>
+                    <Allotment.Pane >
+                        <ParameterView />
+                    </Allotment.Pane>
+                    <Allotment.Pane>
                         <Link to="/tree-view">Tree View</Link>
-						<TreeView width={300} height={400} mode="normal"/>
-					</Pane>
-				</SplitPane>
-
-			</SplitPane>
-		</div>
-	)
+                        <TreeViewWithSize width="100%" height="90%" mode="normal" />
+                    </Allotment.Pane>
+                </Allotment>
+            </Allotment.Pane>
+        </Allotment>
+    )
 }

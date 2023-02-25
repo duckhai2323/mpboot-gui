@@ -1,59 +1,39 @@
 import React, { FC, useEffect, useState } from "react";
-import { LazyLog } from 'react-lazylog'
-// @ts-ignore
+import './LogView.css';
+import "@patternfly/react-core/dist/styles/base.css";
 import { useElectron } from "../../hooks/useElectron";
-// @ts-ignore
-import * as phylotree from 'phylotree';
+import { LogViewer, LogViewerSearch } from "@patternfly/react-log-viewer";
+import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
+import { useLog } from "../../hooks/useLog";
+import { usePhylogenTree } from "../../hooks/usePhylogenTree";
+
 export interface LogViewProps {
 
 }
 
 export const LogView: FC = (props: LogViewProps) => {
-    const [log, setLog] = useState<string>("")
-    const [logFileName, setLogFileName] = useState<string>("")
-    const electron = useElectron()
+    const [logState] = useLog()
+  
 
-    useEffect(() => {
-        if (!logFileName) return
-        const logStream = electron.subscribeLog(logFileName)
-        logStream.on("data", (data) => {
-            setLog((prev) => prev ? prev + "\n" + data : data)
-        })
-        return () => {
-            logStream.unregister()
-        }
-    }, [logFileName])
-
-    useEffect(() => {
-        (async () => {
-            const tree = new phylotree.phylotree("");
-            console.log(tree)
-        })()
-    }, [])
-
-    const onButtonClick = (e: React.MouseEvent) => {
-        e.preventDefault();
-        (async () => {
-            const logFile = await electron.generateLog()
-            setLogFileName(logFile)
-        })()
-    }
     return (
-        <div style={{ height: "100%" }}>
-            {
-                log == "" ?
-                    <button onClick={onButtonClick} color="red">Generate Log</button>
-                    :
-                    <div style={{width: "100%", height: "95%"}}>
-                        <LazyLog
-                            text={log}
-                            follow
-                            extraLines={3}
-                            selectableLines
-                            enableSearch
-                        />
-                    </div>
-            }
+        <div style={{ height: "90%" }}>
+            <LogViewer
+                hasLineNumbers={false}
+                data={logState.logData}
+                theme="light"
+                isTextWrapped={true}
+                height="100%"
+                scrollToRow={logState.logData.length}
+                toolbar={
+                    <Toolbar>
+                        <ToolbarContent>
+                            <ToolbarItem>
+                                <LogViewerSearch minSearchChars={3} placeholder="Search value" />
+                            </ToolbarItem>
+                        </ToolbarContent>
+                    </Toolbar>
+                }
+            />
         </div>
 
     );

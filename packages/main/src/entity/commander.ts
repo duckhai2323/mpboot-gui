@@ -1,4 +1,5 @@
 import { spawn } from 'child_process';
+import { WebContents } from 'electron';
 
 import { createWriteStream } from 'fs';
 import { writeFile } from 'fs/promises';
@@ -14,8 +15,8 @@ export interface SpawnOptions {
 }
 
 export class Commander {
-  private binary: string;
-  private args: string[];
+  protected binary: string;
+  protected args: string[];
   private spawnOptions?: SpawnOptions;
 
   constructor(binary: string, args: string[], spawnOptions?: SpawnOptions) {
@@ -24,8 +25,8 @@ export class Commander {
     this.spawnOptions = spawnOptions;
   }
 
-  public async execute(): Promise<ExecuteResult> {
-    const logFileName = `${tmpdir()}/log-${this.binary}-${Date.now()}.log`;
+  public async execute(onFinish: () => void): Promise<ExecuteResult> {
+    const logFileName = `${tmpdir()}/log-${this.binary.replaceAll('/', '-')}-${Date.now()}.log`;
     await writeFile(logFileName, '');
     const logStream = createWriteStream(logFileName, { flags: 'a+' });
     const ls = spawn(this.binary, this.args, {
@@ -43,6 +44,7 @@ export class Commander {
 
     ls.on('exit', (_code) => {
       logStream.end();
+      onFinish()
     });
 
     return {
