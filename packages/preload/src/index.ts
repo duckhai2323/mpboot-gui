@@ -13,6 +13,10 @@ export { sha256sum } from './nodeCrypto';
 export { versions } from './versions';
 export { ipcRenderer } from 'electron';
 
+const testAvailable = (): boolean => {
+  return true;
+};
+
 const exposed: ExposedElectron = {
   subscribeLog,
   generateLog,
@@ -23,6 +27,7 @@ const exposed: ExposedElectron = {
   readContentFile,
   executeCommand,
   subscribeCommandCallbackOnFinish,
+  testAvailable,
 };
 
 contextBridge.exposeInMainWorld('electron', exposed);

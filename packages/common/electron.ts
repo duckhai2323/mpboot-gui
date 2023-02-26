@@ -1,7 +1,7 @@
-import { CommandCallbackOnFinishResult, CommandExecuteResult } from "./commander";
-import { ContentFile } from "./content-file";
-import { Directory } from "./directory-tree";
-import { Parameter } from "./parameter";
+import type { CommandCallbackOnFinishResult, CommandExecuteResult } from './commander';
+import type { ContentFile } from './content-file';
+import type { Directory } from './directory-tree';
+import type { Parameter } from './parameter';
 
 export interface CustomEventEmitter {
   on: (event: string, callback: (data: any) => void) => void;
@@ -26,6 +26,8 @@ export interface ExposedElectron {
   executeCommand: (parameter: Parameter) => Promise<CommandExecuteResult>;
 
   subscribeCommandCallbackOnFinish: (commandId: string, callback: (result: CommandCallbackOnFinishResult) => void) => Unsubscribe;
+
+  testAvailable: () => boolean
 }
 
 export const unimplementedExposedElectron = {} as ExposedElectron;
