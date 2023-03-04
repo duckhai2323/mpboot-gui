@@ -4,18 +4,16 @@ import type { WorkspaceState } from '../state/workspace.state';
 import { initialWorkspaceState } from '../state/workspace.state';
 
 export const workspaceSlice = createSlice({
-    name: 'workspace',
-    initialState: initialWorkspaceState,
-    reducers: {
-        setWorkspace: (state, action: PayloadAction<Partial<WorkspaceState>>) => {
-            return {
-                ...state,
-                ...action.payload,
-            };
-        },
+  name: 'workspace',
+  initialState: initialWorkspaceState,
+  reducers: {
+    setWorkspace: (state, action: PayloadAction<Partial<WorkspaceState>>) => {
+      return {
+        ...state,
+        ...action.payload,
+      };
     },
+  },
 });
-
-
 
 export const Actions = workspaceSlice.actions;

@@ -1,9 +1,9 @@
-export const initialContentFileState : ContentFileState= {
-    path: '',
-    name: '',
+export const initialContentFileState: ContentFileState = {
+  path: '',
+  name: '',
 };
 export type ContentFileState = {
-    path: string;
-    name: string;
-    content?: string;
-}
+  path: string;
+  name: string;
+  content?: string;
+};

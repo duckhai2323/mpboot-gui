@@ -1,10 +1,9 @@
 export const initialLogState = {
-    logData: new Array<string>(),
-    logFile: '',
+  logData: new Array<string>(),
+  logFile: '',
 };
 
-
 export type LogState = {
-    logData: string[];
-    logFile: string;
-}
+  logData: string[];
+  logFile: string;
+};

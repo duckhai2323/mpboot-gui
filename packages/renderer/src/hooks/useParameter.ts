@@ -5,12 +5,15 @@ import type { ParameterState } from '../redux/state/parameter.state';
 import type { RootState } from '../redux/store/root';
 
 export const useParameter = (): [ParameterState, (source: string) => void] => {
-    const parameter = useSelector((state: RootState) => state.parameter);
-    const dispatch = useDispatch();
+  const parameter = useSelector((state: RootState) => state.parameter);
+  const dispatch = useDispatch();
 
-    const setSource = useCallback((source: string) => {
-        dispatch(Actions.setParameter({ source }));
-    }, [dispatch]);
+  const setSource = useCallback(
+    (source: string) => {
+      dispatch(Actions.setParameter({ source }));
+    },
+    [dispatch],
+  );
 
-    return [parameter, setSource];
+  return [parameter, setSource];
 };

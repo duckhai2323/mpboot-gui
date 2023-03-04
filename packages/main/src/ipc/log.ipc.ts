@@ -13,8 +13,9 @@ ipcMain.on(IPC_EVENTS.LOG_SUBSCRIBE, (event, logFile) => {
 });
 
 ipcMain.handle(IPC_EVENTS.LOG_GENERATE, async (_event, _arg) => {
-  const command = new Commander(mpbootExecutablePath, ['--help'], {
+  const command = new Commander(mpbootExecutablePath, ['--help'], {});
+  const result = await command.execute(() => {
+    return;
   });
-  const result = await command.execute(() => {return;});
   return result.logFile;
 });

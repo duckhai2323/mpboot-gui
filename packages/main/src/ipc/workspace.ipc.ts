@@ -5,25 +5,30 @@ import type { IWorkspace, WorkspaceChooseDirectoryDialogResult } from '../../../
 import { Workspace } from '../entity/workspace';
 import { repository } from '../repository/repository';
 
-ipcMain.handle(IPC_EVENTS.WORKSPACE_CHOOSE_DIRECTORY_DIALOG, async (_event): Promise<WorkspaceChooseDirectoryDialogResult> => {
+ipcMain.handle(
+  IPC_EVENTS.WORKSPACE_CHOOSE_DIRECTORY_DIALOG,
+  async (_event): Promise<WorkspaceChooseDirectoryDialogResult> => {
     logger.debug('Received WORKSPACE_CHOOSE_DIRECTORY_DIALOG');
     const results = await dialog.showOpenDialog({
-        properties: ['openDirectory'],
+      properties: ['openDirectory'],
     });
     logger.debug('dialog.showOpenDialog()', { results });
     return {
-        canceled: results.canceled,
-        directoryPath: results.filePaths.length > 0 ? results.filePaths[0] : undefined,
+      canceled: results.canceled,
+      directoryPath: results.filePaths.length > 0 ? results.filePaths[0] : undefined,
     };
-});
+  },
+);
 
 ipcMain.handle(IPC_EVENTS.WORKSPACE_LIST, async (_event): Promise<IWorkspace[]> => {
-    logger.debug('Received WORKSPACE_LIST');
-    return await repository.listWorkspaces();
+  logger.debug('Received WORKSPACE_LIST');
+  return await repository.listWorkspaces();
 });
 
-
-ipcMain.handle(IPC_EVENTS.WORKSPACE_CREATE, async (_event, dirPath: string): Promise<IWorkspace> => {
+ipcMain.handle(
+  IPC_EVENTS.WORKSPACE_CREATE,
+  async (_event, dirPath: string): Promise<IWorkspace> => {
     logger.debug('Received WORKSPACE_CREATE', { dirPath });
     return await repository.createWorkspace(new Workspace(dirPath));
-});
+  },
+);

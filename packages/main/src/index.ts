@@ -5,6 +5,10 @@ import { platform } from 'node:process';
 import './ipc';
 import './repository/repository';
 import './menu';
+import { logger } from '../../common/logger';
+import { isDevEnv } from './const';
+
+logger.log("You're running in development mode?", { isDevEnv: isDevEnv });
 /**
  * Prevent electron from running multiple instances.
  */

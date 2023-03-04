@@ -17,22 +17,28 @@ export interface ExposedElectron {
   subscribeLog: (logFile: string) => CustomEventEmitter;
   generateLog: () => Promise<string>;
 
-  subscribeDirectoryTree: (dirPath : string) => CustomEventEmitter;
-  getFirstLoadDirectoryTree: (dirPath : string) => Promise<Directory>;
-  exploreDirectory: (dirPath : string, dirToExplore : string) => Promise<Directory>;
+  subscribeDirectoryTree: (dirPath: string) => CustomEventEmitter;
+  getFirstLoadDirectoryTree: (dirPath: string) => Promise<Directory>;
+  exploreDirectory: (dirPath: string, dirToExplore: string) => Promise<Directory>;
 
   openContentFile: (filePath: string) => Promise<ContentFile>;
   readContentFile: (filePath: string) => Promise<string>;
 
   executeCommand: (parameter: Parameter) => Promise<CommandExecuteResult>;
 
-  subscribeCommandCallbackOnFinish: (commandId: string, callback: (result: CommandCallbackOnFinishResult) => void) => Unsubscribe;
+  subscribeCommandCallbackOnFinish: (
+    commandId: string,
+    callback: (result: CommandCallbackOnFinishResult) => void,
+  ) => Unsubscribe;
 
   openDirectoryForWorkspace: () => Promise<WorkspaceChooseDirectoryDialogResult>;
   listWorkspaces: () => Promise<IWorkspace[]>;
-  createWorkspace: (dirPath : string) => Promise<IWorkspace>;
+  createWorkspace: (dirPath: string) => Promise<IWorkspace>;
 
   testAvailable: () => Promise<boolean>;
+
+  dirname: (path: string) => string;
+  basename: (path: string) => string;
 }
 
 export const unimplementedExposedElectron = {} as ExposedElectron;

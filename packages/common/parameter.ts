@@ -1,14 +1,14 @@
 export interface Parameter {
-    source: string;
+  source: string;
 }
 
 export const convertParameterToCommandArgs = (parameter: Parameter): string[] => {
-    const args = [];
+  const args = [];
 
-    if (parameter.source) {
-        args.push('-s');
-        args.push(parameter.source);
-    }
+  if (parameter.source) {
+    args.push('-s');
+    args.push(parameter.source);
+  }
 
-    return args;
+  return args;
 };

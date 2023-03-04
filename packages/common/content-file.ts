@@ -1,5 +1,5 @@
 export interface ContentFile {
-    filePath?: string;
-    fileName?: string;
-    content?: string;
+  filePath?: string;
+  fileName?: string;
+  content?: string;
 }

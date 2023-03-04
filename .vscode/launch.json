@@ -5,9 +5,7 @@
       "name": "Attach to Main process",
       "port": 9229,
       "request": "attach",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
+      "skipFiles": ["<node_internals>/**"],
       "type": "node",
       "sourceMaps": true,
       "resolveSourceMapLocations": [
@@ -16,8 +14,7 @@
       ],
       "sourceMapPathOverrides": {
         "../src/**": "${workspaceFolder}/packages/main/src/**",
-        "../../common/**": "${workspaceFolder}/packages/common/**",
-        
+        "../../common/**": "${workspaceFolder}/packages/common/**"
       }
     }
   ]

@@ -6,18 +6,15 @@ import { workspaceSlice } from '../slice/workspace.slice';
 import { phylogenTreeSlice } from '../slice/phylogen-tree.slice';
 
 export const store = configureStore({
-
-    reducer: {
-        contentFile: contentFileSlice.reducer,
-        parameter: parameterSlice.reducer,
-        log: logSlice.reducer,
-        workspace: workspaceSlice.reducer,
-        phylogenTree: phylogenTreeSlice.reducer,
-    },
+  reducer: {
+    contentFile: contentFileSlice.reducer,
+    parameter: parameterSlice.reducer,
+    log: logSlice.reducer,
+    workspace: workspaceSlice.reducer,
+    phylogenTree: phylogenTreeSlice.reducer,
+  },
 });
 
-export type RootState = ReturnType<typeof store.getState>
+export type RootState = ReturnType<typeof store.getState>;
 
-export type AppDispatch = typeof store.dispatch
-
-
+export type AppDispatch = typeof store.dispatch;

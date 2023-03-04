@@ -1,6 +1,5 @@
 import md5 from 'md5';
 
-
 export const IPC_EVENTS = {
   LOG_SUBSCRIBE: 'log:subscribe',
   LOG_FILE_OF: (logFile: string) => `log:file-${md5(logFile)}`,

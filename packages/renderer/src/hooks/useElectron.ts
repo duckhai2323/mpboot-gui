@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { singletonHook } from 'react-singleton-hook';
-import type { ExposedElectron} from '../../../common/electron';
+import type { ExposedElectron } from '../../../common/electron';
 import { unimplementedExposedElectron } from '../../../common/electron';
 
 export const useElectronImpl = () => {

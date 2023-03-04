@@ -1,6 +1,6 @@
 import { app, BrowserWindow } from 'electron';
 import { join } from 'node:path';
-import { pageUrl } from './const';
+import { isDevEnv, pageUrl } from './const';
 
 async function createWindow() {
   const browserWindow = new BrowserWindow({
@@ -25,7 +25,7 @@ async function createWindow() {
   browserWindow.on('ready-to-show', () => {
     browserWindow?.show();
 
-    if (import.meta.env.DEV) {
+    if (isDevEnv) {
       browserWindow?.webContents.openDevTools();
     }
   });
@@ -43,7 +43,7 @@ async function createWindow() {
 /**
  * Restore an existing BrowserWindow or Create a new BrowserWindow.
  */
-export async function restoreOrCreateWindow() : Promise<BrowserWindow> {
+export async function restoreOrCreateWindow(): Promise<BrowserWindow> {
   let window = BrowserWindow.getAllWindows().find(w => !w.isDestroyed());
 
   if (window === undefined) {

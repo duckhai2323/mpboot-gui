@@ -42,11 +42,11 @@ export class Commander {
     ls.stdout.pipe(logStream);
     ls.stderr.pipe(logStream);
 
-    ls.on('exit', (_code) => {
+    ls.on('exit', _code => {
       logStream.end();
       onFinish(_code);
     });
-    ls.on('error', (err) => {
+    ls.on('error', err => {
       logger.error('Failed to run command', err);
     });
 

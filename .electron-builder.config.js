@@ -34,6 +34,6 @@ module.exports = async function () {
     win: {
       target: 'portable',
       publish: ['github'],
-    }
+    },
   };
 };

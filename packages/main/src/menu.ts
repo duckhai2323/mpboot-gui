@@ -5,21 +5,25 @@ import { restoreOrCreateWindow } from './mainWindow';
 const isMac = process.platform === 'darwin';
 
 const template = [
-//   { role: 'appMenu' }
-  ...(isMac ? [{
-    label: app.name,
-    submenu: [
-      { role: 'about' },
-      { type: 'separator' },
-      { role: 'services' },
-      { type: 'separator' },
-      { role: 'hide' },
-      { role: 'hideOthers' },
-      { role: 'unhide' },
-      { type: 'separator' },
-      { role: 'quit' },
-    ],
-  }] : []),
+  //   { role: 'appMenu' }
+  ...(isMac
+    ? [
+        {
+          label: app.name,
+          submenu: [
+            { role: 'about' },
+            { type: 'separator' },
+            { role: 'services' },
+            { type: 'separator' },
+            { role: 'hide' },
+            { role: 'hideOthers' },
+            { role: 'unhide' },
+            { type: 'separator' },
+            { role: 'quit' },
+          ],
+        },
+      ]
+    : []),
   // { role: 'fileMenu' }
   {
     label: 'File',
@@ -27,8 +31,8 @@ const template = [
       {
         label: 'Dashboard',
         click: async () => {
-            const window = await restoreOrCreateWindow();
-            await window.loadURL(pageUrl + '#/dashboard');
+          const window = await restoreOrCreateWindow();
+          await window.loadURL(pageUrl + '#/dashboard');
         },
       },
       isMac ? { role: 'close' } : { role: 'quit' },
@@ -44,23 +48,18 @@ const template = [
       { role: 'cut' },
       { role: 'copy' },
       { role: 'paste' },
-      ...(isMac ? [
-        { role: 'pasteAndMatchStyle' },
-        { role: 'delete' },
-        { role: 'selectAll' },
-        { type: 'separator' },
-        {
-          label: 'Speech',
-          submenu: [
-            { role: 'startSpeaking' },
-            { role: 'stopSpeaking' },
-          ],
-        },
-      ] : [
-        { role: 'delete' },
-        { type: 'separator' },
-        { role: 'selectAll' },
-      ]),
+      ...(isMac
+        ? [
+            { role: 'pasteAndMatchStyle' },
+            { role: 'delete' },
+            { role: 'selectAll' },
+            { type: 'separator' },
+            {
+              label: 'Speech',
+              submenu: [{ role: 'startSpeaking' }, { role: 'stopSpeaking' }],
+            },
+          ]
+        : [{ role: 'delete' }, { type: 'separator' }, { role: 'selectAll' }]),
     ],
   },
   // { role: 'viewMenu' }
@@ -84,19 +83,21 @@ const template = [
     submenu: [
       { role: 'minimize' },
       { role: 'zoom' },
-      ...(isMac ? [
-        { type: 'separator' },
-        { role: 'front' },
-        { type: 'separator' },
-        { role: 'window' },
-      ] : [
-        { role: 'close' },
-      ]),
+      ...(isMac
+        ? [{ type: 'separator' }, { role: 'front' }, { type: 'separator' }, { role: 'window' }]
+        : [{ role: 'close' }]),
     ],
   },
   {
     role: 'help',
     submenu: [
+      {
+        label: 'Open developer tools',
+        click: async () => {
+          const window = await restoreOrCreateWindow();
+          window?.webContents.openDevTools();
+        },
+      },
       {
         label: 'Learn More',
         click: async () => {

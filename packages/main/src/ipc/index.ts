@@ -5,7 +5,6 @@ import './content-file.ipc';
 import './command.ipc';
 import { logger } from '../../../common/logger';
 
-
 process.on('uncaughtException', function (err) {
-    logger.error('uncaughtException', err);
+  logger.error('uncaughtException', err);
 });

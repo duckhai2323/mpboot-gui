@@ -1,8 +1,8 @@
 export interface CommandExecuteResult {
-    commandId : string;
-    logFile: string;
+  commandId: string;
+  logFile: string;
 }
 
 export interface CommandCallbackOnFinishResult {
-    treeFile: string
+  treeFile: string;
 }

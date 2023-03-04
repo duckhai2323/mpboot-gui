@@ -3,21 +3,19 @@ import { createSlice } from '@reduxjs/toolkit';
 import { initialPhylogenTreeState } from '../state/phylogen-tree.state';
 
 export const phylogenTreeSlice = createSlice({
-    name: 'phylogen-tree',
-    initialState: initialPhylogenTreeState,
-    reducers: {
-        setNewick: (state, action: PayloadAction<string>) => {
-            if (!action.payload) {
-                return state;
-            }
-            return {
-                ...state,
-                newick: action.payload,
-            };
-        },
+  name: 'phylogen-tree',
+  initialState: initialPhylogenTreeState,
+  reducers: {
+    setNewick: (state, action: PayloadAction<string>) => {
+      if (!action.payload) {
+        return state;
+      }
+      return {
+        ...state,
+        newick: action.payload,
+      };
     },
+  },
 });
-
-
 
 export const Actions = phylogenTreeSlice.actions;
