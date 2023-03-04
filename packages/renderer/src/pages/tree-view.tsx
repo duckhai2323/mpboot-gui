@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { TreeViewWithSize } from "../components/TreeView/TreeView";
+import { TreeView, TreeViewWithSize } from "../components/TreeView/TreeView";
 
 export const TreeViewPage = () => {
     return (

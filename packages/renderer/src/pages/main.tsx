@@ -10,6 +10,7 @@ import { ParameterView } from '../components/ParameterView/ParameterView';
 import { TreeView, TreeViewWithSize } from '../components/TreeView/TreeView';
 import "allotment/dist/style.css";
 import "./main.css";
+import { TreePreview, TreePreviewWithSize } from '../components/TreePreview/TreePreview';
 
 export const MainPage = () => {
     const size = useWindowSize();
@@ -37,7 +38,7 @@ export const MainPage = () => {
                     </Allotment.Pane>
                     <Allotment.Pane>
                         <Link to="/tree-view">Tree View</Link>
-                        <TreeViewWithSize width="100%" height="90%" mode="normal" />
+                        <TreePreviewWithSize width="100%" height="90%" mode="normal" />
                     </Allotment.Pane>
                 </Allotment>
             </Allotment.Pane>
