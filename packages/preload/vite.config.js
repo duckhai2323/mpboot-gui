@@ -16,7 +16,7 @@ const config = {
   envDir: PROJECT_ROOT,
   build: {
     ssr: true,
-    sourcemap: 'inline',
+    sourcemap: false,
     target: `chrome${chrome}`,
     outDir: 'dist',
     assetsDir: '.',

@@ -29,12 +29,18 @@ const config = {
     },
   },
   build: {
-    sourcemap: true,
+    sourcemap: false,
     target: `chrome${chrome}`,
     outDir: 'dist',
     assetsDir: '.',
     rollupOptions: {
       input: join(PACKAGE_ROOT, 'index.html'),
+      output: {
+        manualChunks: {
+          lodash: ['lodash'],
+          react: ['react', 'react-dom', 'react-router-dom', 'redux'],
+        },
+      },
     },
     emptyOutDir: true,
     reportCompressedSize: false,

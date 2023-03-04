@@ -7,6 +7,7 @@ import { generateLog, subscribeLog } from './log';
 import { executeCommand, subscribeCommandCallbackOnFinish } from './command';
 import { openContentFile, readContentFile } from './content-file';
 import { getFirstLoadDirectoryTree, subscribeDirectoryTree, exploreDirectory } from './directory-tree';
+import { contextBridge } from 'electron';
 
 export { sha256sum } from './nodeCrypto';
 export { versions } from './versions';
@@ -29,4 +30,4 @@ export const exposed: ExposedElectron = {
   testAvailable,
 };
 
-// contextBridge.exposeInMainWorld('electron', exposed);
+contextBridge.exposeInMainWorld('electron', exposed);

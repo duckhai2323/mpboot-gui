@@ -33,7 +33,7 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 18 # Need for npm >=7.7
+          node-version: 18
           cache: 'yarn'
       
       - run: yarn install --frozen-lockfile
@@ -49,7 +49,7 @@ jobs:
           retry_wait_seconds: 15
           retry_on: error
           shell: 'bash'
-          command: npx --no-install electron-builder --config .electron-builder.config.js --publish ${{ inputs.dry-run && 'never' || 'always' }}
+          command: 
         env:
           # Code Signing params
           # See https://www.electron.build/code-signing

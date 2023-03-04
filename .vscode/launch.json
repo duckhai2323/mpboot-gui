@@ -2,12 +2,23 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Attach to Main process",
+      "port": 9229,
+      "request": "attach",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
       "type": "node",
-      "request": "launch",
-      "name": "Debug Main Process",
-      "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}\\scripts\\watch.mjs",
-      "autoAttachChildProcesses": true
+      "sourceMaps": true,
+      "resolveSourceMapLocations": [
+        "${workspaceFolder}/packages/main/dist/**",
+        "!**/node_modules/**"
+      ],
+      "sourceMapPathOverrides": {
+        "../src/**": "${workspaceFolder}/packages/main/src/**",
+        "../../common/**": "${workspaceFolder}/packages/common/**",
+        
+      }
     }
   ]
 }
