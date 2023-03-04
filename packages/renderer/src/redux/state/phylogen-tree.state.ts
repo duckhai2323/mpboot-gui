@@ -1,6 +1,6 @@
 export const initialPhylogenTreeState = {
-    newick: ""
-}
+    newick: '',
+};
 
 export type PhylogenTreeState = {
     newick: string;

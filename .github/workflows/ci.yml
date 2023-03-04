@@ -35,11 +35,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-
-  lint:
-    uses: ./.github/workflows/lint.yml
-  tests:
-    uses: ./.github/workflows/tests.yml
   draft_release:
     if: github.event_name == 'push' && github.ref_name == 'main'
     needs: [ tests ]

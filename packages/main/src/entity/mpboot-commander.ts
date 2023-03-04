@@ -1,4 +1,5 @@
-import { Commander, SpawnOptions } from "./commander";
+import type { SpawnOptions } from './commander';
+import { Commander } from './commander';
 
 export class MPBootCommander extends Commander {
 
@@ -11,7 +12,7 @@ export class MPBootCommander extends Commander {
         if (sourceIndex !== -1) {
             return this.args[sourceIndex + 1];
         }
-        return ''
+        return '';
     }
 
     get sourceFileName(): string {

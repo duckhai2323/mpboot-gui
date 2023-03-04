@@ -1,6 +1,6 @@
-import { useCallback } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/store/root";
+import { useCallback } from 'react';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../redux/store/root';
 
 export const useProject = () : [projectPath : string, getRelativePath: (path : string) => string]=> {
     const projectState = useSelector((state: RootState) => state.project);
@@ -10,7 +10,7 @@ export const useProject = () : [projectPath : string, getRelativePath: (path : s
     const getRelativePath = useCallback((path: string) => {
         const relativePath = path.replace(projectPath, '.');
         return relativePath;
-    }, [projectPath])
+    }, [projectPath]);
 
-    return [projectPath, getRelativePath]
-}
+    return [projectPath, getRelativePath];
+};

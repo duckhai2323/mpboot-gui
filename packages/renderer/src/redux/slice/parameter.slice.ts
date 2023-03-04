@@ -1,5 +1,7 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { initialParameterState, ParameterState } from "../state/parameter.state";
+import type { PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
+import type { ParameterState } from '../state/parameter.state';
+import { initialParameterState } from '../state/parameter.state';
 
 export const parameterSlice = createSlice({
     name: 'parameter',
@@ -8,12 +10,12 @@ export const parameterSlice = createSlice({
         setParameter: (state, action: PayloadAction<Partial<ParameterState>>) => {
             return {
                 ...state,
-                ...action.payload
-            }
+                ...action.payload,
+            };
         },
         resetParameter: (_state) => {
-            return initialParameterState
-        }
+            return initialParameterState;
+        },
     },
 });
 

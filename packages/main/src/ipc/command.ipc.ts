@@ -1,10 +1,10 @@
 import { ipcMain } from 'electron';
 import { IPC_EVENTS } from '../../../common/ipc';
-import { Commander } from '../entity/commander';
-import { convertParameterToCommandArgs, Parameter } from '../../../common/parameter';
+import type { Parameter } from '../../../common/parameter';
+import { convertParameterToCommandArgs } from '../../../common/parameter';
 import { logger } from '../../../common/logger';
 import { randomUUID } from 'crypto';
-import { CommandCallbackOnFinishResult, CommandExecuteResult } from '../../../common/commander';
+import type { CommandCallbackOnFinishResult, CommandExecuteResult } from '../../../common/commander';
 import { MPBootCommander } from '../entity/mpboot-commander';
 
 
@@ -16,8 +16,8 @@ ipcMain.handle(IPC_EVENTS.COMMAND_EXECUTE, async (event, param: Parameter) : Pro
     });
     const result = await command.execute(() => {
         const data : CommandCallbackOnFinishResult = {
-            treeFile: command.generatedTreeFilePath
-        }
+            treeFile: command.generatedTreeFilePath,
+        };
         event.sender.send(IPC_EVENTS.COMMAND_CALLBACK_ON_FINISH(commandId), data);
     });
     return {

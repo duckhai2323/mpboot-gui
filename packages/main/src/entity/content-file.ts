@@ -1,11 +1,10 @@
-import { readFile } from "fs/promises";
-import { logger } from "../../../common/logger";
+import { readFile } from 'fs/promises';
 
 export class ContentFile {
     public readonly filePath: string;
     public readonly fileName: string;
     private fileContent: string;
-    private isLoaded: boolean = false;
+    private isLoaded = false;
 
 
     constructor(filePath: string) {
@@ -15,7 +14,7 @@ export class ContentFile {
     }
 
     private async loadContent(): Promise<void> {
-        this.fileContent =  await readFile(this.filePath, "utf-8")
+        this.fileContent =  await readFile(this.filePath, 'utf-8');
         this.isLoaded = true;
     }
 

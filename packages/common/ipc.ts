@@ -1,4 +1,4 @@
-import md5 from 'md5'
+import * as md5 from 'md5';
 
 
 export const IPC_EVENTS = {
@@ -8,7 +8,7 @@ export const IPC_EVENTS = {
 
   DIRECTORY_TREE_SUBSCRIBE: 'directory-tree:subscribe',
   DIRECTORY_TREE_CHANGE_OF: (dirPath: string) => `directory-tree:change-${md5(dirPath)}`,
-  DIRECTORY_TREE_FIRST_LOAD: `directory-tree:first-load`,
+  DIRECTORY_TREE_FIRST_LOAD: 'directory-tree:first-load',
   DIRECTORY_TREE_UNSUBSCRIBE: 'directory-tree:unsubscribe',
   DIRECTORY_TREE_EXPLORE_DIRECTORY: 'directory-tree:explore-directory',
 

@@ -1,6 +1,6 @@
 export const initialParameterState = {
-    source: ''
-}
+    source: '',
+};
 
 
 export type ParameterState = {

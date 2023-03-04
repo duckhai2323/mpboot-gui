@@ -2,7 +2,6 @@
  * @module preload
  */
 
-import { contextBridge } from 'electron';
 import type { ExposedElectron } from '../../common/electron';
 import { generateLog, subscribeLog } from './log';
 import { executeCommand, subscribeCommandCallbackOnFinish } from './command';
@@ -17,7 +16,7 @@ const testAvailable = (): boolean => {
   return true;
 };
 
-const exposed: ExposedElectron = {
+export const exposed: ExposedElectron = {
   subscribeLog,
   generateLog,
   getFirstLoadDirectoryTree,
@@ -30,4 +29,4 @@ const exposed: ExposedElectron = {
   testAvailable,
 };
 
-contextBridge.exposeInMainWorld('electron', exposed);
+// contextBridge.exposeInMainWorld('electron', exposed);

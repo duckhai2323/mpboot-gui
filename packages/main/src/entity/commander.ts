@@ -1,5 +1,4 @@
 import { spawn } from 'child_process';
-import { WebContents } from 'electron';
 
 import { createWriteStream } from 'fs';
 import { writeFile } from 'fs/promises';
@@ -44,7 +43,7 @@ export class Commander {
 
     ls.on('exit', (_code) => {
       logStream.end();
-      onFinish()
+      onFinish();
     });
 
     return {

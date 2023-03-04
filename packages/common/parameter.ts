@@ -11,4 +11,4 @@ export const convertParameterToCommandArgs = (parameter: Parameter): string[] =>
     }
 
     return args;
-}
+};

@@ -14,4 +14,4 @@ export const useElectronImpl = () => {
   return electron;
 };
 
-export const useElectron = singletonHook(unimplementedExposedElectron, useElectronImpl)
+export const useElectron = singletonHook(unimplementedExposedElectron, useElectronImpl);

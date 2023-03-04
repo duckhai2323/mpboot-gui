@@ -1,5 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { initialPhylogenTreeState } from "../state/phylogen-tree.state";
+import type { PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
+import { initialPhylogenTreeState } from '../state/phylogen-tree.state';
 
 export const phylogenTreeSlice = createSlice({
     name: 'phylogen-tree',
@@ -7,13 +8,13 @@ export const phylogenTreeSlice = createSlice({
     reducers: {
         setNewick: (state, action: PayloadAction<string>) => {
             if (!action.payload) {
-                return state
+                return state;
             }
             return {
                 ...state,
-                newick: action.payload
-            }
-        }
+                newick: action.payload,
+            };
+        },
     },
 });
 
