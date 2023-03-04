@@ -3,6 +3,7 @@ import { spawn } from 'child_process';
 import { createWriteStream } from 'fs';
 import { writeFile } from 'fs/promises';
 import { tmpdir } from 'os';
+import { logger } from '../../../common/logger';
 
 export interface ExecuteResult {
   logFile: string;
@@ -24,7 +25,7 @@ export class Commander {
     this.spawnOptions = spawnOptions;
   }
 
-  public async execute(onFinish: () => void): Promise<ExecuteResult> {
+  public async execute(onFinish: (exitCode?: number | null) => void): Promise<ExecuteResult> {
     const logFileName = `${tmpdir()}/log-${this.binary.replaceAll('/', '-')}-${Date.now()}.log`;
     await writeFile(logFileName, '');
     const logStream = createWriteStream(logFileName, { flags: 'a+' });
@@ -43,7 +44,10 @@ export class Commander {
 
     ls.on('exit', (_code) => {
       logStream.end();
-      onFinish();
+      onFinish(_code);
+    });
+    ls.on('error', (err) => {
+      logger.error('Failed to run command', err);
     });
 
     return {

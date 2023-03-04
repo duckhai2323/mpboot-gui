@@ -7,6 +7,7 @@ export class MPBootCommander extends Commander {
         super(binary, args, spawnOptions);
     }
 
+    
     get sourceFilePath(): string {
         const sourceIndex = this.args.indexOf('-s');
         if (sourceIndex !== -1) {

@@ -14,7 +14,7 @@
     "build:preload": "cd ./packages/preload && vite build",
     "build:renderer": "cd ./packages/renderer && vite build",
     "compile": "cross-env MODE=production npm run build && electron-builder build --config .electron-builder.config.js --dir --config.asar=false",
-    "release" : "cross-env MODE=production electron-builder --config .electron-builder.config.js",
+    "release": "cross-env MODE=production electron-builder --config .electron-builder.config.js",
     "test": "npm run test:main && npm run test:preload && npm run test:renderer && npm run test:e2e",
     "test:e2e": "npm run build && vitest run",
     "test:main": "vitest run -r packages/main --passWithNoTests",
@@ -36,6 +36,7 @@
     "@types/node": "18.13.0",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.9",
+    "@types/sqlite3": "^3.1.8",
     "@types/tail": "^2.2.1",
     "@typescript-eslint/eslint-plugin": "^5.42.1",
     "@typescript-eslint/parser": "^5.43.0",
@@ -79,6 +80,7 @@
     "react-router-dom": "^6.2.1",
     "react-singleton-hook": "^4.0.1",
     "react-split-pane": "^2.0.3",
+    "sqlite3": "^5.1.4",
     "tail": "^2.2.6"
   }
 }

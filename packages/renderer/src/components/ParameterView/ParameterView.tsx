@@ -4,13 +4,13 @@ import { logger } from '../../../../common/logger';
 import { useElectron } from '../../hooks/useElectron';
 import { useLog } from '../../hooks/useLog';
 import { usePhylogenTree } from '../../hooks/usePhylogenTree';
-import { useProject } from '../../hooks/useProject';
+import { useWorkspace } from '../../hooks/useWorkspace';
 import { RootState } from '../../redux/store/root';
 
 export const ParameterView = () => {
     const parameter = useSelector((state: RootState) => state.parameter)
     const [, setLogFile] = useLog();
-    const [, getRelativePath] = useProject()
+    const [, getRelativePath] = useWorkspace()
     const [newick, , subscribeCommand] = usePhylogenTree()
     const electron = useElectron()
     

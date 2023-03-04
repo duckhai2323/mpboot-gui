@@ -2,6 +2,7 @@ import type { CommandCallbackOnFinishResult, CommandExecuteResult } from './comm
 import type { ContentFile } from './content-file';
 import type { Directory } from './directory-tree';
 import type { Parameter } from './parameter';
+import type { IWorkspace, WorkspaceChooseDirectoryDialogResult } from './workspace';
 
 export interface CustomEventEmitter {
   on: (event: string, callback: (data: any) => void) => void;
@@ -27,7 +28,11 @@ export interface ExposedElectron {
 
   subscribeCommandCallbackOnFinish: (commandId: string, callback: (result: CommandCallbackOnFinishResult) => void) => Unsubscribe;
 
-  testAvailable: () => boolean
+  openDirectoryForWorkspace: () => Promise<WorkspaceChooseDirectoryDialogResult>;
+  listWorkspaces: () => Promise<IWorkspace[]>;
+  createWorkspace: (dirPath : string) => Promise<IWorkspace>;
+
+  testAvailable: () => Promise<boolean>;
 }
 
 export const unimplementedExposedElectron = {} as ExposedElectron;

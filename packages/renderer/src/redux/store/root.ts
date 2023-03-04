@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { contentFileSlice } from '../slice/content-file.slice';
 import { logSlice } from '../slice/log.slice';
 import { parameterSlice } from '../slice/parameter.slice';
-import { projectSlice } from '../slice/project.slice';
+import { workspaceSlice } from '../slice/workspace.slice';
 import { phylogenTreeSlice } from '../slice/phylogen-tree.slice';
 
 export const store = configureStore({
@@ -11,7 +11,7 @@ export const store = configureStore({
         contentFile: contentFileSlice.reducer,
         parameter: parameterSlice.reducer,
         log: logSlice.reducer,
-        project: projectSlice.reducer,
+        workspace: workspaceSlice.reducer,
         phylogenTree: phylogenTreeSlice.reducer,
     },
 });

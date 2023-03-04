@@ -3,6 +3,7 @@ import { logManagerInstance } from '../entity/log-manager';
 import { IPC_EVENTS } from '../../../common/ipc';
 import { Commander } from '../entity/commander';
 import { logger } from '../../../common/logger';
+import { mpbootExecutablePath } from '../const';
 
 ipcMain.on(IPC_EVENTS.LOG_SUBSCRIBE, (event, logFile) => {
   logger.log('Received LOG_SUBSCRIBE', { logFile });
@@ -12,7 +13,7 @@ ipcMain.on(IPC_EVENTS.LOG_SUBSCRIBE, (event, logFile) => {
 });
 
 ipcMain.handle(IPC_EVENTS.LOG_GENERATE, async (_event, _arg) => {
-  const command = new Commander('/Users/aqaurius6666/Downloads/build/mpboot', ['--help'], {
+  const command = new Commander(mpbootExecutablePath, ['--help'], {
   });
   const result = await command.execute(() => {return;});
   return result.logFile;

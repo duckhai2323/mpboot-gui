@@ -17,4 +17,10 @@ export const IPC_EVENTS = {
 
   COMMAND_EXECUTE: 'command:execute',
   COMMAND_CALLBACK_ON_FINISH: (commandId: string) => `command:${commandId}:callback-on-finish`,
+
+  WORKSPACE_CHOOSE_DIRECTORY_DIALOG: 'workspace:choose-directory-dialog',
+  WORKSPACE_LIST: 'workspace:list',
+  WORKSPACE_CREATE: 'workspace:create',
+
+  AVAILABLE_TEST: 'available:test',
 };

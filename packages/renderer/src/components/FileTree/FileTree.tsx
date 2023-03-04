@@ -8,11 +8,11 @@ import { Directory } from "../../../../common/directory-tree";
 import "./FileTree.css";
 import { useContentView } from "../../hooks/useContentView";
 import { useParameter } from "../../hooks/useParameter";
-import { useProject } from "../../hooks/useProject";
+import { useWorkspace } from "../../hooks/useWorkspace";
 
 
 export const FileTree = () => {
-    const [projectPath] = useProject()
+    const [projectPath] = useWorkspace()
     const [_, openFile] = useContentView();
     const [parameterState, setSource] = useParameter();
     const electron = useElectron();

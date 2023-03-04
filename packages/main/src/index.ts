@@ -3,7 +3,8 @@ import './security-restrictions';
 import { restoreOrCreateWindow } from './mainWindow';
 import { platform } from 'node:process';
 import './ipc';
-
+import './repository/repository';
+import './menu';
 /**
  * Prevent electron from running multiple instances.
  */

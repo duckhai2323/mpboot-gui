@@ -6,13 +6,15 @@ import { logger } from '../../../common/logger';
 import { randomUUID } from 'crypto';
 import type { CommandCallbackOnFinishResult, CommandExecuteResult } from '../../../common/commander';
 import { MPBootCommander } from '../entity/mpboot-commander';
+import { mpbootExecutablePath } from '../const';
+import { WhichCommander } from '../entity/which-commander';
 
 
 ipcMain.handle(IPC_EVENTS.COMMAND_EXECUTE, async (event, param: Parameter) : Promise<CommandExecuteResult> => {
     logger.log('Received COMMAND_EXECUTE', { param });
     const args = convertParameterToCommandArgs(param);
     const commandId = randomUUID();
-    const command = new MPBootCommander('/Users/aqaurius6666/Downloads/build/mpboot', args, {
+    const command = new MPBootCommander(mpbootExecutablePath, args, {
     });
     const result = await command.execute(() => {
         const data : CommandCallbackOnFinishResult = {
@@ -24,4 +26,9 @@ ipcMain.handle(IPC_EVENTS.COMMAND_EXECUTE, async (event, param: Parameter) : Pro
         logFile: result.logFile,
         commandId,
     };
+});
+
+ipcMain.handle(IPC_EVENTS.AVAILABLE_TEST, async () => {
+    const command = new WhichCommander(mpbootExecutablePath);
+    return await command.test();
 });
