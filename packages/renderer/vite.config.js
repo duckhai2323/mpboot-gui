@@ -38,6 +38,8 @@ const config = {
         manualChunks: {
           lodash: ['lodash'],
           react: ['react', 'react-dom', 'react-router-dom', 'redux'],
+          allotment: ['allotment'],
+          phylotree: ['phylotree-visualization-demo', 'phylotree'],
         },
       },
     },
