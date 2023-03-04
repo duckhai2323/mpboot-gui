@@ -35,6 +35,8 @@ jobs:
         with:
           node-version: 18 # Need for npm >=7.7
           cache: 'yarn'
+      
+      - run: yarn install --frozen-lockfile
 
       - run: yarn build
 
