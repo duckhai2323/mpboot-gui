@@ -10,6 +10,7 @@ export const DashboardPage = () => {
     const [, , setWorkspace] = useWorkspace()
     const navigate = useNavigate()
     const [workspaces, setWorkspaces] = useState<IWorkspace[]>([])
+    
     useEffect(() => {
         electron.listWorkspaces().then((workspaces) => {
             setWorkspaces(workspaces)

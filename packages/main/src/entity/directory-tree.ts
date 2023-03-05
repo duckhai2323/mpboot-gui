@@ -2,6 +2,7 @@ import type { AsyncSubscription } from '@parcel/watcher';
 import { subscribe } from '@parcel/watcher';
 import { readFile, stat } from 'fs/promises';
 import { glob } from 'glob';
+import path from 'path';
 import { promisify } from 'util';
 import type { Directory, DirectoryTreeEvent } from '../../../common/directory-tree';
 import { logger } from '../../../common/logger';
@@ -61,8 +62,8 @@ export class DirectoryTree {
   }
 
   public async explore(dirToExplore?: string): Promise<Directory> {
-    const currentPath = dirToExplore ? `${dirToExplore}/` : '';
-    const pattern = currentPath + '*';
+    const currentPath = dirToExplore || '';
+    const pattern = path.join(currentPath, '*');
     const all = await globAsync(pattern, { cwd: this.dirPath });
     const files = await globAsync(pattern, { cwd: this.dirPath, nodir: true });
     const children: Directory[] = [];
@@ -72,49 +73,46 @@ export class DirectoryTree {
     }
     all.forEach(file => {
       children.push({
-        path: `${this.dirPath}/${file}`,
-        name: file.split('/').pop()!,
+        path: path.join(this.dirPath, file),
+        name: path.basename(file),
         children: [],
       });
     });
 
     files.forEach(file => {
       children.push({
-        path: `${this.dirPath}/${file}`,
-        name: file.split('/').pop()!,
+        path: path.join(this.dirPath, file),
+        name: path.basename(file),
       });
     });
     if (dirToExplore === undefined) {
       this.currentDirectory = {
         path: this.dirPath,
-        name: this.dirPath.split('/').pop()!,
+        name: path.basename(this.dirPath),
         children: children,
       };
 
       return this.currentDirectory;
     }
     let targetDir: Directory = this.currentDirectory!;
-    this.findDirAndUpdate(this.currentDirectory!, dirToExplore, dir => {
+    this.findNodeAndDo(this.currentDirectory!, dirToExplore, dir => {
       dir.children = children;
       targetDir = dir;
     });
     return targetDir;
   }
 
-  private findDirAndUpdate(
-    current: Directory,
-    dirPath: string,
-    callback: (dir: Directory) => void,
-  ) {
+  private findNodeAndDo(current: Directory, nodePath: string, callback: (node: Directory) => void) {
     if (!current) return;
-    if (current.children === undefined) return;
 
-    if (current.path === this.dirPath + '/' + dirPath) {
+    if (current.path === path.join(this.dirPath, nodePath)) {
       callback(current);
       return;
     }
+    if (current.children === undefined) return;
+
     for (const child of current.children) {
-      this.findDirAndUpdate(child, dirPath, callback);
+      this.findNodeAndDo(child, nodePath, callback);
     }
   }
 }

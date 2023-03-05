@@ -26,3 +26,7 @@ export const subscribeLog = (logFile: string): CustomEventEmitter => {
 export const generateLog = () => {
   return ipcRenderer.invoke(IPC_EVENTS.LOG_GENERATE);
 };
+
+export const unsubscribeLog = (logFile: string) => {
+  ipcRenderer.send(IPC_EVENTS.LOG_UNSUBSCRIBE, logFile);
+};

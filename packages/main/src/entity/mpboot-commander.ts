@@ -1,3 +1,4 @@
+import path from 'path';
 import type { SpawnOptions } from './commander';
 import { Commander } from './commander';
 
@@ -15,7 +16,7 @@ export class MPBootCommander extends Commander {
   }
 
   get sourceFileName(): string {
-    return this.sourceFilePath.split('/').pop()!;
+    return path.basename(this.sourceFilePath);
   }
 
   get generatedTreeFilePath(): string {

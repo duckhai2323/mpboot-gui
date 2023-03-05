@@ -13,6 +13,12 @@ export const contentFileSlice = createSlice({
         ...action.payload,
       };
     },
+    clear: _state => {
+      return {
+        path: '',
+        name: '',
+      };
+    },
     openFile: (state, action: PayloadAction<Partial<ContentFileState>>) => {
       if (!action.payload.path || !action.payload.name) {
         return state;

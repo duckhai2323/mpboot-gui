@@ -50,7 +50,7 @@ app
  * Install Vue.js or any other extension in development mode only.
  * Note: You must install `electron-devtools-installer` manually
  */
-if (import.meta.env.DEV) {
+if (isDevEnv) {
   app
     .whenReady()
     .then(() => import('electron-devtools-installer'))

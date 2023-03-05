@@ -1,6 +1,7 @@
 import type { CommandCallbackOnFinishResult, CommandExecuteResult } from './commander';
 import type { ContentFile } from './content-file';
 import type { Directory } from './directory-tree';
+import type { ShowContextMenuRequest } from './menu';
 import type { Parameter } from './parameter';
 import type { IWorkspace, WorkspaceChooseDirectoryDialogResult } from './workspace';
 
@@ -16,6 +17,7 @@ export interface Unsubscribe {
 export interface ExposedElectron {
   subscribeLog: (logFile: string) => CustomEventEmitter;
   generateLog: () => Promise<string>;
+  unsubscribeLog: (logFile: string) => void;
 
   subscribeDirectoryTree: (dirPath: string) => CustomEventEmitter;
   getFirstLoadDirectoryTree: (dirPath: string) => Promise<Directory>;
@@ -39,6 +41,8 @@ export interface ExposedElectron {
 
   dirname: (path: string) => string;
   basename: (path: string) => string;
+
+  showContentMenu: (req: ShowContextMenuRequest) => void;
 }
 
 export const unimplementedExposedElectron = {} as ExposedElectron;

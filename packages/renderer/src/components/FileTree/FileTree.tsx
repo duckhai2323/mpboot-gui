@@ -1,17 +1,17 @@
-import React from "react";
-import FolderTree from 'react-folder-tree';
-import 'react-folder-tree/dist/style.css';
+import React, { useEffect } from "react";
+import FolderTree from '@aqaurius1910/react-folder-tree';
+import '@aqaurius6666/react-folder-tree/dist/style.css';
 import "./FileTree.css";
 import { useFileTree } from "../../hooks/useFileTree";
 
 
 export const FileTree = () => {
-    const [nodeData, onTreeStateChange, onNameClick] = useFileTree()
+    const [nodeData, onTreeStateChange, onNameClick, onContextMenu] = useFileTree()
 
     if (!nodeData) return <div></div>
 
     return (
-        <div>
+        <div onContextMenu={onContextMenu}>
             <FolderTree
                 data={nodeData}
                 onChange={onTreeStateChange}

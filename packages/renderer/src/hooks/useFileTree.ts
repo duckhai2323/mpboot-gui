@@ -1,3 +1,4 @@
+import type { MouseEventHandler } from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import type { NodeData } from 'react-folder-tree';
 import { singletonHook } from 'react-singleton-hook';
@@ -12,6 +13,7 @@ import { useContentView } from './useContentView';
 import { useElectron } from './useElectron';
 import { useParameter } from './useParameter';
 import { useWorkspace } from './useWorkspace';
+import { findTargetNode } from 'use-tree-state';
 
 const unimplementedUseFileTree = (): [
   nodeData: NodeData | undefined,
@@ -23,6 +25,7 @@ const unimplementedUseFileTree = (): [
     defaultOnClick: () => void;
     nodeData: NodeData;
   }) => void,
+  onContextMenu: MouseEventHandler<HTMLElement>,
 ] => {
   return [
     {} as NodeData,
@@ -32,6 +35,9 @@ const unimplementedUseFileTree = (): [
     ({ defaultOnClick, nodeData }: { defaultOnClick: () => void; nodeData: NodeData }) => {
       defaultOnClick();
       const _ = nodeData;
+      return;
+    },
+    (_event: any) => {
       return;
     },
   ];
@@ -47,6 +53,7 @@ const useFileTreeImpl = (): [
     defaultOnClick: () => void;
     nodeData: NodeData;
   }) => void,
+  onContextMenu: MouseEventHandler<HTMLElement>,
 ] => {
   const [projectPath] = useWorkspace();
   const [_, openFile] = useContentView();
@@ -55,7 +62,7 @@ const useFileTreeImpl = (): [
   const [nodeData, setNodeData] = useState<NodeData>();
 
   useEffect(() => {
-    if (!nodeData) return;
+    if (!projectPath) return;
     const emitter = electron.subscribeDirectoryTree(projectPath);
     emitter.on('data', (events: DirectoryTreeEvent[]) => {
       onDirectoryTreeEvents(events);
@@ -63,7 +70,7 @@ const useFileTreeImpl = (): [
     return () => {
       emitter.unregister();
     };
-  }, [nodeData]);
+  }, [projectPath]);
 
   useEffect(() => {
     (async () => {
@@ -72,7 +79,7 @@ const useFileTreeImpl = (): [
       const directory = await electron.getFirstLoadDirectoryTree(projectPath);
       setNodeData(convertDirectoryToNodeData(directory));
     })();
-  }, [electron]);
+  }, [electron, projectPath]);
 
   const onDirectoryTreeEvents = useCallback(
     (events: DirectoryTreeEvent[]) => {
@@ -187,7 +194,24 @@ const useFileTreeImpl = (): [
     [JSON.stringify(nodeData), nodeData],
   );
 
-  return [nodeData, onTreeStateChange, onNameClick];
+  const onContextMenu: MouseEventHandler<HTMLElement> = useCallback(
+    e => {
+      e.preventDefault();
+      const { clientX, clientY } = e;
+      const targetElement = e.target as HTMLElement;
+      const { folderTreePath } = targetElement.dataset;
+      const node = findTargetNode(nodeData, JSON.parse(folderTreePath!));
+      electron.showContentMenu({
+        x: clientX,
+        y: clientY,
+        type: node.type == 'directory' ? 'file-tree-item-directory' : 'file-tree-item-file',
+        data: node.id,
+      });
+    },
+    [nodeData],
+  );
+
+  return [nodeData, onTreeStateChange, onNameClick, onContextMenu];
 };
 
 export const useFileTree = singletonHook(unimplementedUseFileTree, useFileTreeImpl);

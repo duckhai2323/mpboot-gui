@@ -14,7 +14,6 @@ import { TreePreview, TreePreviewWithSize } from '../components/TreePreview/Tree
 
 export const MainPage = () => {
     const size = useWindowSize();
-    const ref = React.useRef<HTMLDivElement>(null);
     return (
         <Allotment >
             <Allotment.Pane minSize={size.width * 0.1} className="allotment__pane--scroll-on-overflow-y" >

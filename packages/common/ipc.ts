@@ -4,6 +4,7 @@ export const IPC_EVENTS = {
   LOG_SUBSCRIBE: 'log:subscribe',
   LOG_FILE_OF: (logFile: string) => `log:file-${md5(logFile)}`,
   LOG_GENERATE: 'log:generate',
+  LOG_UNSUBSCRIBE: 'log:unsubscribe',
 
   DIRECTORY_TREE_SUBSCRIBE: 'directory-tree:subscribe',
   DIRECTORY_TREE_CHANGE_OF: (dirPath: string) => `directory-tree:change-${md5(dirPath)}`,
@@ -22,4 +23,6 @@ export const IPC_EVENTS = {
   WORKSPACE_CREATE: 'workspace:create',
 
   AVAILABLE_TEST: 'available:test',
+
+  CONTEXT_MENU_SHOW: 'context-menu:show',
 };

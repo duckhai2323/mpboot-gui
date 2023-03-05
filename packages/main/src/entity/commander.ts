@@ -3,6 +3,7 @@ import { spawn } from 'child_process';
 import { createWriteStream } from 'fs';
 import { writeFile } from 'fs/promises';
 import { tmpdir } from 'os';
+import { join } from 'path';
 import { logger } from '../../../common/logger';
 
 export interface ExecuteResult {
@@ -26,7 +27,7 @@ export class Commander {
   }
 
   public async execute(onFinish: (exitCode?: number | null) => void): Promise<ExecuteResult> {
-    const logFileName = `${tmpdir()}/log-${this.binary.replaceAll('/', '-')}-${Date.now()}.log`;
+    const logFileName = join(tmpdir(), `mpbootgui-${Date.now()}.log`);
     await writeFile(logFileName, '');
     const logStream = createWriteStream(logFileName, { flags: 'a+' });
     const ls = spawn(this.binary, this.args, {

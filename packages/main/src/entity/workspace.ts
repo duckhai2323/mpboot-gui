@@ -1,3 +1,5 @@
+import { basename } from 'path';
+
 export class Workspace {
   public id: number;
   public name: string;
@@ -8,7 +10,7 @@ export class Workspace {
     this.createdAt = new Date();
     this.updatedAt = new Date();
     this.path = path;
-    this.name = path.split('/').pop()!;
+    this.name = basename(path);
   }
 
   public static fromRow(row: any): Workspace {

@@ -3,7 +3,7 @@
  */
 
 import type { ExposedElectron } from '../../common/electron';
-import { generateLog, subscribeLog } from './log';
+import { generateLog, subscribeLog, unsubscribeLog } from './log';
 import { executeCommand, subscribeCommandCallbackOnFinish } from './command';
 import { openContentFile, readContentFile } from './content-file';
 import { createWorkspace, listWorkspaces, openDirectoryForWorkspace } from './workspace';
@@ -16,6 +16,7 @@ import { contextBridge, ipcRenderer } from 'electron';
 import { IPC_EVENTS } from '../../common/ipc';
 import { dirname } from './fs';
 import { basename } from 'path';
+import { showContentMenu } from './menu';
 
 export { sha256sum } from './nodeCrypto';
 export { versions } from './versions';
@@ -42,6 +43,8 @@ export const exposed: ExposedElectron = {
   openDirectoryForWorkspace,
   dirname: dirname,
   basename: basename,
+  unsubscribeLog: unsubscribeLog,
+  showContentMenu: showContentMenu,
 };
 
 contextBridge.exposeInMainWorld('electron', exposed);

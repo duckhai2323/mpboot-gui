@@ -7,6 +7,9 @@ import { mpbootExecutablePath } from '../const';
 
 ipcMain.on(IPC_EVENTS.LOG_SUBSCRIBE, (event, logFile) => {
   logger.log('Received LOG_SUBSCRIBE', { logFile });
+  if (!logManagerInstance.isValidLogFile(logFile)) {
+    return;
+  }
   logManagerInstance.subscribeLog(logFile, data => {
     event.sender.send(IPC_EVENTS.LOG_FILE_OF(logFile), data);
   });
@@ -18,4 +21,13 @@ ipcMain.handle(IPC_EVENTS.LOG_GENERATE, async (_event, _arg) => {
     return;
   });
   return result.logFile;
+});
+
+ipcMain.on(IPC_EVENTS.LOG_UNSUBSCRIBE, (_event, logFile) => {
+  logger.log('Received LOG_UNSUBSCRIBE', { logFile });
+  if (!logManagerInstance.isValidLogFile(logFile)) {
+    return;
+  }
+  logManagerInstance.unsubscribeLog(logFile);
+  return;
 });

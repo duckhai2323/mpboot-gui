@@ -1,4 +1,5 @@
 import { readFile } from 'fs/promises';
+import { basename } from 'path';
 
 export class ContentFile {
   public readonly filePath: string;
@@ -8,7 +9,7 @@ export class ContentFile {
 
   constructor(filePath: string) {
     this.filePath = filePath;
-    this.fileName = filePath.split('/').pop()!;
+    this.fileName = basename(filePath);
     this.fileContent = '';
   }
 
