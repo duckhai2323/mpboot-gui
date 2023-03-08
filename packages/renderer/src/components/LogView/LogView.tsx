@@ -12,7 +12,7 @@ export interface LogViewProps {
 }
 
 export const LogView: FC = (props: LogViewProps) => {
-    const [logState, , reloadLog] = useLog()
+    const [logData, , reloadLog] = useLog()
 
 
     return (
@@ -21,11 +21,11 @@ export const LogView: FC = (props: LogViewProps) => {
             <div style={{ height: "90%" }}>
                 <LogViewer
                     hasLineNumbers={false}
-                    data={logState.logData}
+                    data={logData}
                     theme="light"
                     isTextWrapped={true}
                     height="100%"
-                    scrollToRow={logState.logData.length}
+                    scrollToRow={logData.length}
                     toolbar={
                         <Toolbar>
                             <ToolbarContent>

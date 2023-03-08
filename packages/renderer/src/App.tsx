@@ -1,11 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import { HashRouter, Route, Routes } from 'react-router-dom';
-import { MainPage } from './pages/main';
-import { TreeViewPage } from './pages/tree-view';
+
+// import { MainPage } from './pages/main';
+// import { TreeViewPage } from './pages/tree-view';
 import "./App.css";
 import { useWindowSize } from 'usehooks-ts';
 import { useElectron } from './hooks/useElectron';
-import { DashboardPage } from './pages/dashboard';
+// import { DashboardPage } from './pages/dashboard';
+
+const MainPage = lazy(() => import('./pages/main').then((module) => ({ default: module.MainPage })));
+const TreeViewPage = lazy(() => import('./pages/tree-view').then((module) => ({ default: module.TreeViewPage })));
+const DashboardPage = lazy(() => import('./pages/dashboard').then((module) => ({ default: module.DashboardPage })));
 
 function App() {
 	const size = useWindowSize();
@@ -14,7 +19,7 @@ function App() {
 
 	useEffect(() => {
 		if (!electron || typeof electron.testAvailable !== "function") return;
-		
+
 		electron.testAvailable().then((res) => {
 			if (!res) {
 				setErrMsg("mpboot executable is not available")
@@ -45,14 +50,16 @@ function App() {
 	return (
 
 		<div style={{ width: size.width, height: size.height }}>
-			<HashRouter>
-				<Routes>
-					<Route path="/dashboard" element={<DashboardPage />} />
-					<Route path="/main" element={<MainPage />} />
-					<Route path="/tree-view" element={<TreeViewPage />} />
-					<Route path='*' element={<DashboardPage />} />
-				</Routes>
-			</HashRouter>
+			<Suspense fallback={<div>Loading...</div>}>
+				<HashRouter>
+					<Routes>
+						<Route path="/dashboard" element={<DashboardPage />} />
+						<Route path="/main" element={<MainPage />} />
+						<Route path="/tree-view" element={<TreeViewPage />} />
+						<Route path='*' element={<DashboardPage />} />
+					</Routes>
+				</HashRouter>
+			</Suspense>
 		</div>
 
 	)

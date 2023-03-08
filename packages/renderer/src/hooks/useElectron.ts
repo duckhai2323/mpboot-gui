@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useDebugValue, useEffect, useMemo, useState } from 'react';
 import { singletonHook } from 'react-singleton-hook';
 import type { ExposedElectron } from '../../../common/electron';
 import { unimplementedExposedElectron } from '../../../common/electron';
@@ -6,6 +6,9 @@ import type { ContextMenuType } from '../../../common/menu';
 
 export const useElectronImpl = () => {
   const [electron, setElectron] = useState<ExposedElectron>(unimplementedExposedElectron);
+
+  useDebugValue(electron === unimplementedExposedElectron ? 'not ready' : 'ready')
+
   useMemo(() => {
     if (window) {
       setElectron(() => window.electron);

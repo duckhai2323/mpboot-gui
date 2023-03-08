@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useRoutes } from 'react-router-dom'
-import { logger } from '../../../common/logger'
+import { useNavigate } from 'react-router-dom'
 import { IWorkspace } from '../../../common/workspace'
 import { useElectron } from '../hooks/useElectron'
 import { useWorkspace } from '../hooks/useWorkspace'

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useDebugValue, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { singletonHook } from 'react-singleton-hook';
 import { Actions } from '../redux/slice/log.slice';
@@ -6,12 +6,12 @@ import type { LogState } from '../redux/state/log.state';
 import type { RootState } from '../redux/store/root';
 import { useElectron } from './useElectron';
 const unimplementedUseLog = (): [
-  logState: LogState,
+  logData: string[],
   setLogFile: (filePath: string) => void,
   reloadLog: () => void,
 ] => {
   return [
-    { logData: [], logFile: '' } as LogState,
+    [],
     (_filePath: string) => {
       return;
     },
@@ -21,7 +21,7 @@ const unimplementedUseLog = (): [
   ];
 };
 const useLogImpl = (): [
-  logState: LogState,
+  logData: string[],
   setLogFile: (filePath: string) => void,
   reloadLog: () => void,
 ] => {
@@ -34,51 +34,51 @@ const useLogImpl = (): [
   /**
    * Render whenever log file changes
    */
-  // useEffect(() => {
-  //   const logStream = electron.subscribeLog(logState.logFile);
-  //   logStream.on('data', (data: string) => {
-  //     dispatch(
-  //       Actions.appendLogData({
-  //         logData: [data],
-  //       }),
-  //     );
-  //   });
-  //   return () => {
-  //     logStream.unregister();
-  //   };
-  // }, [logState.logFile, counter]);
-
-  /**
-   * Flush data to redux store after 250ms of inactivity
-   */
-  useEffect(() => {
-    if (dataToBeFlushed.length === 0) {
-      return;
-    }
-    const timeout = setTimeout(() => {
-      dispatch(
-        Actions.appendLogData({
-          logData: dataToBeFlushed,
-        }),
-      );
-      setDataToBeFlushed([]);
-    }, 250);
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [dataToBeFlushed]);
-
-  const onLogStreamEvent = useCallback((data: string) => {
-    setDataToBeFlushed(d => [...d, data]);
-  }, []);
-
   useEffect(() => {
     const logStream = electron.subscribeLog(logState.logFile);
-    logStream.on('data', onLogStreamEvent);
+    logStream.on('data', (data: string) => {
+      dispatch(
+        Actions.appendLogData({
+          logData: [data],
+        }),
+      );
+    });
     return () => {
       logStream.unregister();
     };
   }, [logState.logFile, counter]);
+
+  /**
+   * Flush data to redux store after 250ms of inactivity
+   */
+  // useEffect(() => {
+  //   if (dataToBeFlushed.length === 0) {
+  //     return;
+  //   }
+  //   const timeout = setTimeout(() => {
+  //     dispatch(
+  //       Actions.appendLogData({
+  //         logData: dataToBeFlushed,
+  //       }),
+  //     );
+  //     setDataToBeFlushed([]);
+  //   }, 250);
+  //   return () => {
+  //     clearTimeout(timeout);
+  //   };
+  // }, [dataToBeFlushed]);
+
+  // const onLogStreamEvent = useCallback((data: string) => {
+  //   setDataToBeFlushed(d => [...d, data]);
+  // }, []);
+
+  // useEffect(() => {
+  //   const logStream = electron.subscribeLog(logState.logFile);
+  //   logStream.on('data', onLogStreamEvent);
+  //   return () => {
+  //     logStream.unregister();
+  //   };
+  // }, [logState.logFile, counter]);
 
   const reloadLog = useCallback(async () => {
     electron.unsubscribeLog(logState.logFile);
@@ -98,7 +98,10 @@ const useLogImpl = (): [
       }),
     );
   }, []);
-  return [logState, setLogFile, reloadLog];
+  
+  const logData = useMemo(() => logState.logData, [logState.logData.length])
+
+  return [logData, setLogFile, reloadLog];
 };
 
 export const useLog = singletonHook(unimplementedUseLog, useLogImpl);

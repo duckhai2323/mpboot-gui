@@ -1,5 +1,5 @@
 import { Allotment } from 'allotment';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 // @ts-ignore
 import { useWindowSize } from 'usehooks-ts';
@@ -7,10 +7,9 @@ import { ContentView } from '../components/ContentView/ContentView';
 import { FileTree } from '../components/FileTree/FileTree';
 import { LogView } from '../components/LogView/LogView';
 import { ParameterView } from '../components/ParameterView/ParameterView';
-import { TreeView, TreeViewWithSize } from '../components/TreeView/TreeView';
 import "allotment/dist/style.css";
 import "./main.css";
-import { TreePreview, TreePreviewWithSize } from '../components/TreePreview/TreePreview';
+import { TreePreviewWithSize } from '../components/TreePreview/TreePreview';
 
 export const MainPage = () => {
     const size = useWindowSize();

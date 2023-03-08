@@ -1,42 +1,35 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useContentView } from '../../hooks/useContentView';
+import { PhyRenderedContent } from './PhyRenderedContent';
+import { TxtRenderedContent } from './TxtRenderedContent';
+import "./ContentView.css"
 
 export const ContentView = () => {
     const [contentFile,] = useContentView();
 
+    const memoContent = useMemo(() => {
+        return contentFile.content
+    }, [contentFile])
+    
 
-    const getColorForADN = useCallback((char: string) => {
-        const colors = {
-            A: 'blue',
-            T: 'cyan',
-            G: 'teal',
-            X: 'purple',
-            N: 'violet',
-            C: 'magenta'
-        };
-        return (colors as any)[char] || 'black'
-    }, [])
 
-    const renderContent = useMemo(() => {
-        const content = contentFile.content
-        if (!content) return <></>
-        let components = []
-        let lastCharacters = content[0]
-        for (let i = 1; i < content.length; i++) {
-            if (lastCharacters[0] !== content[i]) {
-                components.push(<span style={{ color: getColorForADN(lastCharacters[0]) }}>{lastCharacters}</span>)
-                lastCharacters = content[i]
-            } else {
-                lastCharacters += content[i]
-            }
+    const renderComponent = useMemo(() => {
+        if (!memoContent) {
+            return (
+                <div>
+                    <h1>File is empty!</h1>
+                </div>
+            )
         }
-        components.push(<span style={{ color: getColorForADN(lastCharacters[0]) }}>{lastCharacters}</span>)
+        if (contentFile.name.endsWith('.phy')) {
+            return (
+                <PhyRenderedContent content={memoContent} className="content-view" />
+            )
+        }
         return (
-            <>
-                {components}
-            </>
+            <TxtRenderedContent content={memoContent} className="content-view" />
         )
-    }, [contentFile.content])
+    }, [memoContent])
     if (!contentFile.name) {
         return (
             <div>
@@ -44,12 +37,11 @@ export const ContentView = () => {
             </div>
         )
     }
+
     return (
-        <>
-            <pre>
-                {renderContent}
-            </pre>
-        </>
+        <div style={{height: "100%"}}>
+            {renderComponent}
+        </div>
     )
 }
 

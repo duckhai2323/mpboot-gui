@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import type { IWorkspace } from '../../../common/workspace';
 import { Actions } from '../redux/slice/workspace.slice';
@@ -11,7 +11,8 @@ export const useWorkspace = (): [
 ] => {
   const workspaceState = useSelector((state: RootState) => state.workspace);
   const dispatch = useDispatch();
-  const workspacePath = workspaceState.dirPath;
+  
+  const workspacePath = useMemo(() => workspaceState.dirPath, [workspaceState]);
 
   const getRelativePath = useCallback(
     (path: string) => {

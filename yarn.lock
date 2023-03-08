@@ -15,10 +15,10 @@
     "@jridgewell/gen-mapping" "^0.1.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@aqaurius1910/react-folder-tree@^5.0.3":
+"@aqaurius6666/react-folder-tree@5.0.3":
   version "5.0.3"
-  resolved "https://registry.yarnpkg.com/@aqaurius1910/react-folder-tree/-/react-folder-tree-5.0.3.tgz#f508dc04000d489a390d85a02d8a2c3f1106da3e"
-  integrity sha512-IaRRSZufpp2ETXrKgW8KrozekbaHVmekrfAEulEScA4o6kwtFE29Qv39MZpsuGo1e9sfaLdXDLbj3Rn/G+YOow==
+  resolved "https://registry.yarnpkg.com/@aqaurius6666/react-folder-tree/-/react-folder-tree-5.0.3.tgz#ccc99025636820d279f229f052fa1dbe7de57719"
+  integrity sha512-q0ZOLnYvJ3OWPhMAelXsbi/bVBoukEgKPNh5eaOLgSfDByMHuL644E0FaAoSSuLRii3v6RyT0SA5TaxLH7Kr2A==
   dependencies:
     prop-types "^15.7.2"
     react-icons "^4.1.0"
