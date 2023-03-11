@@ -1,47 +1,19 @@
 import type { MouseEventHandler } from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import type { NodeData } from 'react-folder-tree';
-import { singletonHook } from 'react-singleton-hook';
 import type { Directory, DirectoryTreeEvent } from '../../../common/directory-tree';
 import { logger } from '../../../common/logger';
 import {
   convertDirectoryToNodeData,
   findNodeDataAndUpdate,
-  getRelativePath,
 } from '../components/FileTree/convert-directory-to-node-data';
 import { useContentView } from './useContentView';
 import { useElectron } from './useElectron';
 import { useParameter } from './useParameter';
-import { useWorkspace } from './useWorkspace';
 import { findTargetNode } from 'use-tree-state';
-
-const unimplementedUseFileTree = (): [
-  nodeData: NodeData | undefined,
-  onTreeStateChange: (state: any, event: any) => void,
-  onNameClick: ({
-    defaultOnClick,
-    nodeData,
-  }: {
-    defaultOnClick: () => void;
-    nodeData: NodeData;
-  }) => void,
-  onContextMenu: MouseEventHandler<HTMLElement>,
-] => {
-  return [
-    {} as NodeData,
-    (_state: any, _event: any) => {
-      return;
-    },
-    ({ defaultOnClick, nodeData }: { defaultOnClick: () => void; nodeData: NodeData }) => {
-      defaultOnClick();
-      const _ = nodeData;
-      return;
-    },
-    (_event: any) => {
-      return;
-    },
-  ];
-};
+import { useSelector } from 'react-redux';
+import type { RootState } from '../redux/store/root';
+import { getRelativePath } from '../utils/fs';
 
 const useFileTreeImpl = (): [
   nodeData: NodeData | undefined,
@@ -55,37 +27,22 @@ const useFileTreeImpl = (): [
   }) => void,
   onContextMenu: MouseEventHandler<HTMLElement>,
 ] => {
-  const [projectPath] = useWorkspace();
-  const [_, openFile] = useContentView();
-  const [, setSource] = useParameter();
+  const { dirPath } = useSelector((state: RootState) => state.workspace);
+  const [openFile] = useContentView();
+  const [setSource] = useParameter();
   const electron = useElectron();
   const [nodeData, setNodeData] = useState<NodeData>();
 
   useEffect(() => {
-    if (!projectPath) return;
-    const emitter = electron.subscribeDirectoryTree(projectPath);
-    emitter.on('data', (events: DirectoryTreeEvent[]) => {
-      onDirectoryTreeEvents(events);
-    });
-    return () => {
-      emitter.unregister();
-    };
-  }, [projectPath]);
-
-  useEffect(() => {
     (async () => {
-      if (!electron) return;
-
-      const directory = await electron.getFirstLoadDirectoryTree(projectPath);
+      const directory = await electron.getFirstLoadDirectoryTree(dirPath);
       setNodeData(convertDirectoryToNodeData(directory));
     })();
-  }, [electron, projectPath]);
+  }, [dirPath]);
 
   const onDirectoryTreeEvents = useCallback(
     (events: DirectoryTreeEvent[]) => {
       if (!nodeData) return;
-
-      // logger.log("onDirectoryTreeEvents", {events, nodeData})
 
       const _tmp = { ...nodeData };
       let isChanged = false;
@@ -150,12 +107,24 @@ const useFileTreeImpl = (): [
         setNodeData(_tmp);
       }
     },
-    [JSON.stringify(nodeData), nodeData],
+    [JSON.stringify(nodeData)],
   );
 
-  const onTreeStateChange = (state: any, event: any) => {
+  useEffect(() => {
+    if (!dirPath) return;
+    const emitter = electron.subscribeDirectoryTree(dirPath);
+    emitter.on('data', (events: DirectoryTreeEvent[]) => {
+      onDirectoryTreeEvents(events);
+    });
+    return () => {
+      emitter.unregister();
+    };
+  }, [dirPath, onDirectoryTreeEvents]);
+
+  const onTreeStateChange = useCallback((state: any, event: any) => {
     logger.log('state change', { state, event });
-  };
+  }, []);
+
   const onNameClick = useCallback(
     ({
       defaultOnClick,
@@ -169,13 +138,14 @@ const useFileTreeImpl = (): [
       if (clickedNodeData.type === 'file') {
         openFile(clickedNodeData.id);
         setSource(clickedNodeData.id);
+        return;
       }
       if (clickedNodeData.type === 'directory') {
         if (clickedNodeData.explored) {
           clickedNodeData.isOpen = !clickedNodeData.isOpen;
         } else {
           electron
-            .exploreDirectory(projectPath, getRelativePath(projectPath, clickedNodeData.id))
+            .exploreDirectory(dirPath, getRelativePath(clickedNodeData.id, dirPath))
             .then(async (data: Directory) => {
               const node = convertDirectoryToNodeData(data);
               const _tmp = { ...nodeData };
@@ -191,7 +161,7 @@ const useFileTreeImpl = (): [
       }
       defaultOnClick();
     },
-    [JSON.stringify(nodeData), nodeData],
+    [JSON.stringify(nodeData), dirPath],
   );
 
   const onContextMenu: MouseEventHandler<HTMLElement> = useCallback(
@@ -208,10 +178,10 @@ const useFileTreeImpl = (): [
         data: node.id,
       });
     },
-    [nodeData],
+    [JSON.stringify(nodeData)],
   );
 
   return [nodeData, onTreeStateChange, onNameClick, onContextMenu];
 };
 
-export const useFileTree = singletonHook(unimplementedUseFileTree, useFileTreeImpl);
+export const useFileTree = useFileTreeImpl;
