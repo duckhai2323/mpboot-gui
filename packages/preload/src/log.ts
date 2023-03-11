@@ -18,6 +18,7 @@ export const subscribeLog = (logFile: string): CustomEventEmitter => {
     },
     unregister: () => {
       emitter.removeAllListeners();
+      ipcRenderer.send(IPC_EVENTS.LOG_UNSUBSCRIBE, logFile);
       ipcRenderer.off(IPC_EVENTS.LOG_FILE_OF(logFile), onLogListener);
     },
   };

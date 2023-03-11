@@ -31,6 +31,8 @@
       { "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
     ],
     "@typescript-eslint/no-var-requires": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/consistent-type-imports": "error",
     /**
      * Having a semicolon helps the optimizer interpret your code correctly.

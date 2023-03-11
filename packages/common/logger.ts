@@ -1,8 +1,9 @@
+export type Context = unknown;
 export interface Logger {
-  log(message: string, context?: any): void;
+  log(message: string, context?: Context): void;
   error(message: string, err?: Error): void;
-  warn(message: string, context?: any): void;
-  debug(message: string, context?: any): void;
+  warn(message: string, context?: Context): void;
+  debug(message: string, context?: Context): void;
 }
 export enum LogLevel {
   DEBUG = 0,
@@ -31,9 +32,11 @@ export class ConsoleLogger implements Logger {
     this.level = level;
   }
   private formatMessage(logLevel: LogLevel, message: string): string {
-    return `${new Date().toISOString()} ${LogLevelToColor[logLevel]}[${LogLevelToString[logLevel]}]\x1b[0m: ${message}`;
+    return `${new Date().toISOString()} ${LogLevelToColor[logLevel]}[${
+      LogLevelToString[logLevel]
+    }]\x1b[0m: ${message}`;
   }
-  debug(message: string, context?: any): void {
+  debug(message: string, context?: Context): void {
     if (this.level > LogLevel.DEBUG) {
       return;
     }
@@ -44,7 +47,7 @@ export class ConsoleLogger implements Logger {
     }
   }
 
-  log(message: string, context?: any): void {
+  log(message: string, context?: Context): void {
     if (this.level > LogLevel.INFO) {
       return;
     }
@@ -64,7 +67,7 @@ export class ConsoleLogger implements Logger {
       console.error(this.formatMessage(LogLevel.ERROR, message));
     }
   }
-  warn(message: string, context?: any): void {
+  warn(message: string, context?: Context): void {
     if (this.level > LogLevel.WARN) {
       return;
     }

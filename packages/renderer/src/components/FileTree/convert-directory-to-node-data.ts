@@ -1,4 +1,4 @@
-import type { NodeData } from 'react-folder-tree';
+import type { NodeData } from '@aqaurius6666/react-folder-tree';
 import type { Directory } from '../../../../common/directory-tree';
 
 export const convertDirectoryToNodeData = (directory: Directory): NodeData => {

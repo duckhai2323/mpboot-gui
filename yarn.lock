@@ -5045,15 +5045,6 @@ react-dropzone@9.0.0:
     prop-types "^15.6.2"
     prop-types-extra "^1.1.0"
 
-react-folder-tree@^5.0.3:
-  version "5.1.1"
-  resolved "https://registry.yarnpkg.com/react-folder-tree/-/react-folder-tree-5.1.1.tgz#ac578c4b769bee462e2011812636b935eadf5b3a"
-  integrity sha512-lqXSXxaf4KD3abV9W9DXSrGI1YtFxQSGm73jSBU25G7IK0BKfRv8FB+WHm2tTMK637mSnWVBirwt6LsE/Pmq8g==
-  dependencies:
-    prop-types "^15.7.2"
-    react-icons "^4.1.0"
-    use-tree-state "1.0.0"
-
 react-html-attributes@^1.4.2:
   version "1.4.6"
   resolved "https://registry.yarnpkg.com/react-html-attributes/-/react-html-attributes-1.4.6.tgz#9558b56bb81c60f6cee9ae7d5e97434a59c086ff"

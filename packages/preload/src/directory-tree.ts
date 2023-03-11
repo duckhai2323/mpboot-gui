@@ -23,6 +23,7 @@ export const subscribeDirectoryTree = (dirPath: string): CustomEventEmitter => {
     },
     unregister: () => {
       emitter.removeAllListeners();
+      ipcRenderer.send(IPC_EVENTS.DIRECTORY_TREE_UNSUBSCRIBE, dirPath);
       ipcRenderer.off(IPC_EVENTS.DIRECTORY_TREE_CHANGE_OF(dirPath), onChangeOfDirectoryEvent);
     },
   };

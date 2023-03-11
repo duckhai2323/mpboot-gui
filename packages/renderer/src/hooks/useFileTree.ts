@@ -1,6 +1,5 @@
 import type { MouseEventHandler } from 'react';
 import { useCallback, useEffect, useState } from 'react';
-import type { NodeData } from 'react-folder-tree';
 import type { Directory, DirectoryTreeEvent } from '../../../common/directory-tree';
 import { logger } from '../../../common/logger';
 import {
@@ -14,6 +13,7 @@ import { findTargetNode } from 'use-tree-state';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../redux/store/root';
 import { getRelativePath } from '../utils/fs';
+import type { NodeData } from '@aqaurius6666/react-folder-tree';
 
 const useFileTreeImpl = (): [
   nodeData: NodeData | undefined,
@@ -40,86 +40,82 @@ const useFileTreeImpl = (): [
     })();
   }, [dirPath]);
 
-  const onDirectoryTreeEvents = useCallback(
-    (events: DirectoryTreeEvent[]) => {
-      if (!nodeData) return;
-
-      const _tmp = { ...nodeData };
-      let isChanged = false;
-      events.forEach(event => {
-        if (event.type === 'create') {
-          const parentPath = electron.dirname(event.path);
-          findNodeDataAndUpdate(_tmp, parentPath, found => {
-            if (found.children?.findIndex(e => e.id == event.path) !== -1) {
-              logger.warn('already exists create directory tree', event.path);
-              return;
+  const reduceNodeData = useCallback((node: NodeData, events: DirectoryTreeEvent[]): NodeData => {
+    const tmp = { ...node };
+    let isChanged = false;
+    for (const event of events) {
+      const parentPath = electron.dirname(event.path);
+      if (event.type === 'create') {
+        findNodeDataAndUpdate(tmp, parentPath, found => {
+          if (found.children?.findIndex(e => e.id == event.path) !== -1) {
+            logger.warn('already exists create directory tree', event.path);
+            return;
+          }
+          const children = found.children || [];
+          const nodeToPush = {
+            id: event.path,
+            name: electron.basename(event.path),
+            isOpen: false,
+            ...(event.isDirectory
+              ? {
+                  children: [],
+                  type: 'directory',
+                  explored: false,
+                }
+              : {
+                  type: 'file',
+                }),
+          };
+          children.push(nodeToPush);
+          children.sort((a, b) => {
+            if (a.type === 'directory' && b.type === 'file') {
+              return -1;
             }
-            const _children = found.children || [];
-            const nodeToPush = {
-              id: event.path,
-              name: electron.basename(event.path),
-              isOpen: false,
-              ...(event.isDirectory
-                ? {
-                    children: [],
-                    type: 'directory',
-                    explored: false,
-                  }
-                : {
-                    type: 'file',
-                  }),
-            };
-            _children.push(nodeToPush);
-            _children.sort((a, b) => {
-              if (a.type === 'directory' && b.type === 'file') {
-                return -1;
-              }
-              if (a.type === 'file' && b.type === 'directory') {
-                return 1;
-              }
-              return a.name.localeCompare(b.name);
-            });
-            found.children = _children;
-            isChanged = true;
-          });
-        } else if (event.type === 'update') {
-          findNodeDataAndUpdate(_tmp, event.path, found => {
-            if (found.type === 'file') {
-              logger.warn('skip update file directory tree', event.path);
-            } else {
-              logger.warn('skip update directory directory tree', event.path);
+            if (a.type === 'file' && b.type === 'directory') {
+              return 1;
             }
+            return a.name.localeCompare(b.name);
           });
-        } else if (event.type === 'delete') {
-          const parentPath = electron.dirname(event.path);
-          findNodeDataAndUpdate(_tmp, parentPath, found => {
-            const _children = found.children?.filter(child => child.id !== event.path);
-            if (_children?.length === found.children?.length) {
-              logger.warn('not found for delete directory tree', event.path);
-              return;
-            }
-            found.children = _children;
-            isChanged = true;
-          });
-        }
-      });
-      if (isChanged) {
-        setNodeData(_tmp);
+          found.children = children;
+          isChanged = true;
+        });
+      } else if (event.type === 'update') {
+        findNodeDataAndUpdate(tmp, event.path, found => {
+          if (found.type === 'file') {
+            logger.warn('skip update file directory tree', event.path);
+          } else {
+            logger.warn('skip update directory directory tree', event.path);
+          }
+        });
+      } else if (event.type === 'delete') {
+        findNodeDataAndUpdate(tmp, parentPath, found => {
+          const _children = found.children?.filter(child => child.id !== event.path);
+          if (_children?.length === found.children?.length) {
+            logger.warn('not found for delete directory tree', event.path);
+            return;
+          }
+          found.children = _children;
+          isChanged = true;
+        });
       }
-    },
-    [JSON.stringify(nodeData)],
-  );
+    }
+    if (isChanged) {
+      return tmp;
+    }
+    return node;
+  }, []);
 
   useEffect(() => {
     if (!dirPath) return;
+
     const emitter = electron.subscribeDirectoryTree(dirPath);
     emitter.on('data', (events: DirectoryTreeEvent[]) => {
-      onDirectoryTreeEvents(events);
+      setNodeData(nodeData => reduceNodeData(nodeData!, events));
     });
     return () => {
       emitter.unregister();
     };
-  }, [dirPath, onDirectoryTreeEvents]);
+  }, [dirPath, reduceNodeData]);
 
   const onTreeStateChange = useCallback((state: any, event: any) => {
     logger.log('state change', { state, event });

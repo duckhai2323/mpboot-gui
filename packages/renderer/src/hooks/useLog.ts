@@ -23,7 +23,8 @@ const useLogImpl = (): [
   // const logState = useSelector((state: RootState) => state.log);
   const dispatch = useDispatch();
   const electron = useElectron();
-  const [dataToBeFlushed, setDataToBeFlushed] = useState<string[]>([]);
+  // const [dataToBeFlushed, setDataToBeFlushed] = useState<string[]>([]);
+  const [unsubscribeLogFunc, setUnsubscribeLogFunc] = useState<() => void>();
 
   /**
    * Render whenever log file changes
@@ -31,7 +32,7 @@ const useLogImpl = (): [
   const subscribeLog = useCallback((logFile: string) => {
     const logStream = electron.subscribeLog(logFile);
     dispatch(
-      Actions.appendLogData({
+      Actions.setLogFile({
         logFile: logFile,
         logData: [],
       }),
@@ -42,6 +43,11 @@ const useLogImpl = (): [
           logData: [data],
         }),
       );
+    });
+    setUnsubscribeLogFunc(_currentFunc => {
+      return function () {
+        logStream.unregister();
+      };
     });
   }, []);
 
@@ -77,10 +83,15 @@ const useLogImpl = (): [
   //   };
   // }, [logState.logFile, counter]);
 
-  const reloadLog = useCallback((logFile: string) => {
-    electron.unsubscribeLog(logFile);
-    subscribeLog(logFile);
-  }, []);
+  const reloadLog = useCallback(
+    (logFile: string) => {
+      if (unsubscribeLogFunc) {
+        unsubscribeLogFunc();
+      }
+      subscribeLog(logFile);
+    },
+    [unsubscribeLogFunc],
+  );
 
   return [subscribeLog, reloadLog];
 };

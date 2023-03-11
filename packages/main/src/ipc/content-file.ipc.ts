@@ -30,5 +30,10 @@ ipcMain.handle(IPC_EVENTS.CONTENT_FILE_READ, async (event, filePath): Promise<st
   } else {
     contentFile = instanceManager.get(instanceKey) as ContentFile;
   }
-  return contentFile.getFileContent();
+  try {
+    return await contentFile.getFileContent();
+  } catch (err: any) {
+    logger.error('Failed to read file', err);
+    return '';
+  }
 });

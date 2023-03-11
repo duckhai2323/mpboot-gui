@@ -36,9 +36,9 @@ ipcMain.handle(IPC_EVENTS.AVAILABLE_TEST, async () => {
   logger.debug('Received AVAILABLE_TEST');
   const command = new WhichCommander(mpbootExecutablePath);
   try {
-      return await command.test();
-  } catch (err : any) {
-      logger.error('Failed to test mpboot executable',err);
-      return false;
+    return await command.test();
+  } catch (err: any) {
+    logger.error('Failed to test mpboot executable', err);
+    return false;
   }
 });

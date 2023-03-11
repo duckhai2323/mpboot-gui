@@ -1,7 +1,7 @@
 {
   "name": "MpbootGUI",
   "description": "GUI Desktop Application for Mpboot",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "private": true,
   "author": {
     "name": "Vu Nguyen <aqaurius6666@gmail.com>"
@@ -76,7 +76,6 @@
     "phylotree-visualization-demo": "^1.2.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-folder-tree": "^5.0.3",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.2.1",
     "react-singleton-hook": "^4.0.1",
