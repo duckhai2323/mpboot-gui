@@ -15,7 +15,7 @@ import { WhichCommander } from '../entity/which-commander';
 ipcMain.handle(
   IPC_EVENTS.COMMAND_EXECUTE,
   async (event, param: Parameter): Promise<CommandExecuteResult> => {
-    logger.log('Received COMMAND_EXECUTE', { param });
+    logger.debug('Received COMMAND_EXECUTE', { param });
     const args = convertParameterToCommandArgs(param);
     const commandId = randomUUID();
     const command = new MPBootCommander(mpbootExecutablePath, args, {});
@@ -33,6 +33,12 @@ ipcMain.handle(
 );
 
 ipcMain.handle(IPC_EVENTS.AVAILABLE_TEST, async () => {
+  logger.debug('Received AVAILABLE_TEST');
   const command = new WhichCommander(mpbootExecutablePath);
-  return await command.test();
+  try {
+      return await command.test();
+  } catch (err : any) {
+      logger.error('Failed to test mpboot executable',err);
+      return false;
+  }
 });

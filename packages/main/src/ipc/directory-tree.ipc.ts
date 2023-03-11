@@ -5,7 +5,7 @@ import { DirectoryTree } from '../entity/directory-tree';
 import { createInstanceKey, instanceManager } from '../entity/instance-manager';
 
 ipcMain.on(IPC_EVENTS.DIRECTORY_TREE_SUBSCRIBE, async (event, dirPath) => {
-  logger.log('Received SUBSCRIBE_TREE_CHANNEL', dirPath);
+  logger.debug('Received SUBSCRIBE_TREE_CHANNEL', dirPath);
   const instanceKey = createInstanceKey('directory-tree', dirPath);
   let tree: DirectoryTree;
   if (instanceManager.has(instanceKey)) {
@@ -24,7 +24,7 @@ ipcMain.on(IPC_EVENTS.DIRECTORY_TREE_SUBSCRIBE, async (event, dirPath) => {
 });
 
 ipcMain.on(IPC_EVENTS.DIRECTORY_TREE_UNSUBSCRIBE, async (event, dirPath) => {
-  logger.log('Received UNSUBSCRIBE_TREE_CHANNEL', dirPath);
+  logger.debug('Received UNSUBSCRIBE_TREE_CHANNEL', dirPath);
   const instanceKey = createInstanceKey('directory-tree', dirPath);
   const tree = instanceManager.get(instanceKey) as DirectoryTree;
   if (tree) {

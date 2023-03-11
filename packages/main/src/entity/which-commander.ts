@@ -10,14 +10,14 @@ export class WhichCommander extends Commander {
   }
 
   public async test(): Promise<boolean> {
-    return new Promise<boolean>((resolve, _reject) => {
-      this.execute(_code => {
-        if (_code !== 0) {
-          resolve(false);
+    return new Promise<boolean>((resolve, reject) => {
+      this.execute(code => {
+        if (code !== 0) {
+          reject("Binary doesn't exist");
         }
         resolve(true);
-      }).catch(_e => {
-        resolve(false);
+      }).catch(e => {
+        reject(e);
       });
     });
   }

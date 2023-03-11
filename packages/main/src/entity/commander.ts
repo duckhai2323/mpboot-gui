@@ -28,17 +28,7 @@ export class Commander {
 
   public async execute(onFinish: (exitCode?: number | null) => void): Promise<ExecuteResult> {
     const logFileName = join(tmpdir(), `mpbootgui-${Date.now()}.log`);
-    logger.debug('Execute info', {
-      binary: this.binary,
-      args: this.args,
-      logFileName,
-    });
     await writeFile(logFileName, '');
-    logger.debug('Log file', {
-      binary: this.binary,
-      args: this.args,
-      logFileName,
-    });
     logger.debug('Log file', {
       binary: this.binary,
       args: this.args,

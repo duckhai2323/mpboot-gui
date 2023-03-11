@@ -11,11 +11,17 @@ export enum LogLevel {
   ERROR = 3,
 }
 
-export const LogLevelToString = {
+const LogLevelToString = {
   [LogLevel.DEBUG]: 'DEBUG',
   [LogLevel.INFO]: 'INFO',
   [LogLevel.WARN]: 'WARN',
   [LogLevel.ERROR]: 'ERROR',
+};
+const LogLevelToColor = {
+  [LogLevel.DEBUG]: '\x1b[36m',
+  [LogLevel.INFO]: '\x1b[32m',
+  [LogLevel.WARN]: '\x1b[33m',
+  [LogLevel.ERROR]: '\x1b[31m',
 };
 
 export class ConsoleLogger implements Logger {
@@ -25,7 +31,7 @@ export class ConsoleLogger implements Logger {
     this.level = level;
   }
   private formatMessage(logLevel: LogLevel, message: string): string {
-    return `${new Date().toISOString()} [${LogLevelToString[logLevel]}]: ${message}`;
+    return `${new Date().toISOString()} ${LogLevelToColor[logLevel]}[${LogLevelToString[logLevel]}]\x1b[0m: ${message}`;
   }
   debug(message: string, context?: any): void {
     if (this.level > LogLevel.DEBUG) {

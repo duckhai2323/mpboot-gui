@@ -6,7 +6,7 @@ import { logger } from '../../../common/logger';
 import { mpbootExecutablePath } from '../const';
 
 ipcMain.on(IPC_EVENTS.LOG_SUBSCRIBE, (event, logFile) => {
-  logger.log('Received LOG_SUBSCRIBE', { logFile });
+  logger.debug('Received LOG_SUBSCRIBE', { logFile });
   if (!logManagerInstance.isValidLogFile(logFile)) {
     return;
   }
@@ -16,6 +16,7 @@ ipcMain.on(IPC_EVENTS.LOG_SUBSCRIBE, (event, logFile) => {
 });
 
 ipcMain.handle(IPC_EVENTS.LOG_GENERATE, async (_event, _arg) => {
+  logger.debug('Received LOG_GENERATE');
   const command = new Commander(mpbootExecutablePath, ['--help'], {});
   const result = await command.execute(() => {
     return;
@@ -24,7 +25,7 @@ ipcMain.handle(IPC_EVENTS.LOG_GENERATE, async (_event, _arg) => {
 });
 
 ipcMain.on(IPC_EVENTS.LOG_UNSUBSCRIBE, (_event, logFile) => {
-  logger.log('Received LOG_UNSUBSCRIBE', { logFile });
+  logger.debug('Received LOG_UNSUBSCRIBE', { logFile });
   if (!logManagerInstance.isValidLogFile(logFile)) {
     return;
   }

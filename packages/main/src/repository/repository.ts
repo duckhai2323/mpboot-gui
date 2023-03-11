@@ -9,7 +9,7 @@ export class Repository {
     this.db = db;
   }
   public static init(dbPath: string): Repository {
-    logger.debug('Repository init', { dbPath });
+    logger.debug('Repository.init()', { dbPath });
     const db = new Database(dbPath);
     const repo = new Repository(db);
     return repo;
@@ -43,7 +43,7 @@ export class Repository {
 
   public async createWorkspace(workspace: Workspace): Promise<Workspace> {
     await this.migrate();
-    logger.debug('Repository.addWorkspace()', { workspace });
+    logger.debug('Repository.createWorkspace()', { workspace });
     return new Promise((resolve, reject) => {
       this.db.get(
         'INSERT INTO workspaces (path, name) VALUES (?, ?) returning *',

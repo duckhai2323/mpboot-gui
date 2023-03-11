@@ -1,10 +1,12 @@
 import type { WebContents } from 'electron';
 import { BrowserWindow, ipcMain, Menu } from 'electron';
 import { IPC_EVENTS } from '../../../common/ipc';
+import { logger } from '../../../common/logger';
 import type { ShowContextMenuRequest } from '../../../common/menu';
 import { isMac } from '../const';
 
 ipcMain.on(IPC_EVENTS.CONTEXT_MENU_SHOW, (event, req: ShowContextMenuRequest) => {
+  logger.debug('Received CONTEXT_MENU_SHOW', { req });
   let template = [];
   switch (req.type) {
     case 'file-tree-item-directory':

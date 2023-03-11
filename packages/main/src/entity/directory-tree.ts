@@ -24,7 +24,7 @@ export class DirectoryTree {
   public async subscribe(onDirectoryTreeEvent: (events: DirectoryTreeEvent[]) => void) {
     this.watcher = await subscribe(this.dirPath, async (err, events) => {
       if (err) {
-        console.log(err);
+        logger.error('Error when subscribe watcher', err);
         return [];
       }
       const directoryTreeEvents: DirectoryTreeEvent[] = await Promise.all(
