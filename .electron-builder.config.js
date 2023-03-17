@@ -32,7 +32,7 @@ module.exports = async function () {
       asar: false,
     },
     win: {
-      target: 'portable',
+      target: 'nsis',
       publish: ['github'],
     },
   };
