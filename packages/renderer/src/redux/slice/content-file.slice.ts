@@ -13,6 +13,15 @@ export const contentFileSlice = createSlice({
         ...action.payload,
       };
     },
+    setContentFileOnlyMatchPath: (state, action: PayloadAction<Partial<ContentFileState>>) => {
+      if (state.path !== action.payload.path) {
+        return state;
+      }
+      return {
+        ...state,
+        ...action.payload,
+      };
+    },
     clear: _state => {
       return {
         path: '',

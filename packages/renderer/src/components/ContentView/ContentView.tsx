@@ -1,19 +1,15 @@
-import React, { useEffect, useMemo } from 'react';
-import { useContentView } from '../../hooks/useContentView';
+import React, { useMemo } from 'react';
 import { PhyRenderedContent } from './PhyRenderedContent';
 import { TxtRenderedContent } from './TxtRenderedContent';
-import "./ContentView.css"
+import "./ContentView.css";
 import { RootState } from '../../redux/store/root';
 import { useSelector } from 'react-redux';
 
 export const ContentView = () => {
     const contentFile = useSelector((state: RootState) => state.contentFile)
-    const memoContent = useMemo(() => {
-        return contentFile.content
-    }, [contentFile])
-
+  
     const renderComponent = useMemo(() => {
-        if (!memoContent) {
+        if (!contentFile.content) {
             return (
                 <div>
                     <h1>File is empty!</h1>
@@ -22,13 +18,14 @@ export const ContentView = () => {
         }
         if (contentFile.name.endsWith('.phy')) {
             return (
-                <PhyRenderedContent content={memoContent} className="content-view" />
+                <PhyRenderedContent content={contentFile.content} className="content-view" />
             )
         }
         return (
-            <TxtRenderedContent content={memoContent} className="content-view" />
+            <TxtRenderedContent content={contentFile.content} className="content-view" />
         )
-    }, [memoContent])
+    }, [contentFile.content])
+    
     if (!contentFile.name) {
         return (
             <div>

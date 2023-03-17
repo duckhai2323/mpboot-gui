@@ -6,6 +6,7 @@ import { useElectron } from './useElectron';
 const usePhylogenTreeImpl = (): [
   setNewick: (str: string) => void,
   subscribeCommand: (id: string) => void,
+  setTreeFile: (filePath: string) => void,
 ] => {
   const dispatch = useDispatch();
   const electron = useElectron();
@@ -22,7 +23,22 @@ const usePhylogenTreeImpl = (): [
     });
   }, []);
 
-  return [setNewick, subscribeCommand];
+  const isValidTreeFile = useCallback((filePath: string) => {
+    const ext = filePath.split('.').pop();
+    return ext === 'treefile';
+  }, []);
+
+  const setTreeFile = useCallback((filePath: string) => {
+    if (!isValidTreeFile(filePath)) {
+      return;
+    }
+    (async () => {
+      const treeNewick = (await electron.readContentFile(filePath)).trimEnd();
+      setNewick(treeNewick);
+    })();
+  }, []);
+
+  return [setNewick, subscribeCommand, setTreeFile];
 };
 
 export const usePhylogenTree = usePhylogenTreeImpl;

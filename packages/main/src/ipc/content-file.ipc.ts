@@ -6,16 +6,15 @@ import { createInstanceKey, instanceManager } from '../entity/instance-manager';
 
 ipcMain.handle(IPC_EVENTS.CONTENT_FILE_OPEN, async (event, filePath): Promise<ContentFile> => {
   logger.debug('Received CONTENT_FILE_OPEN', { filePath });
-  const instanceKey = createInstanceKey('content-file', filePath);
-  let contentFile: ContentFile;
-  if (instanceManager.has(instanceKey)) {
-    logger.debug('Already have a content-file instance', instanceKey);
-    contentFile = instanceManager.get(instanceKey) as ContentFile;
-  } else {
-    contentFile = new ContentFile(filePath);
-    instanceManager.set(instanceKey, contentFile);
-    logger.debug('Create a new content-file instance', instanceKey);
-  }
+  // const instanceKey = createInstanceKey('content-file', filePath);
+  // if (instanceManager.has(instanceKey)) {
+  //   logger.debug('Already have a content-file instance', instanceKey);
+  //   contentFile = instanceManager.get(instanceKey) as ContentFile;
+  // } else {
+  const contentFile = new ContentFile(filePath);
+  //   instanceManager.set(instanceKey, contentFile);
+  //   logger.debug('Create a new content-file instance', instanceKey);
+  // }
   return contentFile;
 });
 

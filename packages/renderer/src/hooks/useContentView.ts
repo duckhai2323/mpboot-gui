@@ -1,9 +1,9 @@
 import { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
 import { Actions } from '../redux/slice/content-file.slice';
 import { useElectron } from './useElectron';
+import { useDispatch } from 'react-redux';
 
-export const useContentView = (): [(filePath: string) => void] => {
+export const useContentView = (): [openFile: (filePath: string) => void, notifyContentFileChange: (filePath: string, data: string) => void] => {
   const dispatch = useDispatch();
   const electron = useElectron();
 
@@ -19,8 +19,17 @@ export const useContentView = (): [(filePath: string) => void] => {
         }),
       );
     },
-    [electron],
+    [],
   );
 
-  return [openFile];
+  const notifyContentFileChange = useCallback((filePath: string, data: string) => {
+    dispatch(
+      Actions.setContentFileOnlyMatchPath({
+        content: data,
+        path: filePath,
+      }),
+    );
+  }, []);
+
+  return [openFile, notifyContentFileChange];
 };

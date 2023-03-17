@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux';
 import type { RootState } from '../redux/store/root';
 import { getRelativePath } from '../utils/fs';
 import type { NodeData } from '@aqaurius6666/react-folder-tree';
+import { usePhylogenTree } from './usePhylogenTree';
 
 const useFileTreeImpl = (): [
   nodeData: NodeData | undefined,
@@ -28,8 +29,9 @@ const useFileTreeImpl = (): [
   onContextMenu: MouseEventHandler<HTMLElement>,
 ] => {
   const { dirPath } = useSelector((state: RootState) => state.workspace);
-  const [openFile] = useContentView();
+  const [openFile, notifyContentFileChange] = useContentView();
   const [setSource] = useParameter();
+  const [,,setTreeFile] = usePhylogenTree();
   const electron = useElectron();
   const [nodeData, setNodeData] = useState<NodeData>();
 
@@ -82,7 +84,7 @@ const useFileTreeImpl = (): [
       } else if (event.type === 'update') {
         findNodeDataAndUpdate(tmp, event.path, found => {
           if (found.type === 'file') {
-            logger.warn('skip update file directory tree', event.path);
+            notifyContentFileChange(event.path, event.data);
           } else {
             logger.warn('skip update directory directory tree', event.path);
           }
@@ -134,6 +136,7 @@ const useFileTreeImpl = (): [
       if (clickedNodeData.type === 'file') {
         openFile(clickedNodeData.id);
         setSource(clickedNodeData.id);
+        setTreeFile(clickedNodeData.id);
         return;
       }
       if (clickedNodeData.type === 'directory') {
@@ -145,7 +148,6 @@ const useFileTreeImpl = (): [
             .then(async (data: Directory) => {
               const node = convertDirectoryToNodeData(data);
               const _tmp = { ...nodeData };
-              logger.log('current nodeData', _tmp);
               findNodeDataAndUpdate(_tmp, node.id, found => {
                 found.children = node.children;
                 found.explored = true;
