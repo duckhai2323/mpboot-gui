@@ -30,8 +30,8 @@ const useFileTreeImpl = (): [
 ] => {
   const { dirPath } = useSelector((state: RootState) => state.workspace);
   const [openFile, notifyContentFileChange] = useContentView();
-  const [setSource] = useParameter();
-  const [,,setTreeFile] = usePhylogenTree();
+  const [setSource, multiSourcesDispatch] = useParameter();
+  const [, , setTreeFile] = usePhylogenTree();
   const electron = useElectron();
   const [nodeData, setNodeData] = useState<NodeData>();
 
@@ -119,8 +119,41 @@ const useFileTreeImpl = (): [
     };
   }, [dirPath, reduceNodeData]);
 
-  const onTreeStateChange = useCallback((state: any, event: any) => {
-    logger.log('state change', { state, event });
+  const onTreeStateChange = useCallback((state: NodeData, event: any) => {
+    if (event.type === 'toggleOpen') {
+      const clickedNodeData = findTargetNode(state, event.path);
+      if (clickedNodeData.explored) return;
+      electron
+        .exploreDirectory(dirPath, getRelativePath(clickedNodeData.id, dirPath))
+        .then(async (data: Directory) => {
+          const node = convertDirectoryToNodeData(data);
+          const _tmp = { ...state };
+          findNodeDataAndUpdate(_tmp, node.id, found => {
+            found.children = node.children;
+            found.explored = true;
+            found.isOpen = true;
+          });
+          setNodeData(_node => _tmp);
+        });
+    }
+    if (event.type === 'checkNode') {
+      const clickedNodeData = findTargetNode(state, event.path);
+      handleCheckNode(clickedNodeData, event.params[0]);
+    }
+  }, []);
+
+  const handleCheckNode = useCallback((node: NodeData, checked: 0 | 1) => {
+    if (node.type === 'file') {
+      if (checked) {
+        multiSourcesDispatch({ type: 'add', payload: node.id });
+      } else {
+        multiSourcesDispatch({ type: 'remove', payload: node.id });
+      }
+    } else {
+      node.children?.forEach((child: NodeData) => {
+        handleCheckNode(child, checked);
+      });
+    }
   }, []);
 
   const onNameClick = useCallback(
@@ -137,11 +170,10 @@ const useFileTreeImpl = (): [
         openFile(clickedNodeData.id);
         setSource(clickedNodeData.id);
         setTreeFile(clickedNodeData.id);
-        return;
       }
       if (clickedNodeData.type === 'directory') {
         if (clickedNodeData.explored) {
-          clickedNodeData.isOpen = !clickedNodeData.isOpen;
+          return;
         } else {
           electron
             .exploreDirectory(dirPath, getRelativePath(clickedNodeData.id, dirPath))

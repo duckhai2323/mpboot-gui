@@ -115,7 +115,7 @@ flowchart TB;
 
 packages/preload <-. IPC Messages .-> packages/main
 
-    subgraph packages/main["packages/main (Shared beatween all windows)"]
+    subgraph packages/main["packages/main (Shared between all windows)"]
     M[index.ts] --> EM[Electron Main Process Modules]
     M --> N2[Node.js API]
     end
@@ -196,7 +196,7 @@ export function getUserData(): Promise<UserData> {
 Now you can import and call the method in renderer
 
 ```ts
-// renderer/anywere/component.ts
+// renderer/anywhere/component.ts
 import { getUserData } from '#preload'
 const userData = await getUserData()
 ```

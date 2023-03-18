@@ -8,6 +8,7 @@ export const convertDirectoryToNodeData = (directory: Directory): NodeData => {
       name: directory.name,
       type: 'file',
       isOpen: false,
+      checked: 0,
     };
   }
   return {
@@ -17,6 +18,7 @@ export const convertDirectoryToNodeData = (directory: Directory): NodeData => {
     type: 'directory',
     explored: false,
     isOpen: false,
+    checked: 0,
   };
 };
 
@@ -36,3 +38,4 @@ export const findNodeDataAndUpdate = (
     findNodeDataAndUpdate(child, path, callback);
   });
 };
+

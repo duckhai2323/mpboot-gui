@@ -1,14 +1,18 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
+import Collapsible from 'react-collapsible';
 import { useSelector } from 'react-redux';
 import { useElectron } from '../../hooks/useElectron';
 import { useLog } from '../../hooks/useLog';
 import { usePhylogenTree } from '../../hooks/usePhylogenTree';
 import { RootState } from '../../redux/store/root';
-import { getRelativePath } from '../../utils/fs';
+import { InputDataType } from './InputDataType';
+import { OutputPrefix } from './OutputPrefix';
+import { Sources } from './Sources';
+import { Treefile } from './Treefile';
+import './ParameterView.css';
 
 export const ParameterView = () => {
     const parameter = useSelector((state: RootState) => state.parameter)
-    const { dirPath } = useSelector((state: RootState) => state.workspace)
     const [subscribeLog] = useLog();
     const [, subscribeCommand] = usePhylogenTree()
     const electron = useElectron()
@@ -22,13 +26,27 @@ export const ParameterView = () => {
         })()
     }, [parameter])
 
-    const relativeSourcePath = useMemo(() => getRelativePath(parameter.source, dirPath), [parameter.source, dirPath])
 
     return (
         <>
             <button id="run-button" onClick={onRunButtonSubmit}>Run</button>
-            {/* <input id="source-input" type="text" readOnly>{parameter.source}</input> */}
-            <div>{relativeSourcePath}</div>
+            <Collapsible trigger={"Basic parameters"} transitionTime={1} >
+            <table>
+                <Sources source={parameter.source} multiSources={parameter.multiSources} />
+                <Treefile />
+                <InputDataType />
+                <OutputPrefix />
+            </table>
+            </Collapsible>
+            <Collapsible trigger={"Advance parameters"} transitionTime={1} >
+            <table>
+                <Sources source={parameter.source} multiSources={parameter.multiSources} />
+                <Treefile />
+                <InputDataType />
+                <OutputPrefix />
+            </table>
+            </Collapsible>
+            
         </>
     )
 }

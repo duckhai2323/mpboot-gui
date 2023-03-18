@@ -1,0 +1,10 @@
+.Collapsible__trigger.is-closed::before{
+    content: '▶ ';
+    display: inline;
+}
+
+.Collapsible__trigger.is-open::before {
+    content: '▼ ';
+    display: inline;
+
+}

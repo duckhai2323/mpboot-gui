@@ -1,7 +1,7 @@
 {
   "name": "MpbootGUI",
   "description": "GUI Desktop Application for Mpboot",
-  "version": "1.4.3",
+  "version": "1.5.0",
   "private": true,
   "author": {
     "name": "Vu Nguyen <aqaurius6666@gmail.com>"
@@ -62,7 +62,7 @@
     "vitest": "0.25.1"
   },
   "dependencies": {
-    "@aqaurius6666/react-folder-tree": "5.0.3",
+    "@aqaurius6666/react-folder-tree": "5.2.8",
     "@fortawesome/fontawesome-svg-core": "^6.3.0",
     "@parcel/watcher": "^2.1.0",
     "@patternfly/react-log-viewer": "^4.87.100",
@@ -75,6 +75,7 @@
     "phylotree": "^1.1.0",
     "phylotree-visualization-demo": "^1.2.5",
     "react": "^18.2.0",
+    "react-collapsible": "^2.10.0",
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.2.1",

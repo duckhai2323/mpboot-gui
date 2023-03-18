@@ -15,13 +15,19 @@ export const MainPage = () => {
     const size = useWindowSize();
     return (
         <Allotment >
-            <Allotment.Pane minSize={size.width * 0.1} className="allotment__pane--scroll-on-overflow-y" >
+            <Allotment.Pane
+                minSize={size.width * 0.1}
+                preferredSize={size.width * 0.2}
+                className="allotment__pane--scroll-on-overflow-y" >
                 <FileTree />
             </Allotment.Pane>
-            <Allotment.Pane minSize={size.width * 0.6}>
+            <Allotment.Pane
+                minSize={size.width * 0.3}
+                preferredSize={size.width * 0.3}
+            >
                 <Allotment vertical >
-                    <Allotment.Pane 
-                    className="allotment__pane--scroll-on-overflow-x allotment__pane--scroll-on-overflow-y"  >
+                    <Allotment.Pane
+                        className="allotment__pane--scroll-on-overflow-x allotment__pane--scroll-on-overflow-y"  >
                         <ContentView />
                     </Allotment.Pane>
                     <Allotment.Pane >
@@ -29,7 +35,10 @@ export const MainPage = () => {
                     </Allotment.Pane>
                 </Allotment>
             </Allotment.Pane>
-            <Allotment.Pane minSize={size.width * 0.2} >
+            <Allotment.Pane
+                minSize={size.width * 0.3}
+                preferredSize={size.width * 0.3}
+            >
                 <Allotment vertical>
                     <Allotment.Pane >
                         <ParameterView />

@@ -3,6 +3,7 @@ import FolderTree from '@aqaurius6666/react-folder-tree';
 import '@aqaurius6666/react-folder-tree/dist/style.css';
 import "./FileTree.css";
 import { useFileTree } from "../../hooks/useFileTree";
+import { logger } from "../../../../common/logger";
 
 
 export const FileTree = () => {
@@ -15,10 +16,9 @@ export const FileTree = () => {
             <FolderTree
                 data={nodeData}
                 onChange={onTreeStateChange}
-                showCheckbox={false}
+                showCheckbox={true}
                 onNameClick={onNameClick}
                 indentPixels={10}
-                readOnly
             />
         </div>
 

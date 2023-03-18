@@ -15,10 +15,10 @@
     "@jridgewell/gen-mapping" "^0.1.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@aqaurius6666/react-folder-tree@5.0.3":
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/@aqaurius6666/react-folder-tree/-/react-folder-tree-5.0.3.tgz#ccc99025636820d279f229f052fa1dbe7de57719"
-  integrity sha512-q0ZOLnYvJ3OWPhMAelXsbi/bVBoukEgKPNh5eaOLgSfDByMHuL644E0FaAoSSuLRii3v6RyT0SA5TaxLH7Kr2A==
+"@aqaurius6666/react-folder-tree@5.2.8":
+  version "5.2.8"
+  resolved "https://registry.yarnpkg.com/@aqaurius6666/react-folder-tree/-/react-folder-tree-5.2.8.tgz#d2c627048540d6c4c743d6159db3598da4c7a275"
+  integrity sha512-wf71YcbeV2eetxfzoKfiLOA7swbgl2OI4kk3uz9mSNmesmWUjM0E1myotdQ+W4kQrXnwpM8b9buf0uS8ecna3Q==
   dependencies:
     prop-types "^15.7.2"
     react-icons "^4.1.0"
@@ -4848,6 +4848,11 @@ react-bootstrap@^2.5.0:
     react-transition-group "^4.4.2"
     uncontrollable "^7.2.1"
     warning "^4.0.3"
+
+react-collapsible@^2.10.0:
+  version "2.10.0"
+  resolved "https://registry.yarnpkg.com/react-collapsible/-/react-collapsible-2.10.0.tgz#57330f9f4f968a41ece49c651b56cf30f9a06d19"
+  integrity sha512-kEVsmlFfXBMTCnU5gwIv19MdmPAhbIPzz5Er37TiJSzRKS0IHrqAKQyQeHEmtoGIQMTcVI46FzE4z3NlVTx77A==
 
 react-dom@^18.2.0:
   version "18.2.0"
