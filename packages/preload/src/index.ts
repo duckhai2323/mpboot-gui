@@ -11,10 +11,11 @@ import {
   getFirstLoadDirectoryTree,
   subscribeDirectoryTree,
   exploreDirectory,
+  searchDirectoryTree,
 } from './directory-tree';
 import { contextBridge, ipcRenderer } from 'electron';
 import { IPC_EVENTS } from '../../common/ipc';
-import { dirname } from './fs';
+import { dirname, join } from './fs';
 import { basename } from 'path';
 import { showContentMenu } from './menu';
 
@@ -43,8 +44,10 @@ export const exposed: ExposedElectron = {
   openDirectoryForWorkspace,
   dirname: dirname,
   basename: basename,
+  join: join,
   unsubscribeLog: unsubscribeLog,
   showContentMenu: showContentMenu,
+  searchDirectoryTree: searchDirectoryTree,
 };
 
 contextBridge.exposeInMainWorld('electron', exposed);

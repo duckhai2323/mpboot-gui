@@ -38,4 +38,3 @@ export const findNodeDataAndUpdate = (
     findNodeDataAndUpdate(child, path, callback);
   });
 };
-

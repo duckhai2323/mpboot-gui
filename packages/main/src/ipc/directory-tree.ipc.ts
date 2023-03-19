@@ -66,3 +66,22 @@ ipcMain.handle(
     return result;
   },
 );
+
+ipcMain.handle(
+  IPC_EVENTS.DIRECTORY_TREE_SEARCH,
+  async (event, { dirPath, pattern }: { dirPath: string; pattern: string }) => {
+    logger.debug('Received DIRECTORY_TREE_SEARCH', { dirPath, pattern });
+    const instanceKey = createInstanceKey('directory-tree', dirPath);
+    let tree: DirectoryTree;
+    if (instanceManager.has(instanceKey)) {
+      logger.debug('Already have a tree instance', instanceKey);
+      tree = instanceManager.get(instanceKey) as DirectoryTree;
+    } else {
+      tree = new DirectoryTree(dirPath);
+      instanceManager.set(instanceKey, tree);
+      logger.debug('Create a new tree instance', instanceKey);
+    }
+    const result = await tree.search(pattern);
+    return result;
+  },
+);

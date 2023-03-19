@@ -22,6 +22,7 @@ export interface ExposedElectron {
   subscribeDirectoryTree: (dirPath: string) => CustomEventEmitter;
   getFirstLoadDirectoryTree: (dirPath: string) => Promise<Directory>;
   exploreDirectory: (dirPath: string, dirToExplore: string) => Promise<Directory>;
+  searchDirectoryTree: (dirPath: string, pattern: string) => Promise<string[]>;
 
   openContentFile: (filePath: string) => Promise<ContentFile>;
   readContentFile: (filePath: string) => Promise<string>;
@@ -41,6 +42,7 @@ export interface ExposedElectron {
 
   dirname: (path: string) => string;
   basename: (path: string) => string;
+  join: (...paths: string[]) => string;
 
   showContentMenu: (req: ShowContextMenuRequest) => void;
 }

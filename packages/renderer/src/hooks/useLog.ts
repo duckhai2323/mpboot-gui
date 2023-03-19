@@ -9,10 +9,10 @@ const unimplementedUseLog = (): [
 ] => {
   return [
     (_filePath: string) => {
-      return;
+      throw new Error('useLog not implemented');
     },
     (_filePath: string) => {
-      return;
+      throw new Error('useLog not implemented');
     },
   ];
 };

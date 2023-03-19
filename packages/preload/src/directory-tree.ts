@@ -39,3 +39,11 @@ export const exploreDirectory = async (
   });
   return result as Directory;
 };
+
+export const searchDirectoryTree = async (dirPath: string, pattern: string): Promise<string[]> => {
+  const result = await ipcRenderer.invoke(IPC_EVENTS.DIRECTORY_TREE_SEARCH, {
+    dirPath,
+    pattern,
+  });
+  return result as string[];
+};

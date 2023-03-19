@@ -24,6 +24,7 @@ ipcMain.handle(
         treeFile: command.generatedTreeFilePath,
       };
       event.sender.send(IPC_EVENTS.COMMAND_CALLBACK_ON_FINISH(commandId), data);
+      logger.debug('Sent COMMAND_CALLBACK_ON_FINISH', { commandId });
     });
     return {
       logFile: result.logFile,

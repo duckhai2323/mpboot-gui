@@ -13,12 +13,14 @@ export class DirectoryTree {
   private dirPath: string;
   private watcher: AsyncSubscription | null = null;
   private currentDirectory: Directory | null = null;
-  private onDirectoryTreeEvent: (events: DirectoryTreeEvent[]) => void = _events => {
-    return;
-  };
 
   constructor(dirPath: string) {
     this.dirPath = dirPath;
+  }
+
+  public async search(pattern: string): Promise<string[]> {
+    const ret = await globAsync(pattern, { cwd: this.dirPath });
+    return ret;
   }
 
   public async subscribe(onDirectoryTreeEvent: (events: DirectoryTreeEvent[]) => void) {

@@ -1,7 +1,7 @@
 {
   "name": "MpbootGUI",
   "description": "GUI Desktop Application for Mpboot",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "private": true,
   "author": {
     "name": "Vu Nguyen <aqaurius6666@gmail.com>"
@@ -21,13 +21,13 @@
     "test:preload": "vitest run -r packages/preload --passWithNoTests",
     "test:renderer": "vitest run -r packages/renderer --passWithNoTests",
     "watch": "node scripts/watch.mjs",
-    "lint": "eslint . --ext js,mjs,cjs,ts,mts,cts",
+    "lint": "eslint . --ext js,mjs,cjs,ts,mts,cts,tsx",
     "typecheck:main": "tsc --noEmit -p packages/main/tsconfig.json",
     "typecheck:preload": "tsc --noEmit -p packages/preload/tsconfig.json",
     "typecheck:renderer": "tsc --noEmit -p packages/renderer/tsconfig.json",
     "typecheck": "npm run typecheck:main && npm run typecheck:preload && npm run typecheck:renderer",
     "postinstall": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/update-electron-vendors.mjs && patch-package",
-    "format": "npx prettier --write \"**/*.{js,mjs,cjs,ts,mts,cts,json}\""
+    "format": "npx prettier --write \"**/*.{js,mjs,cjs,ts,mts,cts,json,tsx}\""
   },
   "devDependencies": {
     "@testing-library/react": "^14.0.0",

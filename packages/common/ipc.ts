@@ -11,6 +11,7 @@ export const IPC_EVENTS = {
   DIRECTORY_TREE_FIRST_LOAD: 'directory-tree:first-load',
   DIRECTORY_TREE_UNSUBSCRIBE: 'directory-tree:unsubscribe',
   DIRECTORY_TREE_EXPLORE_DIRECTORY: 'directory-tree:explore-directory',
+  DIRECTORY_TREE_SEARCH: 'directory-tree:search',
 
   CONTENT_FILE_OPEN: 'content-file:open',
   CONTENT_FILE_READ: 'content-file:read',
