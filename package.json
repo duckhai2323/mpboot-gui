@@ -1,7 +1,7 @@
 {
   "name": "MpbootGUI",
   "description": "GUI Desktop Application for Mpboot",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "private": true,
   "author": {
     "name": "Vu Nguyen <aqaurius6666@gmail.com>"
