@@ -5,8 +5,9 @@ export class WhichCommander extends Commander {
   constructor(targetBinary: string, spawnOptions?: SpawnOptions) {
     if (process.platform === 'win32') {
       super('where', [targetBinary], spawnOptions);
+    } else {
+      super('which', [targetBinary], spawnOptions);
     }
-    super('which', [targetBinary], spawnOptions);
   }
 
   public async test(): Promise<boolean> {
