@@ -1,10 +1,19 @@
 import { ipcRenderer } from 'electron';
 import { IPC_EVENTS } from '../../common/ipc';
-import type { IWorkspace, WorkspaceChooseDirectoryDialogResult } from '../../common/workspace';
+import type {
+  CreateWorkspaceRequest,
+  IWorkspace,
+  DialogChooseDirectoryOrFileResult,
+} from '../../common/workspace';
 
-export const openDirectoryForWorkspace = async () => {
-  const result = await ipcRenderer.invoke(IPC_EVENTS.WORKSPACE_CHOOSE_DIRECTORY_DIALOG, {});
-  return result as WorkspaceChooseDirectoryDialogResult;
+export const chooseDirectory = async () => {
+  const result = await ipcRenderer.invoke(IPC_EVENTS.DIALOG_CHOOSE_DIRECTORY, {});
+  return result as DialogChooseDirectoryOrFileResult;
+};
+
+export const chooseDirectoryOrFile = async () => {
+  const result = await ipcRenderer.invoke(IPC_EVENTS.DIALOG_CHOOSE_DIRECTORY_OR_FILE, {});
+  return result as DialogChooseDirectoryOrFileResult;
 };
 
 export const listWorkspaces = async () => {
@@ -12,7 +21,7 @@ export const listWorkspaces = async () => {
   return result as IWorkspace[];
 };
 
-export const createWorkspace = async (dirPath: string) => {
-  const result = await ipcRenderer.invoke(IPC_EVENTS.WORKSPACE_CREATE, dirPath);
+export const createWorkspace = async (req: CreateWorkspaceRequest) => {
+  const result = await ipcRenderer.invoke(IPC_EVENTS.WORKSPACE_CREATE, req);
   return result as IWorkspace;
 };

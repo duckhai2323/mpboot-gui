@@ -1,12 +1,13 @@
 import type { FC } from 'react';
 import React from 'react';
 import './LogView.css';
-import '@patternfly/react-core/dist/styles/base.css';
+
 import { LogViewer, LogViewerSearch } from '@patternfly/react-log-viewer';
 import { Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
 import { useLog } from '../../hooks/useLog';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../redux/store/root';
+import { MButton } from '../common/Button';
 
 export const LogView: FC = () => {
   const log = useSelector((state: RootState) => state.log);
@@ -14,7 +15,7 @@ export const LogView: FC = () => {
 
   return (
     <>
-      <button onClick={_e => reloadLog(log.logFile)}>Reload log</button>
+      <MButton onClick={_e => reloadLog(log.logFile)}>Reload log</MButton>
       <div style={{ height: '90%' }}>
         <LogViewer
           hasLineNumbers={false}

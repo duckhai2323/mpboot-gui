@@ -15,6 +15,8 @@ import type { RootState } from '../redux/store/root';
 import { getRelativePath } from '../utils/fs';
 import type { NodeData } from '@aqaurius6666/react-folder-tree';
 import { usePhylogenTree } from './usePhylogenTree';
+import { toast } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const useFileTreeImpl = (): [
   nodeData: NodeData | undefined,
@@ -34,11 +36,20 @@ const useFileTreeImpl = (): [
   const [, , setTreeFile] = usePhylogenTree();
   const electron = useElectron();
   const [nodeData, setNodeData] = useState<NodeData>();
+  const navigate = useNavigate();
 
   useEffect(() => {
+    if (!dirPath) {
+      navigate('/dashboard');
+      return;
+    }
     (async () => {
-      const directory = await electron.getFirstLoadDirectoryTree(dirPath);
-      setNodeData(convertDirectoryToNodeData(directory));
+      try {
+        const directory = await electron.getFirstLoadDirectoryTree(dirPath);
+        setNodeData(convertDirectoryToNodeData(directory));
+      } catch (err: any) {
+        toast.error(err.message);
+      }
     })();
   }, [dirPath]);
 
@@ -109,36 +120,43 @@ const useFileTreeImpl = (): [
 
   useEffect(() => {
     if (!dirPath) return;
-
-    const emitter = electron.subscribeDirectoryTree(dirPath);
-    emitter.on('data', (events: DirectoryTreeEvent[]) => {
-      setNodeData(nodeData => reduceNodeData(nodeData!, events));
-    });
-    return () => {
-      emitter.unregister();
-    };
+    try {
+      const emitter = electron.subscribeDirectoryTree(dirPath);
+      emitter.on('data', (events: DirectoryTreeEvent[]) => {
+        setNodeData(nodeData => reduceNodeData(nodeData!, events));
+      });
+      return () => {
+        emitter.unregister();
+      };
+    } catch (err: any) {
+      toast.error(err.message);
+    }
   }, [dirPath, reduceNodeData]);
 
   const onTreeStateChange = useCallback((state: NodeData, event: any) => {
-    if (event.type === 'toggleOpen') {
-      const clickedNodeData = findTargetNode(state, event.path);
-      if (clickedNodeData.explored) return;
-      electron
-        .exploreDirectory(dirPath, getRelativePath(clickedNodeData.id, dirPath))
-        .then(async (data: Directory) => {
-          const node = convertDirectoryToNodeData(data);
-          const _tmp = { ...state };
-          findNodeDataAndUpdate(_tmp, node.id, found => {
-            found.children = node.children;
-            found.explored = true;
-            found.isOpen = true;
+    try {
+      if (event.type === 'toggleOpen') {
+        const clickedNodeData = findTargetNode(state, event.path);
+        if (clickedNodeData.explored) return;
+        electron
+          .exploreDirectory(dirPath, getRelativePath(clickedNodeData.id, dirPath))
+          .then(async (data: Directory) => {
+            const node = convertDirectoryToNodeData(data);
+            const _tmp = { ...state };
+            findNodeDataAndUpdate(_tmp, node.id, found => {
+              found.children = node.children;
+              found.explored = true;
+              found.isOpen = true;
+            });
+            setNodeData(_node => _tmp);
           });
-          setNodeData(_node => _tmp);
-        });
-    }
-    if (event.type === 'checkNode') {
-      const clickedNodeData = findTargetNode(state, event.path);
-      handleCheckNode(clickedNodeData, event.params[0]);
+      }
+      if (event.type === 'checkNode') {
+        const clickedNodeData = findTargetNode(state, event.path);
+        handleCheckNode(clickedNodeData, event.params[0]);
+      }
+    } catch (err: any) {
+      toast.error(err.message);
     }
   }, []);
 
@@ -165,30 +183,34 @@ const useFileTreeImpl = (): [
       nodeData: NodeData;
     }) => {
       if (!nodeData) return;
-
-      if (clickedNodeData.type === 'file') {
-        openFile(clickedNodeData.id);
-        setSource(clickedNodeData.id);
-        setTreeFile(clickedNodeData.id);
-      }
-      if (clickedNodeData.type === 'directory') {
-        if (clickedNodeData.explored) {
-          return;
-        } else {
-          electron
-            .exploreDirectory(dirPath, getRelativePath(clickedNodeData.id, dirPath))
-            .then(async (data: Directory) => {
-              const node = convertDirectoryToNodeData(data);
-              const _tmp = { ...nodeData };
-              findNodeDataAndUpdate(_tmp, node.id, found => {
-                found.children = node.children;
-                found.explored = true;
-                found.isOpen = true;
-              });
-              setNodeData(_node => _tmp);
-            });
+      try {
+        if (clickedNodeData.type === 'file') {
+          openFile(clickedNodeData.id);
+          setSource(clickedNodeData.id);
+          setTreeFile(clickedNodeData.id);
         }
+        if (clickedNodeData.type === 'directory') {
+          if (clickedNodeData.explored) {
+            return;
+          } else {
+            electron
+              .exploreDirectory(dirPath, getRelativePath(clickedNodeData.id, dirPath))
+              .then(async (data: Directory) => {
+                const node = convertDirectoryToNodeData(data);
+                const _tmp = { ...nodeData };
+                findNodeDataAndUpdate(_tmp, node.id, found => {
+                  found.children = node.children;
+                  found.explored = true;
+                  found.isOpen = true;
+                });
+                setNodeData(_node => _tmp);
+              });
+          }
+        }
+      } catch (err: any) {
+        toast.error(err.message);
       }
+
       defaultOnClick();
     },
     [JSON.stringify(nodeData), dirPath],

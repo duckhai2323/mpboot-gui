@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { useElectron } from '../../hooks/useElectron';
 import { useParameter } from '../../hooks/useParameter';
 import type { RootState } from '../../redux/store/root';
@@ -10,9 +11,14 @@ export const Treefile = () => {
   const electron = useElectron();
   const { treefile } = useSelector((state: RootState) => state.parameter);
   const { dirPath } = useSelector((state: RootState) => state.workspace);
+  const navigate = useNavigate();
   const [, , setTreefile] = useParameter();
 
   useEffect(() => {
+    if (!dirPath) {
+      navigate('/dashboard');
+      return;
+    }
     electron.searchDirectoryTree(dirPath, '**/*.treefile').then(treefiles => {
       setTreefiles(treefiles);
     });
@@ -32,6 +38,7 @@ export const Treefile = () => {
       <td>
         <input
           type="text"
+          id="treefile-input"
           list="treefile"
           placeholder="Treefile"
           onChange={onChange}

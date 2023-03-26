@@ -3,6 +3,7 @@ import { Database } from 'sqlite3';
 import { dbPath } from '../const';
 import { Workspace } from '../entity/workspace';
 import type { PaginationOptions } from './options';
+import { WorkspaceInputData } from '../entity/workspace-input-data';
 export class Repository {
   private isMigrated = false;
   private constructor(private db: Database) {
@@ -21,23 +22,32 @@ export class Repository {
     logger.debug('Repository.migrate()');
 
     return new Promise((resolve, reject) => {
-      this.db.run(
-        `CREATE TABLE IF NOT EXISTS workspaces (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    path TEXT NOT NULL,
-                    name TEXT NOT NULL,
-                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                    last_used_at DATETIME DEFAULT CURRENT_TIMESTAMP
-                )`,
-        err => {
+      this.db.serialize(() => {
+        this.db.run('BEGIN TRANSACTION');
+        this.db.run(`CREATE TABLE IF NOT EXISTS workspaces (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          path TEXT NOT NULL,
+          name TEXT NOT NULL,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          last_used_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )`);
+
+        this.db.run(`CREATE TABLE IF NOT EXISTS workspace_input_data (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          workspace_id INTEGER NOT NULL,
+          ref_name TEXT NOT NULL,
+          type TEXT NOT NULL,
+          input_path TEXT NOT NULL
+        )`);
+        this.db.run('COMMIT', err => {
           if (err) {
             reject(err);
           } else {
             this.isMigrated = true;
             resolve();
           }
-        },
-      );
+        });
+      });
     });
   }
 
@@ -92,6 +102,82 @@ export class Repository {
           resolve(null);
         }
       });
+    });
+  }
+
+  public async getWorkspaceByDirectoryPath(dirPath: string): Promise<Workspace | null> {
+    await this.migrate();
+    logger.debug('Repository.getWorkspaceByDirectoryPath()', { dirPath });
+    const getWsPromise = new Promise<Workspace | null>((resolve, reject) => {
+      this.db.get('SELECT * FROM workspaces WHERE path = ? LIMIT 1', [dirPath], (err, row) => {
+        if (err) {
+          reject(err);
+        } else {
+          if (row) {
+            resolve(Workspace.fromRow(row));
+          }
+          resolve(null);
+        }
+      });
+    });
+    const ws = await getWsPromise;
+    if (!ws) {
+      return null;
+    }
+    ws.inputData = await this.getWorkspaceInputDataByWorkspaceId(ws.id);
+    return ws;
+  }
+  public async getWorkspaceInputDataByWorkspaceId(
+    workspaceId: number,
+  ): Promise<WorkspaceInputData[]> {
+    await this.migrate();
+    logger.debug('Repository.getWorkspaceInputDataByWorkspaceId()', { workspaceId });
+    return new Promise((resolve, reject) => {
+      this.db.all(
+        'SELECT * FROM workspace_input_data WHERE workspace_id = ?',
+        workspaceId,
+        (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            if (rows) {
+              resolve(rows.map(WorkspaceInputData.fromRow));
+            } else {
+              resolve([]);
+            }
+          }
+        },
+      );
+    });
+  }
+  public async createInputDataForWorkspace(
+    workspaceId: number,
+    inputData: WorkspaceInputData[],
+  ): Promise<WorkspaceInputData[]> {
+    await this.migrate();
+    logger.debug('Repository.createInputDataForWorkspace()', { inputData });
+    const values = inputData.map(data => [workspaceId, data.refName, data.type, data.inputPath]);
+    if (values.length === 0) {
+      return [];
+    }
+    return new Promise((resolve, reject) => {
+      const rows: WorkspaceInputData[] = [];
+      for (const value of values) {
+        this.db.get(
+          'INSERT INTO workspace_input_data (workspace_id, ref_name, type, input_path) VALUES (?, ?, ?, ?) returning *',
+          value,
+          (err, row) => {
+            if (err) {
+              reject(err);
+            } else {
+              rows.push(WorkspaceInputData.fromRow(row));
+              if (rows.length === values.length) {
+                resolve(rows);
+              }
+            }
+          },
+        );
+      }
     });
   }
 }

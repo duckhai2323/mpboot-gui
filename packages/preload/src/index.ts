@@ -6,7 +6,12 @@ import type { ExposedElectron } from '../../common/electron';
 import { generateLog, subscribeLog, unsubscribeLog } from './log';
 import { executeCommand, subscribeCommandCallbackOnFinish } from './command';
 import { openContentFile, readContentFile } from './content-file';
-import { createWorkspace, listWorkspaces, openDirectoryForWorkspace } from './workspace';
+import {
+  createWorkspace,
+  listWorkspaces,
+  chooseDirectory,
+  chooseDirectoryOrFile,
+} from './workspace';
 import {
   getFirstLoadDirectoryTree,
   subscribeDirectoryTree,
@@ -15,7 +20,7 @@ import {
 } from './directory-tree';
 import { contextBridge, ipcRenderer } from 'electron';
 import { IPC_EVENTS } from '../../common/ipc';
-import { dirname, join } from './fs';
+import { dirname, isDirectory, join } from './fs';
 import { basename } from 'path';
 import { showContentMenu } from './menu';
 
@@ -41,7 +46,9 @@ export const exposed: ExposedElectron = {
   testAvailable,
   listWorkspaces: listWorkspaces,
   createWorkspace: createWorkspace,
-  openDirectoryForWorkspace,
+  chooseDirectory: chooseDirectory,
+  chooseDirectoryOrFile: chooseDirectoryOrFile,
+  isDirectory: isDirectory,
   dirname: dirname,
   basename: basename,
   join: join,

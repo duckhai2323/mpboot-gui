@@ -1,16 +1,19 @@
-import { basename } from 'path';
+import type { WorkspaceInputData } from './workspace-input-data';
 
 export class Workspace {
   public id: number;
   public name: string;
   public createdAt: Date;
   public updatedAt: Date;
-  constructor(public path: string) {
+  public path: string;
+  public inputData?: WorkspaceInputData[];
+
+  constructor(name: string, path: string) {
     this.id = -1;
     this.createdAt = new Date();
     this.updatedAt = new Date();
     this.path = path;
-    this.name = basename(path);
+    this.name = name;
   }
 
   public static fromRow(row: any): Workspace {

@@ -6,7 +6,6 @@ import { ContentView } from '../components/ContentView/ContentView';
 import { FileTree } from '../components/FileTree/FileTree';
 import { LogView } from '../components/LogView/LogView';
 import { ParameterView } from '../components/ParameterView/ParameterView';
-import 'allotment/dist/style.css';
 import './main.css';
 import { TreePreviewWithSize } from '../components/TreePreview/TreePreview';
 

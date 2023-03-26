@@ -1,8 +1,7 @@
 import type { FC } from 'react';
 import React, { useEffect, useRef } from 'react';
 import './TreePreview.css';
-// @ts-ignore
-import * as phylotree from 'phylotree';
+import { phylotree } from 'phylotree';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../redux/store/root';
 
@@ -24,7 +23,7 @@ export const TreePreview: FC<TreePreviewProps> = ({ width, height, mode = 'norma
   const [treeRenderHtml, setTreeRenderHtml] = React.useState('<div></div>');
   useEffect(() => {
     if (!newick) return;
-    const _tree = new phylotree.phylotree(newick);
+    const _tree = new phylotree(newick);
     const renderOptions: any = {
       width: width,
       height: height,

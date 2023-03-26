@@ -1,6 +1,6 @@
 export const initialWorkspaceState = {
-  dirPath: '/Users/aqaurius6666/codes/electronapp/testfolder',
-  name: 'testfolder',
+  dirPath: '',
+  name: '',
   id: -1,
 };
 

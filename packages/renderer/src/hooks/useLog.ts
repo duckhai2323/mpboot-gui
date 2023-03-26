@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import { singletonHook } from 'react-singleton-hook';
 import { Actions } from '../redux/slice/log.slice';
@@ -30,25 +31,29 @@ const useLogImpl = (): [
    * Render whenever log file changes
    */
   const subscribeLog = useCallback((logFile: string) => {
-    const logStream = electron.subscribeLog(logFile);
-    dispatch(
-      Actions.setLogFile({
-        logFile: logFile,
-        logData: [],
-      }),
-    );
-    logStream.on('data', (data: string) => {
+    try {
+      const logStream = electron.subscribeLog(logFile);
       dispatch(
-        Actions.appendLogData({
-          logData: [data],
+        Actions.setLogFile({
+          logFile: logFile,
+          logData: [],
         }),
       );
-    });
-    setUnsubscribeLogFunc(_currentFunc => {
-      return function () {
-        logStream.unregister();
-      };
-    });
+      logStream.on('data', (data: string) => {
+        dispatch(
+          Actions.appendLogData({
+            logData: [data],
+          }),
+        );
+      });
+      setUnsubscribeLogFunc(_currentFunc => {
+        return function () {
+          logStream.unregister();
+        };
+      });
+    } catch (err: any) {
+      toast.error(err.message);
+    }
   }, []);
 
   /**

@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { toast } from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import { Actions } from '../redux/slice/phylogen-tree.slice';
 import { useElectron } from './useElectron';
@@ -17,8 +18,13 @@ const usePhylogenTreeImpl = (): [
 
   const subscribeCommand = useCallback((commandId: string) => {
     const commandStream = electron.subscribeCommandCallbackOnFinish(commandId, async result => {
-      const treeNewick = (await electron.readContentFile(result.treeFile)).trimEnd();
-      setNewick(treeNewick);
+      if (result.isError) {
+        toast.error("Command didn't finish successfully");
+      } else {
+        const treeNewick = (await electron.readContentFile(result.treeFile)).trimEnd();
+        setNewick(treeNewick);
+        toast.success('Command finished successfully');
+      }
       commandStream.unsubscribe();
     });
   }, []);
@@ -29,12 +35,16 @@ const usePhylogenTreeImpl = (): [
   }, []);
 
   const setTreeFile = useCallback((filePath: string) => {
-    if (!isValidTreeFile(filePath)) {
-      return;
-    }
     (async () => {
-      const treeNewick = (await electron.readContentFile(filePath)).trimEnd();
-      setNewick(treeNewick);
+      try {
+        if (!isValidTreeFile(filePath)) {
+          return;
+        }
+        const treeNewick = (await electron.readContentFile(filePath)).trimEnd();
+        setNewick(treeNewick);
+      } catch (err: any) {
+        toast.error(err.message);
+      }
     })();
   }, []);
 

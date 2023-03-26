@@ -4,9 +4,22 @@ export interface IWorkspace {
   path: string;
   createdAt: Date;
   updatedAt: Date;
+  inputData?: IWorkspaceInputData[];
 }
 
-export interface WorkspaceChooseDirectoryDialogResult {
+export interface CreateWorkspaceRequest {
+  name: string;
+  path: string;
+  inputData: IWorkspaceInputData[];
+}
+
+export interface DialogChooseDirectoryOrFileResult {
   canceled: boolean;
-  directoryPath?: string;
+  paths?: string[];
+}
+
+export interface IWorkspaceInputData {
+  refName: string;
+  type: 'file' | 'directory';
+  inputPath: string;
 }

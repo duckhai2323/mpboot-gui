@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useReducer } from 'react';
+import { toast } from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import { Actions } from '../redux/slice/parameter.slice';
 import type { ParameterState } from '../redux/state/parameter.state';
@@ -54,9 +55,13 @@ export const useParameter = (): [
 
   const executeCommand = useCallback(
     async (parameter: ParameterState) => {
-      const { logFile, commandId } = await electron.executeCommand(parameter);
-      subscribeLog(logFile);
-      subscribeCommand(commandId);
+      try {
+        const { logFile, commandId } = await electron.executeCommand(parameter);
+        subscribeLog(logFile);
+        subscribeCommand(commandId);
+      } catch (err: any) {
+        toast.error(err.message);
+      }
     },
     [subscribeLog],
   );

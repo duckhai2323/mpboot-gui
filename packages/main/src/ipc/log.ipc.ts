@@ -1,12 +1,10 @@
-import { ipcMain } from 'electron';
 import { logManagerInstance } from '../entity/log-manager';
 import { IPC_EVENTS } from '../../../common/ipc';
 import { Commander } from '../entity/commander';
-import { logger } from '../../../common/logger';
 import { mpbootExecutablePath } from '../const';
+import { wrapperIpcMainHandle, wrapperIpcMainOn } from './common.ipc';
 
-ipcMain.on(IPC_EVENTS.LOG_SUBSCRIBE, (event, logFile) => {
-  logger.debug('Received LOG_SUBSCRIBE', { logFile });
+wrapperIpcMainOn(IPC_EVENTS.LOG_SUBSCRIBE, (event, logFile) => {
   if (!logManagerInstance.isValidLogFile(logFile)) {
     return;
   }
@@ -15,8 +13,7 @@ ipcMain.on(IPC_EVENTS.LOG_SUBSCRIBE, (event, logFile) => {
   });
 });
 
-ipcMain.handle(IPC_EVENTS.LOG_GENERATE, async (_event, _arg) => {
-  logger.debug('Received LOG_GENERATE');
+wrapperIpcMainHandle(IPC_EVENTS.LOG_GENERATE, async (_event, _arg) => {
   const command = new Commander(mpbootExecutablePath, ['--help'], {});
   const result = await command.execute(() => {
     return;
@@ -24,8 +21,7 @@ ipcMain.handle(IPC_EVENTS.LOG_GENERATE, async (_event, _arg) => {
   return result.logFile;
 });
 
-ipcMain.on(IPC_EVENTS.LOG_UNSUBSCRIBE, (_event, logFile) => {
-  logger.debug('Received LOG_UNSUBSCRIBE', { logFile });
+wrapperIpcMainOn(IPC_EVENTS.LOG_UNSUBSCRIBE, (_event, logFile) => {
   if (!logManagerInstance.isValidLogFile(logFile)) {
     return;
   }

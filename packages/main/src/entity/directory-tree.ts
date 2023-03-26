@@ -1,30 +1,35 @@
 import type { AsyncSubscription } from '@parcel/watcher';
 import { subscribe } from '@parcel/watcher';
-import { readFile, stat } from 'fs/promises';
+import { access, constants, readFile, stat, symlink } from 'fs/promises';
 import { glob } from 'glob';
-import path from 'path';
+import path, { join } from 'path';
 import { promisify } from 'util';
 import type { Directory, DirectoryTreeEvent } from '../../../common/directory-tree';
 import { logger } from '../../../common/logger';
+import type { WorkspaceInputData } from './workspace-input-data';
 
 const globAsync = promisify(glob);
 
 export class DirectoryTree {
-  private dirPath: string;
+  private path: string;
+  private name: string;
   private watcher: AsyncSubscription | null = null;
   private currentDirectory: Directory | null = null;
+  private inputData: WorkspaceInputData[];
 
-  constructor(dirPath: string) {
-    this.dirPath = dirPath;
+  constructor(name: string, path: string, inputData: WorkspaceInputData[]) {
+    this.path = path;
+    this.name = name;
+    this.inputData = inputData;
   }
 
   public async search(pattern: string): Promise<string[]> {
-    const ret = await globAsync(pattern, { cwd: this.dirPath });
+    const ret = await globAsync(pattern, { cwd: this.path });
     return ret;
   }
 
   public async subscribe(onDirectoryTreeEvent: (events: DirectoryTreeEvent[]) => void) {
-    this.watcher = await subscribe(this.dirPath, async (err, events) => {
+    this.watcher = await subscribe(this.path, async (err, events) => {
       if (err) {
         logger.error('Error when subscribe watcher', err);
         return [];
@@ -63,11 +68,51 @@ export class DirectoryTree {
     }
   }
 
+  public async bootstrap() {
+    try {
+      if (!(await stat(this.path)).isDirectory()) {
+        throw new Error('Workspace directory tree invalid is not directory');
+      }
+      const wsPath = this.path;
+      this.currentDirectory = {
+        path: wsPath,
+        name: this.name,
+        children: await Promise.all(this.inputData.map(e => this.bootstrapDirectory(wsPath, e))),
+      };
+    } catch (err: any) {
+      logger.error(err?.message, err);
+      throw new Error('Workspace directory tree invalid');
+    }
+  }
+  private async isExist(path: string): Promise<boolean> {
+    try {
+      await access(path, constants.F_OK);
+      return true;
+    } catch (err: any) {
+      return false;
+    }
+  }
+  private async bootstrapDirectory(
+    wsPath: string,
+    inputData: WorkspaceInputData,
+  ): Promise<Directory> {
+    const inputStat = await stat(inputData.inputPath);
+    const type = inputStat.isDirectory() ? 'dir' : 'file';
+
+    if (!(await this.isExist(join(wsPath, inputData.refName)))) {
+      await symlink(inputData.inputPath, join(wsPath, inputData.refName), type);
+    }
+    return {
+      path: join(wsPath, inputData.refName),
+      name: inputData.refName,
+    };
+  }
+
   public async explore(dirToExplore?: string): Promise<Directory> {
     const currentPath = dirToExplore || '';
     const pattern = path.join(currentPath, '*');
-    const all = await globAsync(pattern, { cwd: this.dirPath });
-    const files = await globAsync(pattern, { cwd: this.dirPath, nodir: true });
+    const all = await globAsync(pattern, { cwd: this.path });
+    const files = await globAsync(pattern, { cwd: this.path, nodir: true });
     const children: Directory[] = [];
     for (const file of files) {
       const tmpId = all.indexOf(file);
@@ -75,7 +120,7 @@ export class DirectoryTree {
     }
     all.forEach(file => {
       children.push({
-        path: path.join(this.dirPath, file),
+        path: path.join(this.path, file),
         name: path.basename(file),
         children: [],
       });
@@ -83,14 +128,14 @@ export class DirectoryTree {
 
     files.forEach(file => {
       children.push({
-        path: path.join(this.dirPath, file),
+        path: path.join(this.path, file),
         name: path.basename(file),
       });
     });
     if (dirToExplore === undefined) {
       this.currentDirectory = {
-        path: this.dirPath,
-        name: path.basename(this.dirPath),
+        path: this.path,
+        name: path.basename(this.path),
         children: children,
       };
 
@@ -107,7 +152,7 @@ export class DirectoryTree {
   private findNodeAndDo(current: Directory, nodePath: string, callback: (node: Directory) => void) {
     if (!current) return;
 
-    if (current.path === path.join(this.dirPath, nodePath)) {
+    if (current.path === path.join(this.path, nodePath)) {
       callback(current);
       return;
     }

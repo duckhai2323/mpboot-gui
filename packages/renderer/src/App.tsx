@@ -6,6 +6,8 @@ import { HashRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
 import { useWindowSize } from 'usehooks-ts';
 import { useElectron } from './hooks/useElectron';
+import { Toaster } from 'react-hot-toast';
+import "./style"
 // import { DashboardPage } from './pages/dashboard';
 
 const MainPage = lazy(() => import('./pages/main').then(module => ({ default: module.MainPage })));
@@ -14,6 +16,9 @@ const TreeViewPage = lazy(() =>
 );
 const DashboardPage = lazy(() =>
   import('./pages/dashboard').then(module => ({ default: module.DashboardPage })),
+);
+const NewWorkspacePage = lazy(() =>
+  import('./pages/new-workspace').then(module => ({ default: module.NewWorkspacePage })),
 );
 
 function App() {
@@ -59,6 +64,10 @@ function App() {
   return (
     <div style={{ width: size.width, height: size.height }}>
       <Suspense fallback={<div>Loading...</div>}>
+        <Toaster
+          position="bottom-right"
+          reverseOrder={false}
+        />
         <HashRouter>
           <Routes>
             <Route
@@ -72,6 +81,10 @@ function App() {
             <Route
               path="/tree-view"
               element={<TreeViewPage />}
+            />
+            <Route
+              path="/new-workspace"
+              element={<NewWorkspacePage />}
             />
             <Route
               path="*"

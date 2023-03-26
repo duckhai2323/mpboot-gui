@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { useParameter } from '../../hooks/useParameter';
 import type { RootState } from '../../redux/store/root';
+import { MButton } from '../common/Button';
 export const ExecutionButton = () => {
   const parameter = useSelector((state: RootState) => state.parameter);
   const [, , , executeCommand] = useParameter();
@@ -16,12 +17,12 @@ export const ExecutionButton = () => {
 
   return (
     <div>
-      <button
+      <MButton
         id="run-button"
         onClick={onRunButtonSubmit}
       >
         Run
-      </button>
+      </MButton>
     </div>
   );
 };

@@ -3,7 +3,11 @@ import type { ContentFile } from './content-file';
 import type { Directory } from './directory-tree';
 import type { ShowContextMenuRequest } from './menu';
 import type { Parameter } from './parameter';
-import type { IWorkspace, WorkspaceChooseDirectoryDialogResult } from './workspace';
+import type {
+  CreateWorkspaceRequest,
+  IWorkspace,
+  DialogChooseDirectoryOrFileResult,
+} from './workspace';
 
 export interface CustomEventEmitter {
   on: (event: string, callback: (data: any) => void) => void;
@@ -34,14 +38,16 @@ export interface ExposedElectron {
     callback: (result: CommandCallbackOnFinishResult) => void,
   ) => Unsubscribe;
 
-  openDirectoryForWorkspace: () => Promise<WorkspaceChooseDirectoryDialogResult>;
+  chooseDirectory: () => Promise<DialogChooseDirectoryOrFileResult>;
+  chooseDirectoryOrFile: () => Promise<DialogChooseDirectoryOrFileResult>;
   listWorkspaces: () => Promise<IWorkspace[]>;
-  createWorkspace: (dirPath: string) => Promise<IWorkspace>;
+  createWorkspace: (req: CreateWorkspaceRequest) => Promise<IWorkspace>;
 
   testAvailable: () => Promise<boolean>;
 
   dirname: (path: string) => string;
   basename: (path: string) => string;
+  isDirectory: (path: string) => Promise<boolean>;
   join: (...paths: string[]) => string;
 
   showContentMenu: (req: ShowContextMenuRequest) => void;

@@ -5,4 +5,5 @@ export interface CommandExecuteResult {
 
 export interface CommandCallbackOnFinishResult {
   treeFile: string;
+  isError: boolean;
 }
