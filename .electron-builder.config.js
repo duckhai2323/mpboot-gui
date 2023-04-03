@@ -23,7 +23,7 @@ module.exports = async function () {
     asar: true,
     // Specify linux target just for disabling snap compilation
     linux: {
-      target: 'deb',
+      target: 'AppImage',
       publish: ['github'],
     },
     mac: {

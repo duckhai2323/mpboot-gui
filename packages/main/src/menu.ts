@@ -92,6 +92,13 @@ const template = [
     role: 'help',
     submenu: [
       {
+        label: 'Check for updates',
+        click: async () => {
+          const { autoUpdater } = require('electron-updater');
+          autoUpdater.checkForUpdatesAndNotify();
+        },
+      },
+      {
         label: 'Open developer tools',
         click: async () => {
           const window = await restoreOrCreateWindow();
