@@ -3,6 +3,7 @@
 import { chrome } from '../../.electron-vendors.cache.json';
 import { renderer } from 'unplugin-auto-expose';
 import { join } from 'node:path';
+import react from '@vitejs/plugin-react';
 import { injectAppVersion } from '../../version/inject-app-version-plugin.mjs';
 
 const PACKAGE_ROOT = __dirname;
@@ -37,7 +38,6 @@ const config = {
       output: {
         manualChunks: {
           lodash: ['lodash'],
-          react: ['react', 'react-dom', 'react-router-dom', 'redux'],
           allotment: ['allotment'],
           phylotree: ['phylotree-visualization-demo', 'phylotree'],
         },
@@ -55,7 +55,7 @@ const config = {
       preloadEntry: join(PACKAGE_ROOT, '../preload/src/index.ts'),
     }),
     injectAppVersion(),
-    // react(),
+    react(),
   ],
 };
 
