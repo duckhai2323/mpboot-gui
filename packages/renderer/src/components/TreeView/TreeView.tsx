@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import './phylotree.css';
 import { PhylotreeVisualization } from 'phylotree-visualization-demo';
 import { useSelector } from 'react-redux';

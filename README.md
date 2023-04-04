@@ -1,41 +1,24 @@
-[![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner-direct-single.svg)](https://stand-with-ukraine.pp.ua)
+# MpBoot GUI
 
----
+GUI for [mpboot](https://github.com/diepthihoang/mpboot) built by ElectronJs
 
-# Vite Electron Builder Boilerplate
+# Used template
 
 This is a template for secure electron applications. Written following the latest safety requirements, recommendations
 and best practices.
 
 Under the hood is [Vite] — A next-generation blazing fast bundler, and [electron-builder] for packaging.
 
-## Get started
-
-Follow these steps to get started with the template:
-
-1. Click the **[Use this template](https://github.com/cawa-93/vite-electron-builder/generate)** button (you must be
-   logged in) or just clone this repo.
-2. If you want to use another package manager you may need to edit [`.github/workflows`](/.github/workflows) — [it
-   uses `npm` by default](https://github.com/search?q=npm+repo%3Acawa-93%2Fvite-electron-builder+path%3A.github%2Fworkflows&type=Code&ref=advsearch&l=&l=).
-3. If you like this template, don't forget to give a github star or send support! ⭐♥
-
-That's all you need. 😉
-
-> **Note**:
-> This template uses npm v7 feature — [**Installing Peer Dependencies
-Automatically**](https://github.com/npm/rfcs/blob/latest/implemented/0025-install-peer-deps.md). If you are using a
-different package manager, you may need to install some peerDependencies manually.
-
 ## Features
 
-### Electron [![Electron version](https://img.shields.io/github/package-json/dependency-version/cawa-93/vite-electron-builder/dev/electron?label=%20)][electron]
+### Electron [![Electron version](https://img.shields.io/github/package-json/dependency-version/aqaurius6666/mpboot-gui/dev/electron?label=%20)][electron]
 
 - This template uses the latest electron version with all the latest security patches.
 - The architecture of the application is built according to the
   security [guides](https://www.electronjs.org/docs/tutorial/security) and best practices.
 - The latest version of the [electron-builder] is used to package the application.
 
-### Vite [![Vite version](https://img.shields.io/github/package-json/dependency-version/cawa-93/vite-electron-builder/dev/vite?label=%20)][vite]
+### Vite [![Vite version](https://img.shields.io/github/package-json/dependency-version/aqaurius6666/mpboot-gui/dev/vite?label=%20)][vite]
 
 - [Vite] is used to bundle all source codes. It's an extremely fast bundler, that has a vast array of amazing features.
   You can learn more about how it is arranged in [this](https://www.youtube.com/watch?v=xXrhg26VCSc) video.
@@ -48,35 +31,16 @@ Vite provides many useful features, such as: `TypeScript`, `TSX/JSX`, `CSS/JSON 
 
 > [See all Vite features](https://vitejs.dev/guide/features.html).
 
-### TypeScript [![TypeScript version](https://img.shields.io/github/package-json/dependency-version/cawa-93/vite-electron-builder/dev/typescript?label=%20)][typescript] (optional)
+### TypeScript [![TypeScript version](https://img.shields.io/github/package-json/dependency-version/aqaurius6666/mpboot-gui/dev/typescript?label=%20)][typescript] (optional)
 
 - The latest version of TypeScript is used for all the source code.
 - **Vite** supports TypeScript out of the box. However, it does not support type checking.
 - Code formatting rules follow the latest TypeScript recommendations and best practices thanks
   to [@typescript-eslint/eslint-plugin](https://www.npmjs.com/package/@typescript-eslint/eslint-plugin).
 
-> [Guide to disable typescript and remove dependencies](https://github.com/cawa-93/vite-electron-builder/discussions/339) 
+### React [![React version](https://img.shields.io/github/package-json/dependency-version/aqaurius6666/mpboot-gui/react?label=%20&)][React] (optional)
 
-### Vue [![Vue version](https://img.shields.io/github/package-json/dependency-version/cawa-93/vite-electron-builder/dev/vue?label=%20&)][vue] (optional)
-
-- By default, web pages are built using [Vue]. However, you can easily change that. Or not use additional frameworks at
-  all.
-- Code formatting rules follow the latest Vue recommendations and best practices thanks to [eslint-plugin-vue].
-
-> [Find more forks 🔱 for others frameworks or setups](https://github.com/cawa-93/vite-electron-builder/discussions/categories/forks)
-
-### Continuous Integration
-
-- The configured workflow will check the types for each push and PR.
-- The configured workflow will check the code style for each push and PR.
-- **Automatic tests**
-  used [Vitest ![Vitest version](https://img.shields.io/github/package-json/dependency-version/cawa-93/vite-electron-builder/dev/vitest?label=%20&color=yellow)][vitest]
-  -- A blazing fast test framework powered by Vite.
-  - Unit tests are placed within each package and are ran separately.
-  - End-to-end tests are placed in the root [`tests`](tests) directory and use [playwright].
-
-![Workflow graph](https://user-images.githubusercontent.com/1662812/213429323-ef4bcc87-c273-4f2f-b77f-c04cf6dbc36d.png)
-
+- Code formatting rules follow the latest React recommendations and best practices thanks to [eslint-plugin-react].
 
 ### Publishing
 
@@ -84,10 +48,6 @@ Vite provides many useful features, such as: `TypeScript`, `TSX/JSX`, `CSS/JSON 
   - Code signing supported. See [`release` workflow](.github/workflows/release.yml).
   - **Auto-update is supported**. After the release is published, all client applications will download the new version
   and install updates silently.
-  
-> **Note**:
-> This template **configured only for GitHub public repository**, but electron-builder also supports other update distribution servers. Find more in [electron-builder docs](https://www.electron.build/configuration/publish).
-
 ## How it works
 
 The template requires a minimum amount [dependencies](package.json). Only **Vite** is used for building, nothing more.
@@ -282,8 +242,6 @@ See [Contributing Guide](contributing.md).
 
 [electron-builder]: https://github.com/electron-userland/electron-builder
 
-[vue]: https://github.com/vuejs/vue-next
-
 [vue-router]: https://github.com/vuejs/vue-router-next/
 
 [typescript]: https://github.com/microsoft/TypeScript/
@@ -299,6 +257,8 @@ See [Contributing Guide](contributing.md).
 [cawa-93-github]: https://github.com/cawa-93/
 
 [cawa-93-sponsor]: https://www.patreon.com/Kozack/
+
+[react]: https://github.com/facebook/react
 
 
 # Trouble shooting

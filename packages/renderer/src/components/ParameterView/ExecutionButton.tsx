@@ -1,4 +1,5 @@
-import React, { useCallback } from 'react';
+import type React from 'react';
+import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { useParameter } from '../../hooks/useParameter';
 import type { RootState } from '../../redux/store/root';

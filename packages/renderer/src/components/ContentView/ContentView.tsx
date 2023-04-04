@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { PhyRenderedContent } from './PhyRenderedContent';
 import { TxtRenderedContent } from './TxtRenderedContent';
 import './ContentView.css';

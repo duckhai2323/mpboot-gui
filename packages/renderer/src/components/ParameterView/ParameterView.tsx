@@ -1,4 +1,3 @@
-import React from 'react';
 import Collapsible from 'react-collapsible';
 import { SequenceType } from './SequenceType';
 import { OutputPrefix } from './OutputPrefix';

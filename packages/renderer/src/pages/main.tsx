@@ -1,5 +1,4 @@
 import { Allotment } from 'allotment';
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { useWindowSize } from 'usehooks-ts';
 import { ContentView } from '../components/ContentView/ContentView';

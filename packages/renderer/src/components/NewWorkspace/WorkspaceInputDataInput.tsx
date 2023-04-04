@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useElectron } from '../../hooks/useElectron';
 import { MButton } from '../common/Button';
 import type { NewWorkspaceInputData } from './NewWorkspace';

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../redux/store/root';
 import { getRelativePath as getRelativePathFs } from '../../utils/fs';

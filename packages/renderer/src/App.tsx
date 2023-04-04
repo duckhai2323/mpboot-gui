@@ -7,7 +7,7 @@ import './App.css';
 import { useWindowSize } from 'usehooks-ts';
 import { useElectron } from './hooks/useElectron';
 import { Toaster } from 'react-hot-toast';
-import "./style"
+import './style';
 // import { DashboardPage } from './pages/dashboard';
 
 const MainPage = lazy(() => import('./pages/main').then(module => ({ default: module.MainPage })));

@@ -1,4 +1,3 @@
-import React from 'react';
 import FolderTree from '@aqaurius6666/react-folder-tree';
 import '@aqaurius6666/react-folder-tree/dist/style.css';
 import './FileTree.css';

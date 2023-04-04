@@ -1,5 +1,4 @@
 import type { FC } from 'react';
-import React from 'react';
 import './LogView.css';
 
 import { LogViewer, LogViewerSearch } from '@patternfly/react-log-viewer';
