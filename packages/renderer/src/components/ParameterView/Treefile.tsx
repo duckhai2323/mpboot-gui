@@ -13,7 +13,7 @@ export const Treefile = () => {
   const { treefile } = useSelector((state: RootState) => state.parameter);
   const { dirPath } = useSelector((state: RootState) => state.workspace);
   const navigate = useNavigate();
-  const [, , setTreefile] = useParameter();
+  const { setParameter } = useParameter();
 
   useEffect(() => {
     if (!dirPath) {
@@ -27,10 +27,10 @@ export const Treefile = () => {
 
   const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value === '') {
-      setTreefile('');
+      setParameter({ treefile: '' });
       return;
     }
-    setTreefile(electron.join(dirPath, e.target.value));
+    setParameter({ treefile: electron.join(dirPath, e.target.value) });
   }, []);
 
   return (

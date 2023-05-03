@@ -1,20 +1,16 @@
 import type React from 'react';
-import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { useParameter } from '../../hooks/useParameter';
 import type { RootState } from '../../redux/store/root';
 import { MButton } from '../common/Button';
+import { useExecution } from '../../hooks/useExecution';
 export const ExecutionButton = () => {
   const parameter = useSelector((state: RootState) => state.parameter);
-  const [, , , executeCommand] = useParameter();
+  const { executeCommand } = useExecution();
 
-  const onRunButtonSubmit: React.FormEventHandler<HTMLButtonElement> = useCallback(
-    e => {
-      e.preventDefault();
-      executeCommand(parameter);
-    },
-    [parameter, executeCommand],
-  );
+  const onRunButtonSubmit: React.FormEventHandler<HTMLButtonElement> = e => {
+    e.preventDefault();
+    executeCommand(parameter, parameter.isExecutionHistory);
+  };
 
   return (
     <div>

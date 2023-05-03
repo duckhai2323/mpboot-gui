@@ -4,6 +4,7 @@ import { logSlice } from '../slice/log.slice';
 import { parameterSlice } from '../slice/parameter.slice';
 import { workspaceSlice } from '../slice/workspace.slice';
 import { phylogenTreeSlice } from '../slice/phylogen-tree.slice';
+import { executionSlice } from '../slice/execution.slice';
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     log: logSlice.reducer,
     workspace: workspaceSlice.reducer,
     phylogenTree: phylogenTreeSlice.reducer,
+    execution: executionSlice.reducer,
   },
 });
 

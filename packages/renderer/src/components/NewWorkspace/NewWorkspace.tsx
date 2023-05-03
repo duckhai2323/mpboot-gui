@@ -20,7 +20,7 @@ export type NewWorkspaceInputData = {
 };
 
 export const NewWorkspace = () => {
-  const [, setWorkspace] = useWorkspace();
+  const { setWorkspace } = useWorkspace();
   const navigate = useNavigate();
 
   const electron = useElectron();

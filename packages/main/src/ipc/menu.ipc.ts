@@ -2,7 +2,7 @@ import type { WebContents } from 'electron';
 import { BrowserWindow, Menu } from 'electron';
 import { IPC_EVENTS } from '../../../common/ipc';
 import type { ShowContextMenuRequest } from '../../../common/menu';
-import { isMac } from '../const';
+import { is } from '../const';
 import { wrapperIpcMainOn } from './common.ipc';
 
 wrapperIpcMainOn(IPC_EVENTS.CONTEXT_MENU_SHOW, (event, req: ShowContextMenuRequest) => {
@@ -29,7 +29,7 @@ wrapperIpcMainOn(IPC_EVENTS.CONTEXT_MENU_SHOW, (event, req: ShowContextMenuReque
 const buildMenuForFileTreeItemDirectory = (webContents: WebContents, data: any): any => {
   const template = [
     {
-      label: isMac ? 'Reveal in Finder' : 'Open folder in Explorer',
+      label: is.mac ? 'Reveal in Finder' : 'Open folder in Explorer',
       click: () => {
         const { shell } = require('electron');
         shell.openPath(data);
@@ -43,7 +43,7 @@ const buildMenuForFileTreeItemDirectory = (webContents: WebContents, data: any):
 const buildMenuForFileTreeItemFile = (webContents: WebContents, data: any): any => {
   const template = [
     {
-      label: isMac ? 'Reveal file in Finder' : 'Open file in Explorer',
+      label: is.mac ? 'Reveal file in Finder' : 'Open file in Explorer',
       click: () => {
         const { shell } = require('electron');
         shell.showItemInFolder(data);

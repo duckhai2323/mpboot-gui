@@ -35,6 +35,7 @@
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/consistent-type-imports": "error",
+    "no-async-promise-executor": "off",
     /**
      * Having a semicolon helps the optimizer interpret your code correctly.
      * This avoids rare errors in optimized code.

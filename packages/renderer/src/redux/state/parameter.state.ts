@@ -3,6 +3,8 @@ export const initialParameterState = {
   multiSources: [] as string[],
   treefile: '',
   sequenceType: '',
+  seed: 0,
+  isExecutionHistory: false,
 };
 
 export type ParameterState = {
@@ -10,4 +12,6 @@ export type ParameterState = {
   multiSources?: string[];
   treefile: string;
   sequenceType: string;
+  seed?: number;
+  isExecutionHistory: boolean;
 };

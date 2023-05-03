@@ -1,9 +1,10 @@
-import type { MouseEventHandler } from 'react';
+import type { MouseEventHandler} from 'react';
 import { useCallback, useEffect, useState } from 'react';
-import type { Directory, DirectoryTreeEvent } from '../../../common/directory-tree';
+import type { DirectoryTreeEvent } from '../../../common/directory-tree';
 import { logger } from '../../../common/logger';
 import {
   convertDirectoryToNodeData,
+  convertDirectoryTreeEventToNodeData,
   findNodeDataAndUpdate,
 } from '../components/FileTree/convert-directory-to-node-data';
 import { useContentView } from './useContentView';
@@ -12,11 +13,12 @@ import { useParameter } from './useParameter';
 import { findTargetNode } from 'use-tree-state';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../redux/store/root';
-import { getRelativePath } from '../utils/fs';
 import type { NodeData } from '@aqaurius6666/react-folder-tree';
 import { usePhylogenTree } from './usePhylogenTree';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { useExecution } from './useExecution';
+import { useLog } from './useLog';
 
 const useFileTreeImpl = (): [
   nodeData: NodeData | undefined,
@@ -30,11 +32,13 @@ const useFileTreeImpl = (): [
   }) => void,
   onContextMenu: MouseEventHandler<HTMLElement>,
 ] => {
-  const { dirPath } = useSelector((state: RootState) => state.workspace);
-  const [openFile, notifyContentFileChange] = useContentView();
-  const [setSource, multiSourcesDispatch] = useParameter();
-  const [, , setTreeFile] = usePhylogenTree();
+  const { dirPath, id: workspaceId } = useSelector((state: RootState) => state.workspace);
+  const { openFile, notifyContentFileChange } = useContentView();
+  const { multiSourcesDispatch, setParameter } = useParameter();
+  const { setSequenceNumber } = useExecution();
+  const { setTreeFile } = usePhylogenTree();
   const electron = useElectron();
+  const { loadFullLog } = useLog();
   const [nodeData, setNodeData] = useState<NodeData>();
   const navigate = useNavigate();
 
@@ -46,7 +50,8 @@ const useFileTreeImpl = (): [
     (async () => {
       try {
         const directory = await electron.getFirstLoadDirectoryTree(dirPath);
-        setNodeData(convertDirectoryToNodeData(directory));
+        const tmp = convertDirectoryToNodeData(directory);
+        setNodeData(tmp);
       } catch (err: any) {
         toast.error(err.message);
       }
@@ -59,39 +64,34 @@ const useFileTreeImpl = (): [
     for (const event of events) {
       const parentPath = electron.dirname(event.path);
       if (event.type === 'create') {
-        findNodeDataAndUpdate(tmp, parentPath, found => {
-          if (found.children?.findIndex(e => e.id == event.path) !== -1) {
-            logger.warn('already exists create directory tree', event.path);
-            return;
-          }
-          const children = found.children || [];
-          const nodeToPush = {
-            id: event.path,
-            name: electron.basename(event.path),
-            isOpen: false,
-            ...(event.isDirectory
-              ? {
-                  children: [],
-                  type: 'directory',
-                  explored: false,
-                }
-              : {
-                  type: 'file',
-                }),
-          };
-          children.push(nodeToPush);
-          children.sort((a, b) => {
-            if (a.type === 'directory' && b.type === 'file') {
-              return -1;
+        let parentDirpath = electron.dirname(event.path);
+        let _isChanged = false;
+        while (!_isChanged) {
+          findNodeDataAndUpdate(tmp, parentDirpath, found => {
+            _isChanged = true;
+            if (found.children?.findIndex(e => e.id == event.path) !== -1) {
+              logger.warn('already exists create directory tree', event.path);
+              return;
             }
-            if (a.type === 'file' && b.type === 'directory') {
-              return 1;
-            }
-            return a.name.localeCompare(b.name);
+            const children = found.children || [];
+            children.push(
+              convertDirectoryTreeEventToNodeData(event, electron.basename(event.path)),
+            );
+            children.sort((a, b) => {
+              if (a.type === 'directory' && b.type === 'file') {
+                return -1;
+              }
+              if (a.type === 'file' && b.type === 'directory') {
+                return 1;
+              }
+              return a.name.localeCompare(b.name);
+            });
+            found.children = children;
+            _isChanged = true;
           });
-          found.children = children;
-          isChanged = true;
-        });
+          parentDirpath = electron.dirname(parentDirpath);
+        }
+        isChanged = _isChanged;
       } else if (event.type === 'update') {
         findNodeDataAndUpdate(tmp, event.path, found => {
           if (found.type === 'file') {
@@ -136,20 +136,20 @@ const useFileTreeImpl = (): [
   const onTreeStateChange = useCallback((state: NodeData, event: any) => {
     try {
       if (event.type === 'toggleOpen') {
-        const clickedNodeData = findTargetNode(state, event.path);
-        if (clickedNodeData.explored) return;
-        electron
-          .exploreDirectory(dirPath, getRelativePath(clickedNodeData.id, dirPath))
-          .then(async (data: Directory) => {
-            const node = convertDirectoryToNodeData(data);
-            const _tmp = { ...state };
-            findNodeDataAndUpdate(_tmp, node.id, found => {
-              found.children = node.children;
-              found.explored = true;
-              found.isOpen = true;
-            });
-            setNodeData(_node => _tmp);
-          });
+        // const clickedNodeData = findTargetNode(state, event.path);
+        // if (clickedNodeData.explored) return;
+        // electron
+        //   .exploreDirectory(dirPath, getRelativePath(clickedNodeData.id, dirPath))
+        //   .then(async (data: Directory) => {
+        //     const node = convertDirectoryToNodeData(data);
+        //     const _tmp = { ...state };
+        //     findNodeDataAndUpdate(_tmp, node.id, found => {
+        //       found.children = node.children;
+        //       found.explored = true;
+        //       found.isOpen = true;
+        //     });
+        //     setNodeData(_node => _tmp);
+        //   });
       }
       if (event.type === 'checkNode') {
         const clickedNodeData = findTargetNode(state, event.path);
@@ -174,8 +174,23 @@ const useFileTreeImpl = (): [
     }
   }, []);
 
+  // const exploreDirectory = async (dirPath: string, clickedNodeData: NodeData) => {
+  //   if (!nodeData) return;
+  //   await electron
+  //     .exploreDirectory(dirPath, getRelativePath(clickedNodeData.id, dirPath))
+  //     .then(async (data: Directory) => {
+  //       const node = convertDirectoryToNodeData(data);
+  //       const _tmp = { ...nodeData };
+  //       findNodeDataAndUpdate(_tmp, node.id, found => {
+  //         found.children = node.children;
+  //         found.explored = true;
+  //         found.isOpen = true;
+  //       });
+  //       setNodeData(_node => _tmp);
+  //     });
+  // }
   const onNameClick = useCallback(
-    ({
+    async ({
       defaultOnClick,
       nodeData: clickedNodeData,
     }: {
@@ -184,28 +199,53 @@ const useFileTreeImpl = (): [
     }) => {
       if (!nodeData) return;
       try {
-        if (clickedNodeData.type === 'file') {
-          openFile(clickedNodeData.id);
-          setSource(clickedNodeData.id);
-          setTreeFile(clickedNodeData.id);
-        }
-        if (clickedNodeData.type === 'directory') {
-          if (clickedNodeData.explored) {
-            return;
-          } else {
-            electron
-              .exploreDirectory(dirPath, getRelativePath(clickedNodeData.id, dirPath))
-              .then(async (data: Directory) => {
-                const node = convertDirectoryToNodeData(data);
-                const _tmp = { ...nodeData };
-                findNodeDataAndUpdate(_tmp, node.id, found => {
-                  found.children = node.children;
-                  found.explored = true;
-                  found.isOpen = true;
-                });
-                setNodeData(_node => _tmp);
-              });
+        if (clickedNodeData.executionHistory) {
+          const result = new RegExp('[0-9]+$').exec(clickedNodeData.executionHistory);
+
+          const executionHistory = await electron.loadExecutionHistory({
+            workspaceId: workspaceId,
+            sequenceNumber: +result![0],
+          });
+          setSequenceNumber(+result![0]);
+          loadFullLog(executionHistory.outputLogFilePath);
+          setTreeFile(executionHistory.outputTreeFilePath);
+          if (clickedNodeData.type === 'file') {
+            openFile(clickedNodeData.id);
+            setParameter({
+              treefile: executionHistory.treefile || '',
+              source: executionHistory.source!,
+              sequenceType: executionHistory.sequenceType || '',
+              seed: executionHistory.seed!,
+              isExecutionHistory: true,
+            });
           }
+          if (clickedNodeData.type === 'directory') {
+            setParameter({
+              treefile: executionHistory.treefile || '',
+              source: executionHistory.source!,
+              sequenceType: executionHistory.sequenceType || '',
+              seed: executionHistory.seed!,
+              isExecutionHistory: true,
+            });
+            // if (!clickedNodeData.explored) {
+            //   await exploreDirectory(dirPath, clickedNodeData)
+            // }
+          }
+        } else {
+          if (clickedNodeData.type === 'file') {
+            openFile(clickedNodeData.id);
+            setParameter({
+              source: clickedNodeData.id,
+              seed: undefined,
+              isExecutionHistory: false,
+            });
+            setTreeFile(clickedNodeData.id);
+          }
+          // if (clickedNodeData.type === 'directory') {
+          //   if (!clickedNodeData.explored) {
+          //     await exploreDirectory(dirPath, clickedNodeData)
+          //   }
+          // }
         }
       } catch (err: any) {
         toast.error(err.message);

@@ -1,8 +1,14 @@
-import type { CommandCallbackOnFinishResult, CommandExecuteResult } from './commander';
+import type {
+  CommandCallbackOnFinishResult,
+  ExecuteCommandRequest,
+  ExecuteCommandResponse,
+  LoadExecutionHistoryRequest,
+  LoadExecutionHistoryResponse,
+  SaveExecutionHistoryRequest,
+} from './commander';
 import type { ContentFile } from './content-file';
 import type { Directory } from './directory-tree';
 import type { ShowContextMenuRequest } from './menu';
-import type { Parameter } from './parameter';
 import type {
   CreateWorkspaceRequest,
   IWorkspace,
@@ -31,7 +37,9 @@ export interface ExposedElectron {
   openContentFile: (filePath: string) => Promise<ContentFile>;
   readContentFile: (filePath: string) => Promise<string>;
 
-  executeCommand: (parameter: Parameter) => Promise<CommandExecuteResult>;
+  executeCommand: (req: ExecuteCommandRequest) => Promise<ExecuteCommandResponse>;
+  saveCommandExecution: (executionInfo: SaveExecutionHistoryRequest) => Promise<boolean>;
+  loadExecutionHistory: (req: LoadExecutionHistoryRequest) => Promise<LoadExecutionHistoryResponse>;
 
   subscribeCommandCallbackOnFinish: (
     commandId: string,

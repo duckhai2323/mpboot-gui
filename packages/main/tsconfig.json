@@ -12,6 +12,11 @@
     "allowSyntheticDefaultImports": true
   },
 
-  "include": ["src/**/*.ts", "../../types/**/*.d.ts", "../common/**/*.ts"],
+  "include": [
+    "src/**/*.ts",
+    "../../types/**/*.d.ts",
+    "../common/**/*.ts",
+    "src/repository/migration/3_create_execution_history.migrate.ts"
+  ],
   "exclude": ["**/*.spec.ts", "**/*.test.ts"]
 }

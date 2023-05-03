@@ -1,6 +1,5 @@
 import FolderTree from '@aqaurius6666/react-folder-tree';
-import '@aqaurius6666/react-folder-tree/dist/style.css';
-import './FileTree.css';
+
 import { useFileTree } from '../../hooks/useFileTree';
 
 export const FileTree = () => {

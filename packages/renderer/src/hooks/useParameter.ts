@@ -1,12 +1,8 @@
-import { useCallback, useEffect, useReducer } from 'react';
-import { toast } from 'react-hot-toast';
+import { useEffect, useReducer } from 'react';
 import { useDispatch } from 'react-redux';
 import { Actions } from '../redux/slice/parameter.slice';
 import type { ParameterState } from '../redux/state/parameter.state';
 import { isValidSourceFile } from '../utils/validate';
-import { useElectron } from './useElectron';
-import { useLog } from './useLog';
-import { usePhylogenTree } from './usePhylogenTree';
 
 type MultiSourcesReducerAction = {
   type: 'add' | 'remove' | 'clear';
@@ -28,47 +24,26 @@ const multiSourcesReducer = (state: string[], action: MultiSourcesReducerAction)
   }
 };
 
-export const useParameter = (): [
-  setSource: (source: string) => void,
-  multiSourcesDispatch: React.Dispatch<MultiSourcesReducerAction>,
-  setTreefile: (treefile: string) => void,
-  executeCommand: (parameter: ParameterState) => void,
-  setParameter: (payload: Partial<ParameterState>) => void,
-] => {
-  const [multiSources, multiSourcesDispatch] = useReducer(multiSourcesReducer, []);
+export const useParameter = (): {
+  setSource: (source: string) => void;
+  setParameter: (payload: Partial<ParameterState>) => void;
+  multiSourcesDispatch: React.Dispatch<MultiSourcesReducerAction>;
+} => {
   const dispatch = useDispatch();
-  const electron = useElectron();
-  const [subscribeLog] = useLog();
-  const [, subscribeCommand] = usePhylogenTree();
-
-  const setSource = useCallback((source: string) => {
-    dispatch(Actions.setParameter({ source }));
-  }, []);
+  const [multiSources, multiSourcesDispatch] = useReducer(multiSourcesReducer, []);
 
   useEffect(() => {
+    if (multiSources.length === 0) return;
     dispatch(Actions.setParameter({ multiSources }));
   }, [multiSources]);
 
-  const setTreeFile = useCallback((treefile: string) => {
-    dispatch(Actions.setParameter({ treefile }));
-  }, []);
+  const setSource = (source: string) => {
+    dispatch(Actions.setParameter({ source }));
+  };
 
-  const executeCommand = useCallback(
-    async (parameter: ParameterState) => {
-      try {
-        const { logFile, commandId } = await electron.executeCommand(parameter);
-        subscribeLog(logFile);
-        subscribeCommand(commandId);
-      } catch (err: any) {
-        toast.error(err.message);
-      }
-    },
-    [subscribeLog],
-  );
-
-  const setParameter = useCallback((payload: Partial<ParameterState>) => {
+  const setParameter = (payload: Partial<ParameterState>) => {
     dispatch(Actions.setParameter(payload));
-  }, []);
+  };
 
-  return [setSource, multiSourcesDispatch, setTreeFile, executeCommand, setParameter];
+  return { setSource, setParameter, multiSourcesDispatch };
 };

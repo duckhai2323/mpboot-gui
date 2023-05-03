@@ -6,7 +6,7 @@ import type { RootState } from '../../redux/store/root';
 
 export const SequenceType = () => {
   const { sequenceType: inputDataType } = useSelector((state: RootState) => state.parameter);
-  const [, , , , setParameter] = useParameter();
+  const { setParameter } = useParameter();
 
   const onChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
     if (e.target.value === '') {

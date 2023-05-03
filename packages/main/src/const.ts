@@ -10,4 +10,8 @@ export const pageUrl =
     : new URL('../renderer/dist/index.html', 'file://' + __dirname).toString();
 
 export const isDevEnv = import.meta.env.DEV;
-export const isMac = process.platform === 'darwin';
+export const is = {
+  mac: process.platform === 'darwin',
+  win: process.platform === 'win32',
+  linux: process.platform === 'linux',
+};

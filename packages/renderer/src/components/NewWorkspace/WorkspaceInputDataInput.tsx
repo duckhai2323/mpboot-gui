@@ -2,7 +2,6 @@ import { useCallback, useState } from 'react';
 import { useElectron } from '../../hooks/useElectron';
 import { MButton } from '../common/Button';
 import type { NewWorkspaceInputData } from './NewWorkspace';
-import './workspace.css';
 
 export const WorkspaceInputDataInput = () => {
   const [inputData, setInputData] = useState<NewWorkspaceInputData[]>([]);

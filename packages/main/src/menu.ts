@@ -1,12 +1,10 @@
 import { app, Menu } from 'electron';
-import { pageUrl } from './const';
+import { is, pageUrl } from './const';
 import { restoreOrCreateWindow } from './mainWindow';
-
-const isMac = process.platform === 'darwin';
 
 const template = [
   //   { role: 'appMenu' }
-  ...(isMac
+  ...(is.mac
     ? [
         {
           label: app.name,
@@ -35,7 +33,7 @@ const template = [
           await window.loadURL(pageUrl + '#/dashboard');
         },
       },
-      isMac ? { role: 'close' } : { role: 'quit' },
+      is.mac ? { role: 'close' } : { role: 'quit' },
     ],
   },
   // { role: 'editMenu' }
@@ -48,7 +46,7 @@ const template = [
       { role: 'cut' },
       { role: 'copy' },
       { role: 'paste' },
-      ...(isMac
+      ...(is.mac
         ? [
             { role: 'pasteAndMatchStyle' },
             { role: 'delete' },
@@ -83,7 +81,7 @@ const template = [
     submenu: [
       { role: 'minimize' },
       { role: 'zoom' },
-      ...(isMac
+      ...(is.mac
         ? [{ type: 'separator' }, { role: 'front' }, { type: 'separator' }, { role: 'window' }]
         : [{ role: 'close' }]),
     ],

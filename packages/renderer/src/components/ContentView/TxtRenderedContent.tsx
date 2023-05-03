@@ -1,4 +1,3 @@
-
 export type TxtRenderedContentProps = {
   content: string;
   className?: string;

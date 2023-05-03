@@ -4,10 +4,10 @@ import { useElectron } from './useElectron';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-hot-toast';
 
-export const useContentView = (): [
-  openFile: (filePath: string) => void,
-  notifyContentFileChange: (filePath: string, data: string) => void,
-] => {
+export const useContentView = (): {
+  openFile: (filePath: string) => void;
+  notifyContentFileChange: (filePath: string, data: string) => void;
+} => {
   const dispatch = useDispatch();
   const electron = useElectron();
 
@@ -36,5 +36,5 @@ export const useContentView = (): [
     );
   }, []);
 
-  return [openFile, notifyContentFileChange];
+  return { openFile, notifyContentFileChange };
 };

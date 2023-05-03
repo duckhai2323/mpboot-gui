@@ -17,6 +17,8 @@ export const IPC_EVENTS = {
   CONTENT_FILE_READ: 'content-file:read',
 
   COMMAND_EXECUTE: 'command:execute',
+  COMMAND_SAVE_EXECUTION: 'command:save-execution',
+  COMMAND_LOAD_EXECUTION: 'command:load-execution',
   COMMAND_CALLBACK_ON_FINISH: (commandId: string) => `command:${commandId}:callback-on-finish`,
 
   DIALOG_CHOOSE_DIRECTORY: 'dialog:choose-directory',

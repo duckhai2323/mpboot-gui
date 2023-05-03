@@ -52,7 +52,7 @@ wrapperIpcMainHandle(IPC_EVENTS.DIRECTORY_TREE_FIRST_LOAD, async (event, dirPath
     instanceManager.set(instanceKey, tree);
     logger.debug('Create a new tree instance', instanceKey);
   }
-  const result = await tree.explore();
+  const result = await tree.loadDirectoryTree();
   return result;
 });
 

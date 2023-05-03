@@ -34,6 +34,7 @@ export class DirectoryTree {
         logger.error('Error when subscribe watcher', err);
         return [];
       }
+      logger.debug('changed ', events);
       const directoryTreeEvents: DirectoryTreeEvent[] = await Promise.all(
         events.map(async event => {
           let data = '';
@@ -108,17 +109,71 @@ export class DirectoryTree {
     };
   }
 
+  public async loadDirectoryTree(): Promise<Directory> {
+    const pattern = path.join(this.path, '**/**');
+    const all = await globAsync(pattern, { cwd: this.path });
+    const files = await globAsync(pattern, { cwd: this.path, nodir: true });
+    for (const file of files) {
+      const tmpId = all.indexOf(file);
+      all.splice(tmpId, 1);
+    }
+    const directory: Directory = {
+      name: this.name,
+      path: this.path,
+      children: [],
+    };
+    all.splice(0, 1);
+
+    const findDirectoryAndAddNode = (dir: Directory, dirPath: string, node: Directory) => {
+      if (dir.path === dirPath) {
+        if (!dir.children) {
+          dir.children = [node];
+        } else {
+          dir.children.push(node);
+        }
+        return true;
+      }
+      if (dir.children !== undefined) {
+        for (const child of dir.children) {
+          if (findDirectoryAndAddNode(child, dirPath, node)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    };
+    all.forEach(child => {
+      const dirPath = path.dirname(child);
+      logger.debug(dirPath);
+      findDirectoryAndAddNode(directory, dirPath, {
+        name: path.basename(child),
+        path: child,
+        children: [],
+      });
+    });
+    files.forEach(file => {
+      const dirPath = path.dirname(file);
+      findDirectoryAndAddNode(directory, dirPath, {
+        name: path.basename(file),
+        path: file,
+        children: undefined,
+      });
+    });
+    this.currentDirectory = directory;
+    return directory;
+  }
   public async explore(dirToExplore?: string): Promise<Directory> {
     const currentPath = dirToExplore || '';
     const pattern = path.join(currentPath, '*');
     const all = await globAsync(pattern, { cwd: this.path });
     const files = await globAsync(pattern, { cwd: this.path, nodir: true });
+    logger.debug('Explore', { pattern, all, files });
     const children: Directory[] = [];
     for (const file of files) {
       const tmpId = all.indexOf(file);
       all.splice(tmpId, 1);
     }
-    all.forEach(file => {
+    all.forEach(async file => {
       children.push({
         path: path.join(this.path, file),
         name: path.basename(file),

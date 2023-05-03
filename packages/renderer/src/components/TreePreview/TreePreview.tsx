@@ -1,6 +1,5 @@
 import type { FC } from 'react';
 import React, { useEffect, useRef } from 'react';
-import './TreePreview.css';
 import { phylotree } from 'phylotree';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../redux/store/root';

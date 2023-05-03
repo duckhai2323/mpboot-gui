@@ -1,4 +1,3 @@
-
 export const WorkspaceNameInput = () => {
   return (
     <div>

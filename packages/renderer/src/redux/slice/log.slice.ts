@@ -25,6 +25,10 @@ export const logSlice = createSlice({
         logData: [...state.logData, ...action.payload.logData],
       };
     },
+
+    clear: () => {
+      return initialLogState;
+    },
   },
 });
 

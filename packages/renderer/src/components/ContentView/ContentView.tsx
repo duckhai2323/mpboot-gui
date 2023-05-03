@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { PhyRenderedContent } from './PhyRenderedContent';
 import { TxtRenderedContent } from './TxtRenderedContent';
-import './ContentView.css';
+
 import type { RootState } from '../../redux/store/root';
 import { useSelector } from 'react-redux';
 

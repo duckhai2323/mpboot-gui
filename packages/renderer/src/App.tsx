@@ -8,6 +8,9 @@ import { useWindowSize } from 'usehooks-ts';
 import { useElectron } from './hooks/useElectron';
 import { Toaster } from 'react-hot-toast';
 import './style';
+import { GlobalParameter } from './components/Global/GlobalParameter';
+import { GlobalElectron } from './components/Global/GlobalElectron';
+import { GlobalExecution } from './components/Global/GlobalExecution';
 // import { DashboardPage } from './pages/dashboard';
 
 const MainPage = lazy(() => import('./pages/main').then(module => ({ default: module.MainPage })));
@@ -68,6 +71,9 @@ function App() {
           position="bottom-right"
           reverseOrder={false}
         />
+        <GlobalParameter />
+        <GlobalElectron />
+        <GlobalExecution />
         <HashRouter>
           <Routes>
             <Route

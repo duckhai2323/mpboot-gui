@@ -3,13 +3,16 @@ import { SequenceType } from './SequenceType';
 import { OutputPrefix } from './OutputPrefix';
 import { Sources } from './Sources';
 import { Treefile } from './Treefile';
-import './ParameterView.css';
+
 import { ExecutionButton } from './ExecutionButton';
+import { Seed } from './Seed';
+import { ExecutionHistoryIterator } from './ExecutionHistoryIterator';
 
 export const ParameterView = () => {
   return (
     <>
       <ExecutionButton />
+      <ExecutionHistoryIterator />
       <Collapsible
         trigger={'Basic parameters'}
         transitionTime={1}
@@ -20,6 +23,7 @@ export const ParameterView = () => {
           <Treefile />
           <SequenceType />
           <OutputPrefix />
+          <Seed />
         </table>
       </Collapsible>
       <Collapsible

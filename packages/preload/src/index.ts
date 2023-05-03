@@ -4,7 +4,12 @@
 
 import type { ExposedElectron } from '../../common/electron';
 import { generateLog, subscribeLog, unsubscribeLog } from './log';
-import { executeCommand, subscribeCommandCallbackOnFinish } from './command';
+import {
+  executeCommand,
+  loadExecutionHistory,
+  saveCommandExecution,
+  subscribeCommandCallbackOnFinish,
+} from './command';
 import { openContentFile, readContentFile } from './content-file';
 import {
   createWorkspace,
@@ -55,6 +60,8 @@ export const exposed: ExposedElectron = {
   unsubscribeLog: unsubscribeLog,
   showContentMenu: showContentMenu,
   searchDirectoryTree: searchDirectoryTree,
+  saveCommandExecution: saveCommandExecution,
+  loadExecutionHistory: loadExecutionHistory,
 };
 
 contextBridge.exposeInMainWorld('electron', exposed);

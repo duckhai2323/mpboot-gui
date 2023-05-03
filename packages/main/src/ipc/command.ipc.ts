@@ -1,25 +1,51 @@
 import { IPC_EVENTS } from '../../../common/ipc';
-import type { Parameter } from '../../../common/parameter';
+import { convertCommandToParameter } from '../../../common/parameter';
 import { convertParameterToCommandArgs } from '../../../common/parameter';
 import { logger } from '../../../common/logger';
 import { randomUUID } from 'crypto';
+import glob from 'glob';
 import type {
   CommandCallbackOnFinishResult,
-  CommandExecuteResult,
+  ExecuteCommandRequest,
+  ExecuteCommandResponse,
+  LoadExecutionHistoryRequest,
+  LoadExecutionHistoryResponse,
+  SaveExecutionHistoryRequest,
 } from '../../../common/commander';
 import { MPBootCommander } from '../entity/mpboot-commander';
 import { mpbootExecutablePath } from '../const';
 import { WhichCommander } from '../entity/which-commander';
 import { wrapperIpcMainHandle } from './common.ipc';
+import { repository } from '../repository/repository';
+import { ExecutionHistory } from '../entity/execution-history';
+import { promisify } from 'util';
+import path from 'path';
+
+const globAsync = promisify(glob);
 
 wrapperIpcMainHandle(
   IPC_EVENTS.COMMAND_EXECUTE,
-  async (event, param: Parameter): Promise<CommandExecuteResult> => {
-    const args = convertParameterToCommandArgs(param);
+  async (event, req: ExecuteCommandRequest): Promise<ExecuteCommandResponse> => {
+    const { parameter, isExecutionHistory, workspaceId } = req;
+    let targetParameter = parameter;
+    if (!isExecutionHistory) {
+      const sequenceNumber = await repository.getNextSequenceNumber(workspaceId);
+      const workspace = await repository.getWorkspaceById(workspaceId);
+      const newSourceFileLink = await ExecutionHistory.createOutputExecutionHistory(
+        workspace!.path,
+        sequenceNumber,
+        parameter.source!,
+      );
+      targetParameter = {
+        ...parameter,
+        source: newSourceFileLink,
+      };
+    }
+
+    const args = convertParameterToCommandArgs(targetParameter);
     const commandId = randomUUID();
     const command = new MPBootCommander(mpbootExecutablePath, args, {});
     const result = await command.execute(exitCode => {
-      logger.debug('exit code', exitCode);
       const data: CommandCallbackOnFinishResult = {
         treeFile: command.generatedTreeFilePath,
         isError: exitCode !== 0,
@@ -30,6 +56,7 @@ wrapperIpcMainHandle(
     return {
       logFile: result.logFile,
       commandId,
+      isExecutionHistory,
     };
   },
 );
@@ -43,3 +70,109 @@ wrapperIpcMainHandle(IPC_EVENTS.AVAILABLE_TEST, async () => {
     return false;
   }
 });
+
+wrapperIpcMainHandle(
+  IPC_EVENTS.COMMAND_SAVE_EXECUTION,
+  async (_event, request: SaveExecutionHistoryRequest) => {
+    const { seed, fullCommand, workspaceId } = request;
+    const parameter = convertCommandToParameter(fullCommand);
+
+    try {
+      await repository.createExecutionHistory(workspaceId, parameter, seed);
+      const workspace = await repository.getWorkspaceById(workspaceId);
+      if (!workspace) {
+        throw new Error(`Workspace not found: ${workspaceId}`);
+      }
+      return true;
+    } catch (err: any) {
+      logger.error('Failed to save command execution', err);
+      return false;
+    }
+  },
+);
+
+wrapperIpcMainHandle(
+  IPC_EVENTS.COMMAND_LOAD_EXECUTION,
+  async (_event, request: LoadExecutionHistoryRequest): Promise<LoadExecutionHistoryResponse> => {
+    const { workspaceId, sequenceNumber, position } = request;
+
+    try {
+      const workspace = await repository.getWorkspaceById(workspaceId);
+      if (!workspace) {
+        throw new Error(`Workspace not found: ${workspaceId}`);
+      }
+      let executionHistory: ExecutionHistory | null = null;
+
+      executionHistory = await repository.getExecutionHistoryByWorkspaceIdAndSequenceNumber(
+        workspaceId,
+        sequenceNumber,
+      );
+
+      if (!executionHistory) {
+        throw new Error(
+          `Execution history not found for workspaceId: ${workspaceId},sequenceNumber: ${sequenceNumber}`,
+        );
+      }
+      if (position !== 'current' || position === undefined) {
+        const pattern = '*';
+        const cwd = path.join(workspace.path, 'output');
+        const all = await globAsync(pattern, { cwd });
+        const onlyFiles = await globAsync(pattern, { cwd, nodir: true });
+        const onlyDirectories = all.filter(x => !onlyFiles.includes(x));
+        const directoriesConcatString = onlyDirectories.join(' ');
+        const min = Math.min(...onlyDirectories.map(x => parseInt(x.split('_')[2])));
+        const max = Math.max(...onlyDirectories.map(x => parseInt(x.split('_')[2])));
+        let i = sequenceNumber;
+        if (position === 'previous') {
+          while (i >= min) {
+            i -= 1;
+            if (!new RegExp(`execution_[0-9]+_${i}`).test(directoriesConcatString)) {
+              continue;
+            }
+            executionHistory = await repository.getExecutionHistoryByWorkspaceIdAndSequenceNumber(
+              workspaceId,
+              i,
+            );
+            if (executionHistory) {
+              break;
+            }
+          }
+          if (i < min) {
+            throw new Error('No previous execution found');
+          }
+        } else if (position === 'next') {
+          while (i <= max) {
+            i += 1;
+            if (!new RegExp(`execution_[0-9]+_${i}`).test(directoriesConcatString)) {
+              continue;
+            }
+            executionHistory = await repository.getExecutionHistoryByWorkspaceIdAndSequenceNumber(
+              workspaceId,
+              i,
+            );
+            if (executionHistory) {
+              break;
+            }
+          }
+          if (i > max) {
+            throw new Error('No next execution found');
+          }
+        }
+      }
+      if (!executionHistory) {
+        throw new Error(
+          `Execution history not found for workspaceId: ${workspaceId},sequenceNumber: ${sequenceNumber}`,
+        );
+      }
+      return {
+        ...executionHistory.parameter,
+        seed: executionHistory.seed,
+        outputLogFilePath: executionHistory.parameter.source!.concat('.log'),
+        outputTreeFilePath: executionHistory.parameter.source!.concat('.treefile'),
+      };
+    } catch (err: any) {
+      logger.error('Failed to load command execution', err);
+      throw err;
+    }
+  },
+);
