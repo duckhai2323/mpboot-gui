@@ -3,8 +3,6 @@ import { useSelector } from 'react-redux';
 import type { RootState } from '../../redux/store/root';
 import { MButton } from '../common/Button';
 import { useExecution } from '../../hooks/useExecution';
-import { useEffect } from 'react';
-import { logger } from '../../../../common/logger';
 export const ExecutionButton = () => {
   const parameter = useSelector((state: RootState) => state.parameter);
   const { isRunning, isExecutionHistory } = useSelector((state: RootState) => state.execution);
@@ -14,9 +12,7 @@ export const ExecutionButton = () => {
     e.preventDefault();
     executeCommand(parameter, isExecutionHistory);
   };
-  useEffect(() => {
-    logger.debug('isRunning', isRunning);
-  }, [isRunning]);
+
   return (
     <div>
       <MButton

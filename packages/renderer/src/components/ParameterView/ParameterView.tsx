@@ -7,6 +7,7 @@ import { Treefile } from './Treefile';
 import { ExecutionButton } from './ExecutionButton';
 import { Seed } from './Seed';
 import { ExecutionHistoryIterator } from './ExecutionHistoryIterator';
+import { ExtendedParameter } from './ExtendedParameter';
 
 export const ParameterView = () => {
   return (
@@ -31,10 +32,7 @@ export const ParameterView = () => {
         transitionTime={1}
       >
         <table>
-          <Sources />
-          <Treefile />
-          <SequenceType />
-          <OutputPrefix />
+          <ExtendedParameter />
         </table>
       </Collapsible>
     </>

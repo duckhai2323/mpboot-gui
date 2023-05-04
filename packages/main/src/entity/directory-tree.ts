@@ -140,7 +140,6 @@ export class DirectoryTree {
     };
     all.forEach(child => {
       const dirPath = path.dirname(child);
-      logger.debug(dirPath);
       findDirectoryAndAddNode(directory, dirPath, {
         name: path.basename(child),
         path: child,
