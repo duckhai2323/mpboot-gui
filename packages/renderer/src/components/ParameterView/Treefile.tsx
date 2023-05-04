@@ -40,6 +40,7 @@ export const Treefile = () => {
         <input
           type="text"
           id="treefile-input"
+          key={treefile}
           list="treefile"
           placeholder="Treefile"
           onChange={onChange}

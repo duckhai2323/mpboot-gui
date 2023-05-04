@@ -25,6 +25,7 @@ export const SequenceType = () => {
       <td>Sequence data type</td>
       <td>
         <select
+          key={inputDataType}
           defaultValue={inputDataType}
           onChange={onChange}
         >

@@ -1,14 +1,11 @@
 import type { AsyncSubscription } from '@parcel/watcher';
 import { subscribe } from '@parcel/watcher';
 import { access, constants, readFile, stat, symlink } from 'fs/promises';
-import { glob } from 'glob';
 import path, { join } from 'path';
-import { promisify } from 'util';
 import type { Directory, DirectoryTreeEvent } from '../../../common/directory-tree';
 import { logger } from '../../../common/logger';
 import type { WorkspaceInputData } from './workspace-input-data';
-
-const globAsync = promisify(glob);
+import { globAsync } from '../common/glob';
 
 export class DirectoryTree {
   private path: string;
@@ -110,7 +107,7 @@ export class DirectoryTree {
   }
 
   public async loadDirectoryTree(): Promise<Directory> {
-    const pattern = path.join(this.path, '**/**');
+    const pattern = path.join(this.path, '**','**');
     const all = await globAsync(pattern, { cwd: this.path });
     const files = await globAsync(pattern, { cwd: this.path, nodir: true });
     for (const file of files) {
