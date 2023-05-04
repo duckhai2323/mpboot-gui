@@ -14,12 +14,15 @@ export interface ExecuteCommandResponse {
 export interface CommandCallbackOnFinishResult {
   treeFile: string;
   isError: boolean;
+  sequenceNumber: number;
+  workspaceId: number;
 }
 
 export interface SaveExecutionHistoryRequest {
   fullCommand: string;
   workspaceId: number;
   seed: number;
+  sequenceNumber: number;
 }
 export type LoadExecutionHistoryPosition = 'current' | 'previous' | 'next';
 export interface LoadExecutionHistoryRequest {
@@ -32,4 +35,7 @@ export interface LoadExecutionHistoryResponse extends Parameter {
   seed: number;
   outputLogFilePath: string;
   outputTreeFilePath: string;
+  canForward: boolean;
+  canBackward: boolean;
+  loadedSequenceNumber: number;
 }

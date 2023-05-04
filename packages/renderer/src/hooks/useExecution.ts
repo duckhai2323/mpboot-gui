@@ -8,6 +8,7 @@ import type { RootState } from '../redux/store/root';
 import type { LoadExecutionHistoryPosition } from '../../../common/commander';
 import { usePhylogenTree } from './usePhylogenTree';
 import { useLog } from './useLog';
+import { initialExecutionState } from '../redux/state/execution.state';
 
 export const useExecution = () => {
   const { id } = useSelector((state: RootState) => state.workspace);
@@ -17,13 +18,14 @@ export const useExecution = () => {
   const { loadFullLog } = useLog();
   const executeCommand = async (parameter: ParameterState, isExecutionHistory = false) => {
     try {
-      dispatch(ExecutionActions.resetExecution());
       const { logFile, commandId } = await electron.executeCommand({
         parameter,
         isExecutionHistory,
         workspaceId: id,
       });
-      dispatch(ExecutionActions.setExecution({ logFile, commandId, isExecutionHistory }));
+      dispatch(
+        ExecutionActions.setExecution({ logFile, commandId, isExecutionHistory, isRunning: true }),
+      );
     } catch (err: any) {
       toast.error(err.message);
     }
@@ -32,24 +34,33 @@ export const useExecution = () => {
     dispatch(ExecutionActions.setExecution({ sequenceNumber }));
   };
 
+  const resetExecutionState = () => {
+    dispatch(ExecutionActions.setExecution(initialExecutionState));
+  };
   const loadExecutionHistory = async (
     sequenceNumber: number,
     position: LoadExecutionHistoryPosition = 'current',
   ) => {
     try {
-      const { outputLogFilePath, outputTreeFilePath, seed, ...parameter } =
-        await electron.loadExecutionHistory({
-          position,
-          sequenceNumber,
-          workspaceId: id,
-        });
+      const {
+        outputLogFilePath,
+        outputTreeFilePath,
+        canForward,
+        canBackward,
+        loadedSequenceNumber,
+        seed,
+        ...parameter
+      } = await electron.loadExecutionHistory({
+        position,
+        sequenceNumber,
+        workspaceId: id,
+      });
       dispatch(
         ExecutionActions.setExecution({
           isExecutionHistory: true,
-          sequenceNumber:
-            position === 'current'
-              ? sequenceNumber
-              : sequenceNumber + (position === 'previous' ? -1 : 1),
+          canBackward,
+          canForward,
+          sequenceNumber: loadedSequenceNumber,
         }),
       );
       dispatch(
@@ -65,5 +76,5 @@ export const useExecution = () => {
     }
   };
 
-  return { executeCommand, setSequenceNumber, loadExecutionHistory };
+  return { executeCommand, setSequenceNumber, loadExecutionHistory, resetExecutionState };
 };

@@ -1,6 +1,6 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
-import type { ExecutionState} from '../state/execution.state';
+import type { ExecutionState } from '../state/execution.state';
 import { initialExecutionState } from '../state/execution.state';
 
 export const executionSlice = createSlice({

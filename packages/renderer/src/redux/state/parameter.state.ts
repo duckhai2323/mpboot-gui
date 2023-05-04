@@ -4,7 +4,6 @@ export const initialParameterState = {
   treefile: '',
   sequenceType: '',
   seed: 0,
-  isExecutionHistory: false,
 };
 
 export type ParameterState = {
@@ -13,5 +12,4 @@ export type ParameterState = {
   treefile: string;
   sequenceType: string;
   seed?: number;
-  isExecutionHistory: boolean;
 };

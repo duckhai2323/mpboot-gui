@@ -1,4 +1,4 @@
-import type { OpenDialogOptions} from 'electron';
+import type { OpenDialogOptions } from 'electron';
 import { dialog } from 'electron';
 import { IPC_EVENTS } from '../../../common/ipc';
 import type { DialogChooseDirectoryOrFileResult } from '../../../common/workspace';

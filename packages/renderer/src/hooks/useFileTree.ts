@@ -1,4 +1,4 @@
-import type { MouseEventHandler} from 'react';
+import type { MouseEventHandler } from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import type { DirectoryTreeEvent } from '../../../common/directory-tree';
 import { logger } from '../../../common/logger';
@@ -18,7 +18,6 @@ import { usePhylogenTree } from './usePhylogenTree';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { useExecution } from './useExecution';
-import { useLog } from './useLog';
 
 const useFileTreeImpl = (): [
   nodeData: NodeData | undefined,
@@ -32,13 +31,12 @@ const useFileTreeImpl = (): [
   }) => void,
   onContextMenu: MouseEventHandler<HTMLElement>,
 ] => {
-  const { dirPath, id: workspaceId } = useSelector((state: RootState) => state.workspace);
+  const { dirPath } = useSelector((state: RootState) => state.workspace);
   const { openFile, notifyContentFileChange } = useContentView();
   const { multiSourcesDispatch, setParameter } = useParameter();
-  const { setSequenceNumber } = useExecution();
+  const { loadExecutionHistory, resetExecutionState } = useExecution();
   const { setTreeFile } = usePhylogenTree();
   const electron = useElectron();
-  const { loadFullLog } = useLog();
   const [nodeData, setNodeData] = useState<NodeData>();
   const navigate = useNavigate();
 
@@ -135,22 +133,6 @@ const useFileTreeImpl = (): [
 
   const onTreeStateChange = useCallback((state: NodeData, event: any) => {
     try {
-      if (event.type === 'toggleOpen') {
-        // const clickedNodeData = findTargetNode(state, event.path);
-        // if (clickedNodeData.explored) return;
-        // electron
-        //   .exploreDirectory(dirPath, getRelativePath(clickedNodeData.id, dirPath))
-        //   .then(async (data: Directory) => {
-        //     const node = convertDirectoryToNodeData(data);
-        //     const _tmp = { ...state };
-        //     findNodeDataAndUpdate(_tmp, node.id, found => {
-        //       found.children = node.children;
-        //       found.explored = true;
-        //       found.isOpen = true;
-        //     });
-        //     setNodeData(_node => _tmp);
-        //   });
-      }
       if (event.type === 'checkNode') {
         const clickedNodeData = findTargetNode(state, event.path);
         handleCheckNode(clickedNodeData, event.params[0]);
@@ -174,21 +156,6 @@ const useFileTreeImpl = (): [
     }
   }, []);
 
-  // const exploreDirectory = async (dirPath: string, clickedNodeData: NodeData) => {
-  //   if (!nodeData) return;
-  //   await electron
-  //     .exploreDirectory(dirPath, getRelativePath(clickedNodeData.id, dirPath))
-  //     .then(async (data: Directory) => {
-  //       const node = convertDirectoryToNodeData(data);
-  //       const _tmp = { ...nodeData };
-  //       findNodeDataAndUpdate(_tmp, node.id, found => {
-  //         found.children = node.children;
-  //         found.explored = true;
-  //         found.isOpen = true;
-  //       });
-  //       setNodeData(_node => _tmp);
-  //     });
-  // }
   const onNameClick = useCallback(
     async ({
       defaultOnClick,
@@ -201,51 +168,17 @@ const useFileTreeImpl = (): [
       try {
         if (clickedNodeData.executionHistory) {
           const result = new RegExp('[0-9]+$').exec(clickedNodeData.executionHistory);
-
-          const executionHistory = await electron.loadExecutionHistory({
-            workspaceId: workspaceId,
-            sequenceNumber: +result![0],
-          });
-          setSequenceNumber(+result![0]);
-          loadFullLog(executionHistory.outputLogFilePath);
-          setTreeFile(executionHistory.outputTreeFilePath);
-          if (clickedNodeData.type === 'file') {
-            openFile(clickedNodeData.id);
-            setParameter({
-              treefile: executionHistory.treefile || '',
-              source: executionHistory.source!,
-              sequenceType: executionHistory.sequenceType || '',
-              seed: executionHistory.seed!,
-              isExecutionHistory: true,
-            });
-          }
-          if (clickedNodeData.type === 'directory') {
-            setParameter({
-              treefile: executionHistory.treefile || '',
-              source: executionHistory.source!,
-              sequenceType: executionHistory.sequenceType || '',
-              seed: executionHistory.seed!,
-              isExecutionHistory: true,
-            });
-            // if (!clickedNodeData.explored) {
-            //   await exploreDirectory(dirPath, clickedNodeData)
-            // }
-          }
+          await loadExecutionHistory(+result![0], 'current');
         } else {
           if (clickedNodeData.type === 'file') {
             openFile(clickedNodeData.id);
             setParameter({
               source: clickedNodeData.id,
               seed: undefined,
-              isExecutionHistory: false,
             });
             setTreeFile(clickedNodeData.id);
+            resetExecutionState();
           }
-          // if (clickedNodeData.type === 'directory') {
-          //   if (!clickedNodeData.explored) {
-          //     await exploreDirectory(dirPath, clickedNodeData)
-          //   }
-          // }
         }
       } catch (err: any) {
         toast.error(err.message);

@@ -31,7 +31,6 @@ export class DirectoryTree {
         logger.error('Error when subscribe watcher', err);
         return [];
       }
-      logger.debug('changed ', events);
       const directoryTreeEvents: DirectoryTreeEvent[] = await Promise.all(
         events.map(async event => {
           let data = '';
@@ -107,7 +106,7 @@ export class DirectoryTree {
   }
 
   public async loadDirectoryTree(): Promise<Directory> {
-    const pattern = path.join(this.path, '**','**');
+    const pattern = path.join(this.path, '**', '**');
     const all = await globAsync(pattern, { cwd: this.path });
     const files = await globAsync(pattern, { cwd: this.path, nodir: true });
     for (const file of files) {

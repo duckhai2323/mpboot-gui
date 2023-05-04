@@ -1,4 +1,4 @@
-import type { IDatabase} from '../src/repository/database';
+import type { IDatabase } from '../src/repository/database';
 import { Sqlite3Database } from '../src/repository/database';
 import { beforeAll, describe, expect, it } from 'vitest';
 

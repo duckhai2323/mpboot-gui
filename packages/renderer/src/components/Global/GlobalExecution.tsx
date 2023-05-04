@@ -4,7 +4,8 @@ import { useEffect, useRef } from 'react';
 import { useElectron } from '../../hooks/useElectron';
 import { toast } from 'react-hot-toast';
 import { usePhylogenTree } from '../../hooks/usePhylogenTree';
-import { Actions } from '../../redux/slice/log.slice';
+import { Actions as LogActions } from '../../redux/slice/log.slice';
+import { Actions as ExecutionActions } from '../../redux/slice/execution.slice';
 import type { SaveExecutionHistoryRequest } from '../../../../common/commander';
 import { logger } from '../../../../common/logger';
 
@@ -23,13 +24,14 @@ const useGlobalExecution = () => {
     fullCommand: '',
     workspaceId: -1,
     seed: -1,
+    sequenceNumber: -1,
   });
 
   useEffect(() => {
     try {
       const logStream = electron.subscribeLog(execution.logFile);
       dispatch(
-        Actions.setLogFile({
+        LogActions.setLogFile({
           logFile: execution.logFile,
           logData: [],
         }),
@@ -39,14 +41,21 @@ const useGlobalExecution = () => {
       const commandStream = electron.subscribeCommandCallbackOnFinish(
         execution.commandId,
         async result => {
-          if (result.isError) {
+          const { isError, sequenceNumber, treeFile } = result;
+          if (isError) {
             toast.error("Command didn't finish successfully");
           } else {
-            const treeNewick = (await electron.readContentFile(result.treeFile)).trimEnd();
+            const treeNewick = (await electron.readContentFile(treeFile)).trimEnd();
             setNewick(treeNewick);
             toast.success('Command finished successfully');
+            dispatch(
+              ExecutionActions.setExecution({
+                isRunning: false,
+              }),
+            );
             if (!execution.isExecutionHistory) {
               await electron.saveCommandExecution({
+                sequenceNumber,
                 fullCommand: commandExecutionInfoRef.current.fullCommand,
                 workspaceId: workspace.id,
                 seed: commandExecutionInfoRef.current.seed,
@@ -88,7 +97,7 @@ const useGlobalExecution = () => {
     logDataToFlushRef.current.push(data);
     logTimeoutRef.current = setTimeout(() => {
       dispatch(
-        Actions.appendLogData({
+        LogActions.appendLogData({
           logData: logDataToFlushRef.current,
         }),
       );

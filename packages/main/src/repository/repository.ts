@@ -3,7 +3,7 @@ import { dbPath } from '../const';
 import { Workspace } from '../entity/workspace';
 import type { PaginationOptions } from './options';
 import { WorkspaceInputData } from '../entity/workspace-input-data';
-import type { IDatabase} from './database';
+import type { IDatabase } from './database';
 import { Sqlite3Database } from './database';
 import { Sqlite3Migrator } from './migrate';
 import type { Parameter } from '../../../common/parameter';
@@ -114,76 +114,73 @@ export class Repository {
 
   public async createExecutionHistory(
     workspaceId: number,
-    parameter: Parameter,
-    seed: number,
+    sequenceNumber: number,
   ): Promise<ExecutionHistory> {
     await this.ensureMigrate();
-    logger.debug('Repository.createExecutionHistory()', { workspaceId, parameter, seed });
-    return new Promise<ExecutionHistory>(async (resolve, reject) => {
-      try {
-        await this.db.serialize(async db => {
-          let { sequence_number: sequenceNumber } = (await db.getOne(
-            'SELECT MAX(sequence_number) as sequence_number FROM execution_history WHERE workspace_id = ?',
-            [workspaceId],
-          )) as any;
-          if (sequenceNumber === undefined) {
-            sequenceNumber = -1;
-          }
-          const row = await this.db.getOne(
-            'INSERT INTO execution_history (workspace_id, parameters, seed, sequence_number) VALUES (?, ?, ?, ?) RETURNING *',
-            [workspaceId, JSON.stringify(parameter), seed, sequenceNumber + 1],
-          );
-          resolve(ExecutionHistory.fromRow(row));
-        });
-      } catch (err) {
-        reject(err);
-      }
-    });
+    logger.debug('Repository.createExecutionHistory()', { workspaceId, sequenceNumber });
+    const row = await this.db.getOne(
+      'INSERT INTO execution_history (workspace_id, parameters, seed, sequence_number) VALUES (?, ?, ?, ?) RETURNING *',
+      [workspaceId, JSON.stringify({}), -1, sequenceNumber],
+    );
+    return ExecutionHistory.fromRow(row);
   }
+
   public async getExecutionHistoryByWorkspaceIdAndSequenceNumber(
     workspaceId: number,
     sequenceNumber: number,
   ): Promise<ExecutionHistory | null> {
-    return new Promise<ExecutionHistory | null> (async (resolve, reject) => {
-      try {
-        await this.ensureMigrate();
-        logger.debug('Repository.getExecutionHistoryByWorkspaceIdAndSequenceNumber()', {
-          workspaceId,
-          sequenceNumber,
-        });
-        await this.db.serialize(async db => {
-          const row = await db.getOne(
-            'SELECT * FROM execution_history WHERE workspace_id = ? AND sequence_number = ?',
-            [workspaceId, sequenceNumber],
-          );
-          if (!row) {
-            return resolve(null);
-          }
-          resolve(ExecutionHistory.fromRow(row));
-        });
-      } catch (err) {
-        reject(err);
-      }
+    await this.ensureMigrate();
+    logger.debug('Repository.getExecutionHistoryByWorkspaceIdAndSequenceNumber()', {
+      workspaceId,
+      sequenceNumber,
     });
+    const row = await this.db.getOne(
+      'SELECT * FROM execution_history WHERE workspace_id = ? AND sequence_number = ?',
+      [workspaceId, sequenceNumber],
+    );
+    if (!row) {
+      return null;
+    }
+    return ExecutionHistory.fromRow(row);
   }
-  public async getNextSequenceNumber(workspaceId: number): Promise<number> {
 
-    return new Promise<number>(async (resolve, reject) => {
-      try {
-        await this.ensureMigrate();
-        logger.debug('Repository.getNextSequenceNumber()', { workspaceId });
-         let { sequence_number: sequenceNumber } = (await this.db.getOne(
-          'SELECT MAX(sequence_number) as sequence_number FROM execution_history WHERE workspace_id = ?',
-          [workspaceId],
-        )) as any;
-        if (sequenceNumber === undefined) {
-          sequenceNumber = -1;
-        }
-        resolve(sequenceNumber + 1);
-      } catch (err) {
-        reject(err);
-      }
+  public async getNextSequenceNumber(workspaceId: number): Promise<number> {
+    await this.ensureMigrate();
+    logger.debug('Repository.getNextSequenceNumber()', { workspaceId });
+    let { sequenceNumber } = (await this.db.getOne(
+      'SELECT MAX(sequence_number) as sequenceNumber FROM execution_history WHERE workspace_id = ?',
+      [workspaceId],
+    )) as any;
+    if (sequenceNumber === undefined) {
+      sequenceNumber = -1;
+    }
+    return sequenceNumber + 1;
+  }
+
+  public async updateExecutionHistory(
+    workspaceId: number,
+    sequenceNumber: number,
+    parameter: Parameter,
+    seed: number,
+  ): Promise<ExecutionHistory | null> {
+    await this.ensureMigrate();
+    logger.debug('Repository.updateExecutionHistory()', {
+      workspaceId,
+      sequenceNumber,
     });
+    await this.db.run(
+      'UPDATE execution_history SET parameters = ?, seed = ? WHERE workspace_id = ? AND sequence_number = ?',
+      [JSON.stringify(parameter), seed, workspaceId, sequenceNumber],
+    );
+    const row = await this.db.getOne(
+      'SELECT * FROM execution_history WHERE workspace_id = ? AND sequence_number = ?',
+      [workspaceId, sequenceNumber],
+    );
+    if (!row) {
+      return null;
+    }
+
+    return ExecutionHistory.fromRow(row);
   }
 }
 

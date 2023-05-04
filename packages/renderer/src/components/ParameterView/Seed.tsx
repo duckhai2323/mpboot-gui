@@ -4,7 +4,8 @@ import { useCallback } from 'react';
 import { useParameter } from '../../hooks/useParameter';
 
 export const Seed = () => {
-  const { seed, isExecutionHistory } = useSelector((state: RootState) => state.parameter);
+  const { seed } = useSelector((state: RootState) => state.parameter);
+  const { isExecutionHistory } = useSelector((state: RootState) => state.execution);
 
   const { setParameter } = useParameter();
   const onSeedDidChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
