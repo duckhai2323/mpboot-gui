@@ -65,6 +65,7 @@
   "dependencies": {
     "@aqaurius6666/react-folder-tree": "5.2.8",
     "@fortawesome/fontawesome-svg-core": "^6.3.0",
+    "@koale/useworker": "^4.0.2",
     "@parcel/watcher": "^2.1.0",
     "@patternfly/react-log-viewer": "^4.87.100",
     "@reduxjs/toolkit": "^1.9.3",
