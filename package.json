@@ -78,6 +78,7 @@
     "phylotree-visualization-demo": "^1.2.5",
     "react": "^18.2.0",
     "react-collapsible": "^2.10.0",
+    "react-custom-scrollbars-2": "^4.5.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.0",
     "react-redux": "^8.0.5",

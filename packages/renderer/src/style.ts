@@ -11,4 +11,4 @@ import './components/ParameterView/ParameterView.css';
 import './components/TreePreview/TreePreview.css';
 import './components/TreeView/phylotree.css';
 import './pages/main.css';
-import './components/ContentView/phylip.css'
+import './components/ContentView/phylip.css';

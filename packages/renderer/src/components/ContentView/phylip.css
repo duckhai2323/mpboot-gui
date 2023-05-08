@@ -18,14 +18,37 @@
 }
 
 .cell {
-    padding: 1px;
+    width: 14px    
 }
 
-/* .unselectable {
-    -webkit-user-select: none;
-    -webkit-touch-callout: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
+.cell-off-screen {
+    display: none;
+}
+
+.cell-on-screen {
+    display: table-cell;
+}
+
+.name-table {
+    margin-right: 10px;
+}
+
+.content-table {
+    table-layout: fixed;
+}
+.content-table td {
+    min-width: 14px;
+}
+
+.phylip-content-view {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    width: 100%;
+    height: inherit;
+}
+
+.unselectable {
     user-select: none;
     color: #000000;
-} */
+}
