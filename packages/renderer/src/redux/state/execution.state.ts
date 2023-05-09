@@ -6,6 +6,7 @@ export const initialExecutionState: ExecutionState = {
   canForward: false,
   canBackward: false,
   isRunning: false,
+  sourceChanged: false,
 };
 
 export type ExecutionState = {
@@ -16,4 +17,5 @@ export type ExecutionState = {
   canForward: boolean;
   canBackward: boolean;
   isRunning: boolean;
+  sourceChanged: boolean;
 };

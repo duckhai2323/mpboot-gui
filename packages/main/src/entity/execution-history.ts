@@ -9,6 +9,7 @@ export class ExecutionHistory {
     public parameter: Parameter,
     public seed: number,
     public sequenceNumber: number,
+    public sourceHash: string,
   ) {}
 
   public static formatOutputName(sequenceNumber: number) {
@@ -36,6 +37,7 @@ export class ExecutionHistory {
       JSON.parse(row.parameters),
       row.seed,
       row.sequence_number,
+      row.source_hash,
     );
   }
 }

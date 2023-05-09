@@ -20,6 +20,7 @@ import { repository } from '../repository/repository';
 import { ExecutionHistory } from '../entity/execution-history';
 import { promisify } from 'util';
 import path from 'path';
+import { hashFile } from '../common/hash';
 
 const globAsync = promisify(glob);
 
@@ -82,7 +83,8 @@ wrapperIpcMainHandle(
     const parameter = convertCommandToParameter(fullCommand);
 
     try {
-      await repository.updateExecutionHistory(workspaceId, sequenceNumber, parameter, seed);
+      const sourceHash = await hashFile(parameter.source!);
+      await repository.updateExecutionHistory(workspaceId, sequenceNumber, parameter, seed, sourceHash);
 
       return true;
     } catch (err: any) {
@@ -177,6 +179,7 @@ wrapperIpcMainHandle(
         canBackward: loadedSequenceNumber > min,
         canForward: loadedSequenceNumber < max,
         loadedSequenceNumber,
+        sourceChanged: executionHistory.sourceHash !== (await hashFile(executionHistory.parameter.source!)),
       };
     } catch (err: any) {
       logger.error('Failed to load command execution', err);

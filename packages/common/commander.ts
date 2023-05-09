@@ -38,4 +38,5 @@ export interface LoadExecutionHistoryResponse extends Parameter {
   canForward: boolean;
   canBackward: boolean;
   loadedSequenceNumber: number;
+  sourceChanged: boolean;
 }

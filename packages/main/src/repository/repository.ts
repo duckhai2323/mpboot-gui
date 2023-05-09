@@ -162,6 +162,7 @@ export class Repository {
     sequenceNumber: number,
     parameter: Parameter,
     seed: number,
+    sourceHash: string,
   ): Promise<ExecutionHistory | null> {
     await this.ensureMigrate();
     logger.debug('Repository.updateExecutionHistory()', {
@@ -169,8 +170,8 @@ export class Repository {
       sequenceNumber,
     });
     await this.db.run(
-      'UPDATE execution_history SET parameters = ?, seed = ? WHERE workspace_id = ? AND sequence_number = ?',
-      [JSON.stringify(parameter), seed, workspaceId, sequenceNumber],
+      'UPDATE execution_history SET parameters = ?, seed = ?, source_hash = ? WHERE workspace_id = ? AND sequence_number = ?',
+      [JSON.stringify(parameter), seed, sourceHash, workspaceId, sequenceNumber],
     );
     const row = await this.db.getOne(
       'SELECT * FROM execution_history WHERE workspace_id = ? AND sequence_number = ?',

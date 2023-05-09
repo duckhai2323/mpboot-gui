@@ -4,6 +4,7 @@ import { TxtRenderedContent } from './TxtRenderedContent';
 
 import type { RootState } from '../../redux/store/root';
 import { useSelector } from 'react-redux';
+import { SourceWarning } from './SourceWarning';
 
 export const ContentView = () => {
   const contentFile = useSelector((state: RootState) => state.contentFile);
@@ -40,5 +41,8 @@ export const ContentView = () => {
     );
   }
 
-  return <div style={{ height: '100%' }}>{renderComponent}</div>;
+  return <div style={{ height: '100%' }}>
+    <SourceWarning />
+    {renderComponent}
+  </div>;
 };

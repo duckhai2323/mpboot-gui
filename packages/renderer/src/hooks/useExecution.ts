@@ -49,6 +49,7 @@ export const useExecution = () => {
         canBackward,
         loadedSequenceNumber,
         seed,
+        sourceChanged,
         ...parameter
       } = await electron.loadExecutionHistory({
         position,
@@ -61,6 +62,7 @@ export const useExecution = () => {
           canBackward,
           canForward,
           sequenceNumber: loadedSequenceNumber,
+          sourceChanged,
         }),
       );
       dispatch(

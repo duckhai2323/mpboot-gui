@@ -3,6 +3,7 @@ import { default as migration_1 } from './migration/1_create_workspace.migrate';
 import { default as migration_2 } from './migration/2_create_workspace_input_data.migrate';
 import { default as migration_3 } from './migration/3_create_execution_history.migrate';
 import { default as migration_4 } from './migration/4_create_index_on_execution_history.migrate';
+import { default as migration_5 } from './migration/5_add_column_on_execution_history.migration';
 
 export interface IMigrator {
   migrate(): Promise<void>;
@@ -24,7 +25,7 @@ export class Sqlite3Migrator implements IMigrator {
   }
 
   private async loadMigration(): Promise<IMigrationInfo[]> {
-    return [migration_1, migration_2, migration_3, migration_4];
+    return [migration_1, migration_2, migration_3, migration_4, migration_5];
   }
 
   public async migrate(): Promise<void> {
