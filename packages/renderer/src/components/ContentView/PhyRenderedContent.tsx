@@ -1,5 +1,6 @@
+import { useCallback, useMemo, useState } from 'react';
 import { loadPhylipMatrix } from './heavy-task';
-import { MatrixTable } from './Table';
+import { CellPosition, MatrixTable } from './Table';
 
 export type PhyRenderedContentProps = {
   content: string;
@@ -9,25 +10,35 @@ export type PhyRenderedContentProps = {
 export const PhyRenderedContent = (props: PhyRenderedContentProps) => {
   const { content } = props;
 
-  const renderedContent = loadPhylipMatrix(content);
+  const phylipMatrix = useMemo(() => loadPhylipMatrix(content), [content]);
+  const [highlightCell, setHighlightCell] = useState({ col: 0, row: 0 });
 
-  // const getColorForADN = useCallback((char: string) => {
-  //   const colors = {
-  //     A: 'blue',
-  //     T: 'cyan',
-  //     G: 'teal',
-  //     X: 'purple',
-  //     N: 'violet',
-  //     C: 'magenta',
-  //   };
-  //   return (colors as any)[char] || 'black';
-  // }, []);
+  const onCellClick = useCallback((e: any) => {
+    const { col, row } = e.target.dataset;
+    if (col && row) {
+      const cell = { col: parseInt(col), row: parseInt(row) };
+      setHighlightCell(cell);
+    }
+  }, []);
+
+  const onCellSubmit = useCallback((e: any) => {
+    setHighlightCell(e);
+  }, []);
 
   return (
-    <div style={{height: '100%'}}>
-      <MatrixTable phylipMatrix={renderedContent} />
+    <div style={{ height: '95%' }}>
+      <CellPosition
+        maxColumns={phylipMatrix.dimension.columns}
+        maxRows={phylipMatrix.dimension.rows}
+        currentCell={highlightCell}
+        onCellSubmit={onCellSubmit}
+      />
+
+      <MatrixTable
+        phylipMatrix={phylipMatrix}
+        onCellClick={onCellClick}
+        highlightCell={highlightCell}
+      />
     </div>
   );
-
 };
-

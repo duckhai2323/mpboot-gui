@@ -1,4 +1,3 @@
-
 export interface Parameter {
   source?: string;
   multiSources?: string[];

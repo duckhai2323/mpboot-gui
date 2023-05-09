@@ -29,6 +29,9 @@
     display: table-cell;
 }
 
+.highlighted {
+    background: rgb(255, 255, 0);
+}
 .name-table {
     margin-right: 10px;
 }
@@ -51,4 +54,8 @@
 .unselectable {
     user-select: none;
     color: #000000;
+}
+
+.scrollbars {
+    height: 90%;
 }
