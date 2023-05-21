@@ -1,6 +1,7 @@
 import { app, Menu } from 'electron';
 import { is, pageUrl } from './const';
 import { restoreOrCreateWindow } from './mainWindow';
+import { MPBootSubMenu } from './mpboot-installation';
 
 const template = [
   //   { role: 'appMenu' }
@@ -89,6 +90,7 @@ const template = [
   {
     role: 'help',
     submenu: [
+      MPBootSubMenu,
       {
         label: 'Check for updates',
         click: async () => {

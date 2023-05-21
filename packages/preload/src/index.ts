@@ -28,6 +28,12 @@ import { IPC_EVENTS } from '../../common/ipc';
 import { dirname, isDirectory, join } from './fs';
 import { basename } from 'path';
 import { showContentMenu } from './menu';
+import {
+  getInstallationMetadata,
+  installVersion,
+  subscribeOnInstallationWillOpen,
+  useVersion,
+} from './installation';
 
 export { sha256sum } from './nodeCrypto';
 export { versions } from './versions';
@@ -62,6 +68,10 @@ export const exposed: ExposedElectron = {
   searchDirectoryTree: searchDirectoryTree,
   saveCommandExecution: saveCommandExecution,
   loadExecutionHistory: loadExecutionHistory,
+  subscribeOnInstallationWillOpen: subscribeOnInstallationWillOpen,
+  getInstallationMetadata,
+  installVersion: installVersion,
+  useVersion: useVersion,
 };
 
 contextBridge.exposeInMainWorld('electron', exposed);

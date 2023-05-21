@@ -4,7 +4,7 @@ import { DirectoryTree } from '../entity/directory-tree';
 import { createInstanceKey, instanceManager } from '../entity/instance-manager';
 import { Workspace } from '../entity/workspace';
 import { WorkspaceInputData } from '../entity/workspace-input-data';
-import { repository } from '../repository/repository';
+import { repository } from '../repository';
 import { wrapperIpcMainHandle } from './common.ipc';
 
 wrapperIpcMainHandle(IPC_EVENTS.WORKSPACE_LIST, async (_event): Promise<IWorkspace[]> => {

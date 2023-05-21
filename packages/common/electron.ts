@@ -1,3 +1,4 @@
+import type { MPBootInstallation } from '../main/src/configuration';
 import type {
   CommandCallbackOnFinishResult,
   ExecuteCommandRequest,
@@ -8,6 +9,12 @@ import type {
 } from './commander';
 import type { ContentFile } from './content-file';
 import type { Directory } from './directory-tree';
+import type {
+  InstallationGetMetadataResponse,
+  OnDownloadCompleted,
+  OnDownloadError,
+  OnDownloadProgress,
+} from './installation';
 import type { ShowContextMenuRequest } from './menu';
 import type {
   CreateWorkspaceRequest,
@@ -59,6 +66,23 @@ export interface ExposedElectron {
   join: (...paths: string[]) => string;
 
   showContentMenu: (req: ShowContextMenuRequest) => void;
+
+  subscribeOnInstallationWillOpen: (onInstallationWillOpen: () => void) => () => void;
+  getInstallationMetadata: () => Promise<InstallationGetMetadataResponse>;
+  installVersion: (
+    version: {
+      versionId: string;
+      versionName: string;
+    },
+    onDownloadProgress: OnDownloadProgress,
+    onDownloadCompleted: OnDownloadCompleted,
+    onDownloadError: OnDownloadError,
+  ) => () => void;
+  useVersion: (
+    versionName: string,
+    binaryPath: string,
+    installationType: MPBootInstallation,
+  ) => void;
 }
 
 export const unimplementedExposedElectron = {} as ExposedElectron;

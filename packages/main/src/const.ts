@@ -1,9 +1,7 @@
-import { app } from 'electron';
-import { join } from 'path';
+import type { MPBootSource } from './common/type';
 
-export const userDataPath = app.getPath('userData');
-export const dbPath = join(userDataPath, 'mpboot-gui.sqlite');
-export const mpbootExecutablePath = 'mpboot';
+export const preInstalledMpbootExecutable = 'mpboot';
+
 export const pageUrl =
   import.meta.env.DEV && import.meta.env.VITE_DEV_SERVER_URL !== undefined
     ? import.meta.env.VITE_DEV_SERVER_URL
@@ -14,4 +12,13 @@ export const is = {
   mac: process.platform === 'darwin',
   win: process.platform === 'win32',
   linux: process.platform === 'linux',
+};
+
+export const githubToken =
+  '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';
+
+export const mpbootSource: MPBootSource = {
+  gitProvider: 'github',
+  gitOwner: 'aqaurius6666',
+  gitRepoName: 'mpboot',
 };

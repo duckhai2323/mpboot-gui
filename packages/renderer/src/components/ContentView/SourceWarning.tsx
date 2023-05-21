@@ -1,14 +1,10 @@
-import { useSelector } from "react-redux"
-import { RootState } from "../../redux/store/root"
+import { useSelector } from 'react-redux';
+import type { RootState } from '../../redux/store/root';
 
 export const SourceWarning = () => {
-    const { sourceChanged, isExecutionHistory } = useSelector((state: RootState) => state.execution)
+  const { sourceChanged, isExecutionHistory } = useSelector((state: RootState) => state.execution);
 
-    if (!isExecutionHistory ) return <></>
-    if (!sourceChanged) return <></>
-    return (
-        <div style={{color: 'red'}}>
-            Source modifed
-        </div>
-    )
-}
+  if (!isExecutionHistory) return <></>;
+  if (!sourceChanged) return <></>;
+  return <div style={{ color: 'red' }}>Source modifed</div>;
+};

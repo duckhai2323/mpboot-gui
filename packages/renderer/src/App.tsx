@@ -8,7 +8,7 @@ import { useWindowSize } from 'usehooks-ts';
 import { useElectron } from './hooks/useElectron';
 import { Toaster } from 'react-hot-toast';
 import './style';
-import { GlobalParameter } from './components/Global/GlobalParameter';
+import { GlobalEvent } from './components/Global/GlobalEvent';
 import { GlobalElectron } from './components/Global/GlobalElectron';
 import { GlobalExecution } from './components/Global/GlobalExecution';
 // import { DashboardPage } from './pages/dashboard';
@@ -22,6 +22,10 @@ const DashboardPage = lazy(() =>
 );
 const NewWorkspacePage = lazy(() =>
   import('./pages/new-workspace').then(module => ({ default: module.NewWorkspacePage })),
+);
+
+const InstallationPage = lazy(() =>
+  import('./pages/installation').then(module => ({ default: module.InstallationPage })),
 );
 
 function App() {
@@ -71,10 +75,10 @@ function App() {
           position="bottom-right"
           reverseOrder={false}
         />
-        <GlobalParameter />
-        <GlobalElectron />
-        <GlobalExecution />
         <HashRouter>
+          <GlobalElectron />
+          <GlobalExecution />
+          <GlobalEvent />
           <Routes>
             <Route
               path="/dashboard"
@@ -91,6 +95,10 @@ function App() {
             <Route
               path="/new-workspace"
               element={<NewWorkspacePage />}
+            />
+            <Route
+              path="/installation"
+              element={<InstallationPage />}
             />
             <Route
               path="*"

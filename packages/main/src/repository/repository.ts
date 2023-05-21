@@ -1,5 +1,4 @@
 import { logger } from '../../../common/logger';
-import { dbPath } from '../const';
 import { Workspace } from '../entity/workspace';
 import type { PaginationOptions } from './options';
 import { WorkspaceInputData } from '../entity/workspace-input-data';
@@ -23,7 +22,7 @@ export class Repository {
     if (this.isMigrated) {
       return;
     }
-    logger.debug('Repository.migrate()', { dbPath });
+    logger.debug('Repository.migrate()');
     const migrator = new Sqlite3Migrator(this.db);
     await migrator.migrate();
     this.isMigrated = true;
@@ -184,5 +183,3 @@ export class Repository {
     return ExecutionHistory.fromRow(row);
   }
 }
-
-export const repository = Repository.init(dbPath);

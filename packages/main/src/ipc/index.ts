@@ -5,3 +5,4 @@ import './content-file.ipc';
 import './command.ipc';
 import './menu.ipc';
 import './dialog.ipc';
+import './installation.ipc';

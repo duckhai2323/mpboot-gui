@@ -1,7 +1,7 @@
 import { logManagerInstance } from '../entity/log-manager';
 import { IPC_EVENTS } from '../../../common/ipc';
 import { Commander } from '../entity/commander';
-import { mpbootExecutablePath } from '../const';
+import { preInstalledMpbootExecutable } from '../const';
 import { wrapperIpcMainHandle, wrapperIpcMainOn } from './common.ipc';
 
 wrapperIpcMainOn(IPC_EVENTS.LOG_SUBSCRIBE, (event, logFile) => {
@@ -14,7 +14,7 @@ wrapperIpcMainOn(IPC_EVENTS.LOG_SUBSCRIBE, (event, logFile) => {
 });
 
 wrapperIpcMainHandle(IPC_EVENTS.LOG_GENERATE, async (_event, _arg) => {
-  const command = new Commander(mpbootExecutablePath, ['--help'], {});
+  const command = new Commander(preInstalledMpbootExecutable, ['--help'], {});
   const result = await command.execute(() => {
     return;
   });

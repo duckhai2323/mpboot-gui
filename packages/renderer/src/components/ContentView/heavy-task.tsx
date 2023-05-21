@@ -230,11 +230,11 @@ export const createReactElementFromPhylipMatrix = (matrix: PhylipMatrix) => {
         <table>
           <tbody>
             <tr>
-              {matrix.majors.map((major, index) => (
+              {matrix.majors.map((major, _index) => (
                 <td className={`${major} cell cell-on-screen`}>{major}</td>
               ))}
             </tr>
-            {matrix.matrix.map((line, index) => (
+            {matrix.matrix.map((line, _index) => (
               <tr>
                 {line.split('').map((char, index) => (
                   <td

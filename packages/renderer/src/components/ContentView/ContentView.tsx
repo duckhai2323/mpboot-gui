@@ -41,8 +41,10 @@ export const ContentView = () => {
     );
   }
 
-  return <div style={{ height: '100%' }}>
-    <SourceWarning />
-    {renderComponent}
-  </div>;
+  return (
+    <div style={{ height: '100%' }}>
+      <SourceWarning />
+      {renderComponent}
+    </div>
+  );
 };

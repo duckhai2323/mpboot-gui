@@ -2,7 +2,7 @@ import { IPC_EVENTS } from '../../../common/ipc';
 import { logger } from '../../../common/logger';
 import { DirectoryTree } from '../entity/directory-tree';
 import { createInstanceKey, instanceManager } from '../entity/instance-manager';
-import { repository } from '../repository/repository';
+import { repository } from '../repository';
 import { wrapperIpcMainHandle, wrapperIpcMainOn } from './common.ipc';
 
 wrapperIpcMainOn(IPC_EVENTS.DIRECTORY_TREE_SUBSCRIBE, async (event, dirPath) => {

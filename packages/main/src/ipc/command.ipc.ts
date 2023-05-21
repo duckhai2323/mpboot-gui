@@ -13,14 +13,15 @@ import type {
   SaveExecutionHistoryRequest,
 } from '../../../common/commander';
 import { MPBootCommander } from '../entity/mpboot-commander';
-import { mpbootExecutablePath } from '../const';
+import { preInstalledMpbootExecutable } from '../const';
 import { WhichCommander } from '../entity/which-commander';
 import { wrapperIpcMainHandle } from './common.ipc';
-import { repository } from '../repository/repository';
 import { ExecutionHistory } from '../entity/execution-history';
 import { promisify } from 'util';
 import path from 'path';
 import { hashFile } from '../common/hash';
+import { repository } from '../repository';
+import { globalConfig } from '../configuration';
 
 const globAsync = promisify(glob);
 
@@ -47,7 +48,11 @@ wrapperIpcMainHandle(
 
     const args = convertParameterToCommandArgs(targetParameter);
     const commandId = randomUUID();
-    const command = new MPBootCommander(mpbootExecutablePath, args, {});
+    const command = new MPBootCommander(
+      globalConfig.mpboot.currentPath || preInstalledMpbootExecutable,
+      args,
+      {},
+    );
     const result = await command.execute(exitCode => {
       const data: CommandCallbackOnFinishResult = {
         treeFile: command.generatedTreeFilePath,
@@ -67,7 +72,9 @@ wrapperIpcMainHandle(
 );
 
 wrapperIpcMainHandle(IPC_EVENTS.AVAILABLE_TEST, async () => {
-  const command = new WhichCommander(mpbootExecutablePath);
+  const command = new WhichCommander(
+    globalConfig.mpboot.currentPath || preInstalledMpbootExecutable,
+  );
   try {
     return await command.test();
   } catch (err: any) {
@@ -84,7 +91,13 @@ wrapperIpcMainHandle(
 
     try {
       const sourceHash = await hashFile(parameter.source!);
-      await repository.updateExecutionHistory(workspaceId, sequenceNumber, parameter, seed, sourceHash);
+      await repository.updateExecutionHistory(
+        workspaceId,
+        sequenceNumber,
+        parameter,
+        seed,
+        sourceHash,
+      );
 
       return true;
     } catch (err: any) {
@@ -179,7 +192,8 @@ wrapperIpcMainHandle(
         canBackward: loadedSequenceNumber > min,
         canForward: loadedSequenceNumber < max,
         loadedSequenceNumber,
-        sourceChanged: executionHistory.sourceHash !== (await hashFile(executionHistory.parameter.source!)),
+        sourceChanged:
+          executionHistory.sourceHash !== (await hashFile(executionHistory.parameter.source!)),
       };
     } catch (err: any) {
       logger.error('Failed to load command execution', err);

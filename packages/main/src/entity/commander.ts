@@ -1,4 +1,4 @@
-import { spawn } from 'child_process';
+import { spawn, exec } from 'child_process';
 
 import { createWriteStream } from 'fs';
 import { writeFile } from 'fs/promises';
@@ -24,6 +24,17 @@ export class Commander {
     this.binary = binary;
     this.args = args;
     this.spawnOptions = spawnOptions;
+  }
+  public async executeInline(): Promise<string> {
+    return new Promise((resolve, reject) => {
+      exec(`${this.binary} ${this.args.join(' ')}`, (err, stdout, _stderr) => {
+        if (err) {
+          logger.error('Error when exec command', err);
+          reject(err);
+        }
+        resolve(stdout);
+      });
+    });
   }
 
   public async execute(onFinish: (exitCode?: number | null) => void): Promise<ExecuteResult> {

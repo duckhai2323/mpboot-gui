@@ -29,4 +29,15 @@ export const IPC_EVENTS = {
   AVAILABLE_TEST: 'available:test',
 
   CONTEXT_MENU_SHOW: 'context-menu:show',
+
+  INSTALLATION_OPEN: 'installation:open',
+  INSTALLATION_GET_METADATA: 'installation:get-metadata',
+  INSTALLATION_INSTALL_VERSION: 'installation:install-version',
+  INSTALLATION_CALLBACK_ON_PROGRESS: (versionId: string) =>
+    `installation:${versionId}:callback-on-progress`,
+  INSTALLATION_CALLBACK_ON_SUCCEED: (versionId: string) =>
+    `installation:${versionId}:callback-on-succeed`,
+  INSTALLATION_CALLBACK_ON_ERROR: (versionId: string) =>
+    `installation:${versionId}:callback-on-error`,
+  INSTALLATION_USE_VERSION: 'installation:use-version',
 };
