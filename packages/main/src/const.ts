@@ -1,5 +1,5 @@
 import type { MPBootSource } from './common/type';
-
+import { default as env } from './inject-env';
 export const preInstalledMpbootExecutable = 'mpboot';
 
 export const pageUrl =
@@ -14,8 +14,8 @@ export const is = {
   linux: process.platform === 'linux',
 };
 
-export const githubToken =
-  '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';
+export const githubToken = env.PUBLIC_GITHUB_TOKEN;
+
 
 export const mpbootSource: MPBootSource = {
   gitProvider: 'github',

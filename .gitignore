@@ -59,3 +59,7 @@ thumbs.db
 
 *.log
 testfolder
+
+
+.env
+inject-env.ts

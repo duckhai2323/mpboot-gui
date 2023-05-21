@@ -39,6 +39,12 @@ jobs:
       
       - run: yarn install --frozen-lockfile --network-timeout 100000
 
+      - run: node scripts/inject-env.mjs
+        name: inject env
+        env:
+          PUBLIC_GITHUB_TOKEN: ${{ secrets.PUBLIC_GITHUB_TOKEN }} 
+
+
       - run: yarn build
 
       - name: Compile artifacts and upload them to github release
