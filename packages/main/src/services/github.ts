@@ -5,7 +5,7 @@ export const githubFetch = async (url: string, init?: RequestInit) => {
     ...init,
     headers: {
       ...init?.headers,
-      ...(githubToken && {Authorization: 'Bearer ' + githubToken}),
+      ...(githubToken && { Authorization: 'Bearer ' + githubToken }),
     },
   });
   if (!res.ok) {

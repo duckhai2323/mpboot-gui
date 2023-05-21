@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect } from 'react';
+import { lazy, Suspense } from 'react';
 import { HashRouter, Route, Routes } from 'react-router-dom';
 
 // import { MainPage } from './pages/main';
@@ -31,19 +31,6 @@ const InstallationPage = lazy(() =>
 function App() {
   const size = useWindowSize();
   const electron = useElectron();
-  const [errMsg, setErrMsg] = React.useState<string>('');
-
-  useEffect(() => {
-    if (!electron || typeof electron.testAvailable !== 'function') return;
-
-    electron.testAvailable().then(res => {
-      if (!res) {
-        setErrMsg('mpboot executable is not available');
-      } else {
-        setErrMsg('');
-      }
-    });
-  }, [electron]);
 
   if (!electron || typeof electron.testAvailable !== 'function') {
     return (
@@ -57,17 +44,6 @@ function App() {
     );
   }
 
-  if (errMsg) {
-    return (
-      <div>
-        <div>
-          We are really sorry that MpbootGUI is not currently working as expected. Please contact us
-          for more support.
-        </div>
-        <h1>{errMsg}</h1>
-      </div>
-    );
-  }
   return (
     <div style={{ width: size.width, height: size.height }}>
       <Suspense fallback={<div>Loading...</div>}>

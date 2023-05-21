@@ -1,7 +1,7 @@
 {
   "name": "MpbootGUI",
   "description": "GUI Desktop Application for Mpboot",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "private": true,
   "author": {
     "name": "Vu Nguyen <aqaurius6666@gmail.com>"
@@ -62,6 +62,7 @@
     "vitest": "0.25.1"
   },
   "dependencies": {
+    "7zip-bin": "^5.2.0",
     "@aqaurius6666/react-folder-tree": "5.2.8",
     "@fortawesome/fontawesome-svg-core": "^6.3.0",
     "@parcel/watcher": "^2.1.0",

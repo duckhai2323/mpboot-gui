@@ -3,6 +3,9 @@ import { Installation } from '../src/entity/installation';
 import type { OSType } from '../../common/stuff';
 import { stat } from 'fs/promises';
 import { logger } from '../../common/logger';
+import { is } from '../src/const';
+import { tmpdir } from 'os';
+import { join } from 'path';
 
 const testSource = {
   gitProvider: 'github',
@@ -38,8 +41,12 @@ describe('installation', () => {
   });
 
   it('download asset', async () => {
-    const url = await Installation.getAssetUrl(testSource, testVersion, 'ubuntu');
-    const zipDestPath = `/tmp/test-mpboot-${new Date().getTime()}`;
+    const url = await Installation.getAssetUrl(
+      testSource,
+      testVersion,
+      is.win ? 'windows' : is.mac ? 'macos' : 'ubuntu',
+    );
+    const zipDestPath = join(tmpdir(), `test-mpboot-${new Date().getTime()}`);
     await Installation.downloadAsset(url, zipDestPath, event => {
       expect(event.progress).toBeGreaterThanOrEqual(0);
       expect(event.progress).toBeLessThanOrEqual(1);
@@ -47,10 +54,9 @@ describe('installation', () => {
     let statInfo = await stat(zipDestPath);
     expect(statInfo.size).toBeGreaterThan(0);
 
-    const dest2 = `/tmp/test-mpboot-${new Date().getTime()}-extracted`;
+    const dest2 = join(tmpdir(), `test-mpboot-${new Date().getTime()}-extracted`);
     const binaryPath = await Installation.extractAsset(zipDestPath, dest2);
-    statInfo = await stat(dest2);
+    statInfo = await stat(binaryPath);
     expect(statInfo.size).toBeGreaterThan(0);
-    expect(binaryPath).toBeDefined();
   });
 });

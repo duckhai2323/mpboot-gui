@@ -16,7 +16,6 @@ export const is = {
 
 export const githubToken = env.PUBLIC_GITHUB_TOKEN;
 
-
 export const mpbootSource: MPBootSource = {
   gitProvider: 'github',
   gitOwner: 'aqaurius6666',

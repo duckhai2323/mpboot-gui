@@ -88,9 +88,12 @@ wrapperIpcMainHandle(
   async (_event, request: SaveExecutionHistoryRequest) => {
     const { seed, fullCommand, workspaceId, sequenceNumber } = request;
     const parameter = convertCommandToParameter(fullCommand);
-
+    if (!parameter.source) {
+      logger.error('Source file not found when saving command execution');
+      return false;
+    }
     try {
-      const sourceHash = await hashFile(parameter.source!);
+      const sourceHash = await hashFile(parameter.source);
       await repository.updateExecutionHistory(
         workspaceId,
         sequenceNumber,

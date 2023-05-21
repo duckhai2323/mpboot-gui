@@ -9,6 +9,7 @@ import { githubFetch } from '../services/github';
 import { mkdirp } from '../common/fs';
 import { globAsync } from '../common/glob';
 import { join } from 'path';
+import { is } from '../const';
 
 export class Installation {
   static async listVersions(
@@ -31,7 +32,8 @@ export class Installation {
     } else {
       throw new Error(`git provider ${source.gitProvider} not supported`);
     }
-    const inAppInstalled = await globAsync(join(binaryDirectory, '**', 'mpboot*'));
+    const inAppInstalled = await globAsync(join('**', 'mpboot*'), { cwd: binaryDirectory });
+    console.log(inAppInstalled);
     versions = versions.map((e: MPBootVersion) => {
       const installed = inAppInstalled.find(i => {
         return i.includes(e.versionName);
@@ -133,11 +135,17 @@ export class Installation {
 
   static async extractAsset(assetPath: string, dest: string): Promise<string> {
     await mkdirp(dest);
-    const extractCommand = new Commander('unzip', [assetPath, '-d', dest]);
-    await extractCommand.executeInline();
+    if (is.win) {
+      const { path7za } = await import('7zip-bin');
+      const extractCommand = new Commander(path7za, ['x', assetPath, `-o${dest}`]);
+      await extractCommand.executeInline();
+    } else {
+      const extractCommand = new Commander('unzip', [assetPath, '-d', dest]);
+      await extractCommand.executeInline();
+    }
     const files = await readdir(dest);
     if (files.length >= 0) {
-      return `${dest}/${files[0]}`;
+      return join(dest, files[files.length - 1]); // in Windows, it return mpboot-click.exe and mpboot.exe, mpboot-click.exe is always the first one.
     }
     throw new Error(`extract asset ${assetPath} failed`);
   }
