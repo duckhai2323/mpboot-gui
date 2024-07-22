@@ -63,7 +63,9 @@
   },
   "dependencies": {
     "7zip-bin": "^5.2.0",
+    "@aqaurius6666/phylotree-visualization": "^1.2.6",
     "@aqaurius6666/react-folder-tree": "5.2.8",
+    "@asymme1/phylotree-visualization-demo": "^1.2.7",
     "@fortawesome/fontawesome-svg-core": "^6.3.0",
     "@parcel/watcher": "^2.1.0",
     "@patternfly/react-log-viewer": "^4.87.100",
@@ -73,7 +75,6 @@
     "glob": "^8.1.0",
     "md5": "^2.3.0",
     "phylotree": "^1.1.0",
-    "phylotree-visualization-demo": "^1.2.5",
     "react": "^18.2.0",
     "react-collapsible": "^2.10.0",
     "react-custom-scrollbars-2": "^4.5.0",

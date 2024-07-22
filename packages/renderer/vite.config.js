@@ -39,7 +39,7 @@ const config = {
         manualChunks: {
           lodash: ['lodash'],
           allotment: ['allotment'],
-          phylotree: ['phylotree-visualization-demo', 'phylotree'],
+          phylotree: ['@aqaurius6666/phylotree-visualization', 'phylotree'],
         },
       },
     },
