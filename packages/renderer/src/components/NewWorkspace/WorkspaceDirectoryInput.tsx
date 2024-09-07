@@ -1,6 +1,9 @@
 import { useCallback, useRef } from 'react';
 import { useElectron } from '../../hooks/useElectron';
-import { MButton } from '../common/Button';
+import classNames from 'classnames/bind';
+import styles from './NewWorkspace.module.scss';
+
+const cx = classNames.bind(styles);
 
 export const WorkspaceDirectoryInput = () => {
   const electron = useElectron();
@@ -20,14 +23,17 @@ export const WorkspaceDirectoryInput = () => {
   );
 
   return (
-    <div>
+    <div className={cx('workspace-input')}>
       <label>Workspace directory</label>
-      <input
+      <div className={cx('form-input')}>
+        <input
+        placeholder='/home/Disc C/MPboot/test/Demo'
         name="workspaceDir"
         required
         ref={workspaceDirFormRef}
       />
-      <MButton onClick={onCreateWorkspaceButtonClick}>Edit</MButton>
+      <button className={cx('button')} onClick={onCreateWorkspaceButtonClick}>Edit</button>
+      </div>
     </div>
   );
 };

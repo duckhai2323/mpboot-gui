@@ -1,4 +1,4 @@
-import '@aqaurius6666/react-folder-tree/dist/style.css';
+import '@khaitd0340/react-folder-tree/dist/style.css';
 import '@patternfly/react-core/dist/styles/base.css';
 
 import 'allotment/dist/style.css';

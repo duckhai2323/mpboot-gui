@@ -20,9 +20,9 @@ export const Seed = () => {
     });
   }, []);
   return (
-    <tr>
-      <td>Seed</td>
-      <td>
+    <tr className="parameter-item">
+      <td className='parameter-item-title'>Seed</td>
+      <td className="parameter-item-value">
         <input
           type="text"
           id="seed-input"

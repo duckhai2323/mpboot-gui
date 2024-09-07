@@ -12,6 +12,7 @@ import {
 } from './command';
 import { openContentFile, readContentFile } from './content-file';
 import {
+  removeWorkspace,
   createWorkspace,
   listWorkspaces,
   chooseDirectory,
@@ -57,6 +58,7 @@ export const exposed: ExposedElectron = {
   testAvailable,
   listWorkspaces: listWorkspaces,
   createWorkspace: createWorkspace,
+  removeWorkspace:removeWorkspace,
   chooseDirectory: chooseDirectory,
   chooseDirectoryOrFile: chooseDirectoryOrFile,
   isDirectory: isDirectory,

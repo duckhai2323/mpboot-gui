@@ -16,9 +16,9 @@ export const Sources = () => {
   );
 
   return (
-    <tr>
-      <td>Source file(s)</td>
-      <td>
+    <tr className="parameter-item">
+      <td className='parameter-item-title'>Source file(s)</td>
+      <td className="parameter-item-value">
         {multiSources.length > 1 && (
           <div data-tooltip={multiSources.map(e => getRelativePath(e)).join(', ')}>
             {getRelativePath(multiSources[0])} and more {multiSources.length - 1} files

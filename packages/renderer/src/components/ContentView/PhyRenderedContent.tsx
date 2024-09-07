@@ -26,18 +26,17 @@ export const PhyRenderedContent = (props: PhyRenderedContentProps) => {
   }, []);
 
   return (
-    <div style={{ height: '95%' }}>
+    <div style={{ height: '95%', paddingLeft: '10px', paddingBottom: '5px' }}>
+      <MatrixTable
+        phylipMatrix={phylipMatrix}
+        onCellClick={onCellClick}
+        highlightCell={highlightCell}
+      />
       <CellPosition
         maxColumns={phylipMatrix.dimension.columns}
         maxRows={phylipMatrix.dimension.rows}
         currentCell={highlightCell}
         onCellSubmit={onCellSubmit}
-      />
-
-      <MatrixTable
-        phylipMatrix={phylipMatrix}
-        onCellClick={onCellClick}
-        highlightCell={highlightCell}
       />
     </div>
   );

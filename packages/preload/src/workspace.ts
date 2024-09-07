@@ -1,5 +1,5 @@
+import { IPC_EVENTS } from './../../common/ipc';
 import { ipcRenderer } from 'electron';
-import { IPC_EVENTS } from '../../common/ipc';
 import type {
   CreateWorkspaceRequest,
   IWorkspace,
@@ -24,4 +24,8 @@ export const listWorkspaces = async () => {
 export const createWorkspace = async (req: CreateWorkspaceRequest) => {
   const result = await ipcRenderer.invoke(IPC_EVENTS.WORKSPACE_CREATE, req);
   return result as IWorkspace;
+};
+
+export const removeWorkspace = async (req: number) => {
+  await ipcRenderer.invoke(IPC_EVENTS.WORKSPACE_REMOVE,req);
 };

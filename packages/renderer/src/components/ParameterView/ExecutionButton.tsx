@@ -1,7 +1,6 @@
 import type React from 'react';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../redux/store/root';
-import { MButton } from '../common/Button';
 import { useExecution } from '../../hooks/useExecution';
 export const ExecutionButton = () => {
   const parameter = useSelector((state: RootState) => state.parameter);
@@ -15,13 +14,14 @@ export const ExecutionButton = () => {
 
   return (
     <div>
-      <MButton
+      <button
         id="run-button"
         onClick={onRunButtonSubmit}
         disabled={!!isRunning}
+        className="btn-parameter"
       >
         {isExecutionHistory ? 'Re-run' : 'Run'}
-      </MButton>
+      </button>
     </div>
   );
 };

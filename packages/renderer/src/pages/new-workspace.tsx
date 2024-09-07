@@ -1,5 +1,9 @@
+import { Layout } from '../components/Layout/Layout';
 import { NewWorkspace } from '../components/NewWorkspace/NewWorkspace';
-
 export const NewWorkspacePage = () => {
-  return <NewWorkspace />;
+  return (
+   <Layout>
+      <NewWorkspace/>
+    </Layout>
+  );
 };

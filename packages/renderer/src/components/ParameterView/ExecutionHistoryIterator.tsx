@@ -1,30 +1,30 @@
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../redux/store/root';
-import { MButton } from '../common/Button';
 import { useExecution } from '../../hooks/useExecution';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCaretLeft, faCaretRight } from '@fortawesome/free-solid-svg-icons';
 
 export const ExecutionHistoryIterator = () => {
-  const { sequenceNumber, canBackward, canForward, isExecutionHistory } = useSelector(
-    (state: RootState) => state.execution,
-  );
+  const { sequenceNumber, isExecutionHistory } = useSelector((state: RootState) => state.execution);
 
   const { loadExecutionHistory } = useExecution();
   if (!isExecutionHistory || sequenceNumber === undefined) return <></>;
   return (
-    <tr>
-      <MButton
-        disabled={!canBackward}
-        onClick={() => loadExecutionHistory(sequenceNumber, 'previous')}
-      >
-        Backward
-      </MButton>
-      <div>{sequenceNumber}</div>
-      <MButton
-        disabled={!canForward}
-        onClick={() => loadExecutionHistory(sequenceNumber, 'next')}
-      >
-        Forward
-      </MButton>
-    </tr>
+    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '35px' }}>
+      <span style={{ fontSize: '18px' }}>Execution</span>
+      <tr className="execution-history">
+        <FontAwesomeIcon
+          icon={faCaretLeft}
+          // disabled={!canBackward}
+          onClick={() => loadExecutionHistory(sequenceNumber, 'previous')}
+        />
+        <div>{sequenceNumber}</div>
+        <FontAwesomeIcon
+          icon={faCaretRight}
+          // disabled={!canForward}
+          onClick={() => loadExecutionHistory(sequenceNumber, 'next')}
+        />
+      </tr>
+    </div>
   );
 };

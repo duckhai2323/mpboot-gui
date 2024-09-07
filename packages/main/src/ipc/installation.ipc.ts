@@ -56,7 +56,7 @@ wrapperIpcMainOn(
           progressEvent,
         );
       });
-      // logger.debug(`Installation completed`)
+      logger.debug(dest);
       const binaryPath = await Installation.extractAsset(dest, binaryPathFor(req.versionName));
       event.sender.send(IPC_EVENTS.INSTALLATION_CALLBACK_ON_SUCCEED(req.versionId), binaryPath);
     } catch (error: any) {

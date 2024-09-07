@@ -225,15 +225,48 @@ export const CellPosition = (props: any) => {
   return (
     <>
       <form
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+          gap: '8px',
+          padding: '12px 35px',
+        }}
         ref={formRef}
         onKeyDown={onKeyDown}
       >
-        <span>Row </span>
-        <input style={{ width: 50 }} />
-        <span>/ {maxRows}</span>
-        <span> Col </span>
-        <input style={{ width: 50 }} />
-        <span>/ {maxColumns}</span>
+        <span style={{ fontSize: '18px', color: '#919191' }}>Row </span>
+        <input
+          style={{
+            width: 50,
+            outline: 'none',
+            border: '1px solid #D9D9D9',
+            borderRadius: '5px',
+            justifyContent: 'center',
+            alignItems: 'center',
+            fontSize: '18px',
+            color: '#585858',
+            padding: '0px 5px',
+          }}
+        />
+        <span style={{ fontSize: '18px', color: '#585858' }}>/ {maxRows}</span>
+        <div style={{ width: '10px' }}></div>
+        <span style={{ fontSize: '18px', color: '#919191' }}> Col </span>
+        <input
+          style={{
+            width: 50,
+            outline: 'none',
+            border: '1px solid #D9D9D9',
+            borderRadius: '5px',
+            justifyContent: 'center',
+            alignItems: 'center',
+            fontSize: '18px',
+            color: '#585858',
+            padding: '0px 5px',
+          }}
+        />
+        <span style={{ fontSize: '18px', color: '#585858' }}>/ {maxColumns}</span>
       </form>
     </>
   );

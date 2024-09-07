@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { useRef } from 'react';
-import { PhylotreeVisualization } from '@aqaurius6666/phylotree-visualization';
+import { PhylotreeVisualization } from '@khaitd0340/phylotree-visualization';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../redux/store/root';
 
@@ -17,15 +17,13 @@ export interface TreeViewWithSizeProps {
   mode: 'radial' | 'normal';
 }
 
-export const TreeView: FC<TreeViewProps> = props => {
-  const { width } = props;
+export const TreeView: FC<TreeViewProps> = () => {
   const { newick } = useSelector((state: RootState) => state.phylogenTree);
 
   return (
-    <PhylotreeVisualization
-      input={newick}
-      defaultWidth={width}
-    />
+    <>
+      <PhylotreeVisualization input={newick}></PhylotreeVisualization>
+    </>
   );
 };
 

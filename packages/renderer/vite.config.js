@@ -46,10 +46,12 @@ const config = {
     emptyOutDir: true,
     reportCompressedSize: false,
   },
-  // test: {
-  //   globals: true,
-  //   environment: 'jsdom',
-  // },
+  css: {
+    modules: {
+      scopeBehaviour: 'local',
+      generateScopedName: '[name]__[local]___[hash:base64:5]',
+    },
+  },
   plugins: [
     renderer.vite({
       preloadEntry: join(PACKAGE_ROOT, '../preload/src/index.ts'),

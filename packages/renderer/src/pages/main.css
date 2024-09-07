@@ -1,8 +1,7 @@
 .allotment__pane--scroll-on-overflow-y {
-    overflow-y: scroll !important;
+  overflow-y: scroll !important;
 }
 
-
-.allotment__pane--scroll-on-overflow-x {
-    overflow-x: scroll !important;
-}
+/* .allotment__pane--scroll-on-overflow-x {
+  overflow-x: scroll !important;
+} */

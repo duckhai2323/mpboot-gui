@@ -57,6 +57,7 @@ export interface ExposedElectron {
   chooseDirectoryOrFile: () => Promise<DialogChooseDirectoryOrFileResult>;
   listWorkspaces: () => Promise<IWorkspace[]>;
   createWorkspace: (req: CreateWorkspaceRequest) => Promise<IWorkspace>;
+  removeWorkspace: (req: number) => Promise<void>,
 
   testAvailable: () => Promise<boolean>;
 

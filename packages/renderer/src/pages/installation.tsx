@@ -2,6 +2,17 @@ import { useEffect, useRef, useState } from 'react';
 import { useElectron } from '../hooks/useElectron';
 import type { InstallationGetMetadataResponse } from '../../../common/installation';
 import type { MPBootInstallation } from '../../../main/src/configuration';
+import { Layout } from '../components/Layout/Layout';
+import classNames from 'classnames/bind';
+import styles from './installation.module.scss';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useDispatch, useSelector } from 'react-redux';
+import type { RootState } from 'src/redux/store/root';
+import { Actions } from '../redux/slice/item_menu.slice';
+import { useNavigate } from 'react-router-dom';
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+
+const cx = classNames.bind(styles);
 
 const useInstallation = (): {
   metadata: InstallationGetMetadataResponse | undefined;
@@ -85,11 +96,18 @@ const useInstallation = (): {
 };
 
 export const InstallationPage = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const stateSideBar = useSelector((state: RootState) => state.sidebarState);
   const { metadata, installVersion, progress, errorMsg, newBinaryPath, applyVersion } =
     useInstallation();
   const versionIdRef = useRef<HTMLInputElement>(null);
   if (!metadata) {
-    return <div>Loading...</div>;
+    return (
+      <Layout>
+        <div>Loading...</div>
+      </Layout>
+    );
   }
 
   const onInstallClick = (event: React.FormEvent<HTMLButtonElement>) => {
@@ -119,69 +137,93 @@ export const InstallationPage = () => {
     applyVersion(version.versionName, version.binaryPath, 'in-app');
   };
   return (
-    <>
-      <h1>Metadata</h1>
-      <table>
-        <tbody>
+    <Layout>
+      <div
+        className={cx('installation-container')}
+        style={{ width: stateSideBar.openSideBar ? '83vw' : '95.5vw' }}
+      >
+        <div className={cx('installation-container__header')}>
+          <FontAwesomeIcon
+            className={cx('arrow-left-icon')}
+             icon={faChevronLeft}
+            onClick={_e => {
+              dispatch(
+                Actions.setItemMenu({
+                  itemMenuSideBar: 1,
+                  openSideBar: stateSideBar.openSideBar,
+                }),
+              );
+              navigate('/dashboard');
+            }}
+          />
+          <span>Dashboard</span>
+        </div>
+
+        <div className={cx('installation-container__version')}>
           {Object.entries(metadata).map(([key, value]) => {
             if (key === 'versions') return;
             return (
-              <tr key={key}>
-                <td>{key}</td>
-                <td>{value}</td>
-              </tr>
+              <div className={cx('current-infor-version')}>
+                <span className={cx('current-infor-version__key')}>{key}</span>
+                <span className={cx('current-infor-version__value')}>{value}</span>
+              </div>
             );
           })}
-        </tbody>
-      </table>
-      <h1>More installation</h1>
-      <form>
-        <input
-          ref={versionIdRef}
-          type="text"
-          list="mpboot-version"
-          name="versionId"
-          id="mpboot-version-input"
-        />
-        <datalist id="mpboot-version">
-          {metadata.versions.map(version => {
-            if (version.binaryPath) {
-              return (
-                <option
-                  key={version.versionId}
-                  value={`${version.versionName} (Installed)`}
-                />
-              );
-            }
-            return (
+        </div>
+        <div className={cx('installation-container__install')}>
+          <span>More installation</span>
+          <form>
+            <input
+              className={cx('input-version')}
+              ref={versionIdRef}
+              type="text"
+              list="mpboot-version"
+              name="versionId"
+              id="mpboot-version-input"
+            />
+            <datalist id="mpboot-version">
+              {metadata.versions.map(version => {
+                if (version.binaryPath) {
+                  return (
+                    <option
+                      key={version.versionId}
+                      value={`${version.versionName} (Installed)`}
+                    />
+                  );
+                }
+                return (
+                  <option
+                    key={version.versionId}
+                    value={version.versionName}
+                    selected={metadata.installationType === 'pre-installed'}
+                  />
+                );
+              })}
               <option
-                key={version.versionId}
-                value={version.versionName}
-                selected={metadata.installationType === 'pre-installed'}
+                key="pre-installed"
+                value="Pre-installed"
               />
-            );
-          })}
-          <option
-            key="pre-installed"
-            value="Pre-installed"
-          />
-        </datalist>
-        <button
-          type="button"
-          onClick={onInstallClick}
-        >
-          Install
-        </button>
-        <button
-          type="submit"
-          onClick={onApplyClick}
-        >
-          Apply
-        </button>
-      </form>
-      <div>Progress: {progress.percentage}</div>
-      {errorMsg && <div>Error: {errorMsg}</div>}
-      {newBinaryPath && <div>Download completed, binary path: {newBinaryPath}</div>}
-    </>
+            </datalist>
+            <button
+              className={cx('btn')}
+              type="button"
+              onClick={onInstallClick}
+            >
+              Install
+            </button>
+            <button
+              className={cx('btn')}
+              type="submit"
+              onClick={onApplyClick}
+            >
+              Apply
+            </button>
+          </form>
+          <div className={cx('progress-install')}>Progress: {progress.percentage}</div>
+          {errorMsg && <div>Error: {errorMsg}</div>}
+          {newBinaryPath && <div>Download completed, binary path: {newBinaryPath}</div>}
+        </div>
+      </div>
+    </Layout>
   );
 };

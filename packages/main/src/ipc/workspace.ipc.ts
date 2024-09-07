@@ -31,6 +31,13 @@ wrapperIpcMainHandle(
   },
 );
 
+wrapperIpcMainHandle(
+  IPC_EVENTS.WORKSPACE_REMOVE,
+  async(_event, req: number): Promise<void> => {
+    await repository.removeWorkspace(req);
+  },
+);
+
 const validateCreateWorkspaceRequest = (req: CreateWorkspaceRequest) => {
   return req.name && req.path && req.inputData;
 };

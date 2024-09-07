@@ -20,18 +20,39 @@ wrapperIpcMainHandle(
   },
 );
 
+// wrapperIpcMainHandle(
+//   IPC_EVENTS.DIALOG_CHOOSE_DIRECTORY_OR_FILE,
+//   async (_event): Promise<DialogChooseDirectoryOrFileResult> => {
+//     const options: OpenDialogOptions = is.mac
+//       ? {
+//           properties: ['openDirectory', 'multiSelections', 'openFile'],
+//           title: 'Choose one (or more) directory, file as input data for workspace',
+//           message: 'Choose one (or more) directory, file as input data for workspace',
+//         }
+//       : {
+//           properties: ['multiSelections', 'openFile'],
+//           title: 'Choose one (or more) file as input data for workspace',
+//         };
+//     const results = await dialog.showOpenDialog(options);
+//     return {
+//       canceled: results.canceled,
+//       paths: results.filePaths,
+//     };
+//   },
+// );
+
 wrapperIpcMainHandle(
   IPC_EVENTS.DIALOG_CHOOSE_DIRECTORY_OR_FILE,
   async (_event): Promise<DialogChooseDirectoryOrFileResult> => {
     const options: OpenDialogOptions = is.mac
       ? {
-          properties: ['openDirectory', 'multiSelections', 'openFile'],
-          title: 'Choose one (or more) directory, file as input data for workspace',
-          message: 'Choose one (or more) directory, file as input data for workspace',
+          properties: ['openDirectory', 'openFile'],
+          title: 'Choose one directory or file as input data for workspace',
+          message: 'Choose one directory or file as input data for workspace',
         }
       : {
-          properties: ['multiSelections', 'openFile'],
-          title: 'Choose one (or more) file as input data for workspace',
+          properties: ['openFile'],
+          title: 'Choose one file as input data for workspace',
         };
     const results = await dialog.showOpenDialog(options);
     return {
@@ -40,3 +61,4 @@ wrapperIpcMainHandle(
     };
   },
 );
+

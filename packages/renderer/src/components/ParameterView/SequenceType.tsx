@@ -21,13 +21,14 @@ export const SequenceType = () => {
   }, []);
 
   return (
-    <tr>
-      <td>Sequence data type</td>
-      <td>
+    <tr className="parameter-item">
+      <td className='parameter-item-title'>Sequence data type</td>
+      <td className="parameter-item-value">
         <select
           key={inputDataType}
           defaultValue={inputDataType}
           onChange={onChange}
+          style={{width:'15vw', border:'1px solid #6c6c6c', borderRadius:'5px', background:'white', padding:'3px 10px'}}
         >
           <option value="">Auto detect</option>
           <option value="BIN">BIN</option>

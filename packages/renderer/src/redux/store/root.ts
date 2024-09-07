@@ -5,6 +5,7 @@ import { parameterSlice } from '../slice/parameter.slice';
 import { workspaceSlice } from '../slice/workspace.slice';
 import { phylogenTreeSlice } from '../slice/phylogen-tree.slice';
 import { executionSlice } from '../slice/execution.slice';
+import { SidebarStateSlice } from '../slice/item_menu.slice';
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     workspace: workspaceSlice.reducer,
     phylogenTree: phylogenTreeSlice.reducer,
     execution: executionSlice.reducer,
+    sidebarState: SidebarStateSlice.reducer,
   },
 });
 

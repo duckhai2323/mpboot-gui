@@ -1,4 +1,4 @@
-import type { NodeData } from '@aqaurius6666/react-folder-tree';
+import type { NodeData } from '@khaitd0340/react-folder-tree';
 import type { Directory, DirectoryTreeEvent } from '../../../../common/directory-tree';
 
 const executionHistoryRegexp = new RegExp('execution_[0-9]+_[0-9]+');

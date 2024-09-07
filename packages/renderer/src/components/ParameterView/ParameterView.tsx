@@ -11,9 +11,11 @@ import { ExtendedParameter } from './ExtendedParameter';
 
 export const ParameterView = () => {
   return (
-    <>
-      <ExecutionButton />
-      <ExecutionHistoryIterator />
+    <div className="parameter-section">
+      <div className="btn-group">
+        <ExecutionHistoryIterator />
+        <ExecutionButton />
+      </div>
       <Collapsible
         trigger={'Basic parameters'}
         transitionTime={1}
@@ -35,6 +37,6 @@ export const ParameterView = () => {
           <ExtendedParameter />
         </table>
       </Collapsible>
-    </>
+    </div>
   );
 };

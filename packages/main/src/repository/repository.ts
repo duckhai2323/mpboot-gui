@@ -40,7 +40,7 @@ export class Repository {
   public async listWorkspaces(paginationOption?: PaginationOptions): Promise<Workspace[]> {
     await this.ensureMigrate();
     logger.debug('Repository.listWorkspaces()', { paginationOption });
-    const limit = paginationOption?.limit || 5;
+    const limit = paginationOption?.limit || 6;
     const offset = paginationOption?.offset || 0;
 
     const rows = await this.db.getMany(
@@ -182,4 +182,13 @@ export class Repository {
 
     return ExecutionHistory.fromRow(row);
   }
+
+  public async removeWorkspace(id: number): Promise<void> {
+    await this.ensureMigrate();
+    logger.debug('Repository.removeWorkspaceById()', { id });
+    await this.db.run('DELETE FROM execution_history WHERE workspace_id = ?', [id]);
+    await this.db.run('DELETE FROM workspace_input_data WHERE workspace_id = ?', [id]);
+    await this.db.run('DELETE FROM workspaces WHERE id = ?', [id]);
+  }
+
 }

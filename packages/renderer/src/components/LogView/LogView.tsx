@@ -11,7 +11,7 @@ export const LogView: FC = () => {
   return (
     <>
       {/* <MButton onClick={_e => reloadLog(log.logFile)}>Reload log</MButton> */}
-      <div style={{ height: '90%' }}>
+      <div style={{ height: '100%' }}>
         <LogViewer
           hasLineNumbers={false}
           data={log.logData}

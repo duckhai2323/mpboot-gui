@@ -25,6 +25,7 @@ export const IPC_EVENTS = {
   DIALOG_CHOOSE_DIRECTORY_OR_FILE: 'dialog:choose-directory-or-file',
   WORKSPACE_LIST: 'workspace:list',
   WORKSPACE_CREATE: 'workspace:create',
+  WORKSPACE_REMOVE: 'workspace:remove',
 
   AVAILABLE_TEST: 'available:test',
 

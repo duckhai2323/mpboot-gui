@@ -34,9 +34,9 @@ export const Treefile = () => {
   }, []);
 
   return (
-    <tr>
-      <td>Reconstruction treefile</td>
-      <td>
+    <tr className="parameter-item">
+      <td className='parameter-item-title'>Reconstruction treefile</td>
+      <td className="parameter-item-value">
         <input
           type="text"
           id="treefile-input"

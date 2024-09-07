@@ -13,7 +13,7 @@ import { useParameter } from './useParameter';
 import { findTargetNode } from 'use-tree-state';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../redux/store/root';
-import type { NodeData } from '@aqaurius6666/react-folder-tree';
+import type { NodeData } from '@khaitd0340/react-folder-tree';
 import { usePhylogenTree } from './usePhylogenTree';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';

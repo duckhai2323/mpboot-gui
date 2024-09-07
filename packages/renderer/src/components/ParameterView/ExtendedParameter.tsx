@@ -14,9 +14,9 @@ export const ExtendedParameter = () => {
   };
 
   return (
-    <tr>
-      <td>Extended parameter</td>
-      <td>
+    <tr className='parameter-item'>
+      <td className='parameter-item-title'>Extended parameter</td>
+      <td className='parameter-item-value'>
         <input
           onChange={onExtendedParameterInputDidChange}
           type="text"

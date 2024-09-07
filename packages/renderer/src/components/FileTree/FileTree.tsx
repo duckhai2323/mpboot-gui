@@ -1,4 +1,4 @@
-import FolderTree from '@aqaurius6666/react-folder-tree';
+import FolderTree from '@khaitd0340/react-folder-tree';
 
 import { useFileTree } from '../../hooks/useFileTree';
 
@@ -8,7 +8,10 @@ export const FileTree = () => {
   if (!nodeData) return <div></div>;
 
   return (
-    <div onContextMenu={onContextMenu}>
+    <div
+      onContextMenu={onContextMenu}
+      style={{ paddingLeft: '15px', paddingTop: '15px' }}
+    >
       <FolderTree
         data={nodeData}
         onChange={onTreeStateChange}

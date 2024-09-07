@@ -1,0 +1,43 @@
+.item-workspace {
+  width: 80vw;
+  border: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 15px;
+  &__content {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    span {
+      flex: 1;
+      font-size: 20px;
+      font-weight: 400;
+      text-align: center;
+      padding: 15px;
+      border-bottom: 1px solid #18353e;
+      &:first-child {
+        margin-left: 5.5vw;
+        border-bottom: 1px solid #18353e;
+      }
+    }
+  }
+
+  &__button {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+
+    button {
+      border: none;
+      background: #bcc0ad;
+      font-size: 24px;
+      border-radius: 5px;
+      color: #18353e;
+      padding: 3px 10px;
+    }
+  }
+}
